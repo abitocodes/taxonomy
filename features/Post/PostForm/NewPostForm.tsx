@@ -8,7 +8,7 @@ import { Button, Flex, Input, Stack } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import { addDoc, collection, serverTimestamp, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import { postState } from "../@/atoms/postsAtom";
 import { firestore, storage } from "../../../utils/supabase/client";

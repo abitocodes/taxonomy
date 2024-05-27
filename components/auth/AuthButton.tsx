@@ -1,10 +1,11 @@
-import { createClient } from "@/utils/supabase/server";
+"use server"
+
+import { supabase } from "@/utils/supabase/client";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/shad/new-york/ui/button";
 
 export default async function AuthButton() {
-  const supabase = createClient();
 
   const {
     data: { user },
@@ -13,7 +14,6 @@ export default async function AuthButton() {
   const signOut = async () => {
     "use server";
 
-    const supabase = createClient();
     await supabase.auth.signOut();
     return redirect("/login");
   };

@@ -4,10 +4,10 @@ import { FaReddit } from "react-icons/fa";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSearchParams } from "next/navigation";
 
 import moment from "moment";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 import { communityState } from "@/atoms/communitiesAtom";
 import { supabase } from "../../utils/supabase/client";
@@ -22,7 +22,7 @@ type AboutProps = {
 
 const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => {
   const { user, loading: authLoading, error: authError } = useAuthState();
-  const router = useRouter();
+  const searchParams = useSearchParams()
   const selectFileRef = useRef<HTMLInputElement>(null);
   const setCommunityStateValue = useSetRecoilState(communityState);
 
@@ -86,6 +86,8 @@ const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => 
     setImageLoading(false);
   };
 
+  const communityQuery = searchParams?.get('community');
+
   return (
     <div className={`pt-${pt} sticky top-14`}>
       <div className="flex justify-between items-center p-3 text-white bg-blue-400 rounded-t-md">
@@ -129,7 +131,7 @@ const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => 
                 {communityData?.createdAt && <p>Created {moment(communityData.createdAt).format("MMM DD, YYYY")}</p>}
               </div>
               {!onCreatePage && (
-                <Link href={`/r/${router.query.community}/submit`}>
+                <Link href={`/r/${communityQuery}/submit`}>
                   <button className="mt-3 h-7 w-full bg-blue-500 text-white rounded">
                     Create Post
                   </button>

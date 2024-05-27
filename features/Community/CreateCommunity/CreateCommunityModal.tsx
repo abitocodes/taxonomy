@@ -21,7 +21,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import { communityState } from "../@/atoms/communitiesAtom";
 import { communityModalState } from "../@/atoms/communityModalAtom";

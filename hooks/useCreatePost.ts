@@ -5,7 +5,7 @@ import router from "next/router";
 
 import { authModalState } from "@/atoms/authModalAtom";
 import { supabase } from "@/utils/supabase/client";
-import useDirectory from "./useDirectory";
+import useDirectory from "@/hooks/useDirectory";
 
 const useCreatePost = () => {
   const { user, loading: authLoading, error: authError } = useAuthState();

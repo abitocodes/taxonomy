@@ -1,9 +1,7 @@
 import { FC } from "react";
 import { IconType } from "react-icons";
 
-import { Flex, Icon, Image, MenuItem } from "@chakra-ui/react";
-
-import useDirectory from "../../../hooks/useDirectory";
+import useDirectory from "@/hooks/useDirectory";
 
 type DirectoryItemProps = {
   displayText: string;
@@ -16,12 +14,19 @@ type DirectoryItemProps = {
 const MenuListItem: FC<DirectoryItemProps> = ({ displayText, link, icon, iconColor, imageURL }) => {
   const { onSelectMenuItem } = useDirectory();
   return (
-    <MenuItem width="100%" fontSize="10pt" _hover={{ bg: "gray.100" }} onClick={() => onSelectMenuItem({ displayText, link, icon, iconColor, imageURL })}>
-      <Flex alignItems="center">
-        {imageURL ? <Image borderRadius="full" boxSize="18px" src={imageURL} mr={2} alt="community image" /> : <Icon fontSize={20} mr={2} as={icon} color={iconColor} />}
+    <li className="w-full text-sm hover:bg-gray-100" onClick={() => onSelectMenuItem({ displayText, link, icon, iconColor, imageURL })}>
+      <div className="flex items-center">
+        {imageURL ? (
+          <img className="rounded-full w-4.5 h-4.5 mr-2" src={imageURL} alt="community image" />
+        ) : (
+          <svg className={`h-5 w-5 mr-2 text-${iconColor}`} fill="currentColor">
+            {/* SVG content should be replaced with actual icon SVG path */}
+          </svg>
+        )}
         {displayText}
-      </Flex>
-    </MenuItem>
+      </div>
+    </li>
   );
 };
+
 export default MenuListItem;

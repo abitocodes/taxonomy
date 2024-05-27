@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authModalState } from "@/atoms/authModalAtom";
 import { communityState, defaultCommunity } from "@/atoms/communitiesAtom";
 import { getMySnippets } from "@/helpers/supabase";
@@ -12,6 +12,7 @@ import { prisma } from "@/prisma/client";
 const useCommunityData = (ssrCommunityData?: boolean) => {
   const { user, loading: authLoading, error: authError } = useAuthState();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [communityStateValue, setCommunityStateValue] = useRecoilState(communityState);
   const setAuthModalState = useSetRecoilState(authModalState);
   const [loading, setLoading] = useState(false);
@@ -133,22 +134,24 @@ const useCommunityData = (ssrCommunityData?: boolean) => {
   };
 
   useEffect(() => {
-    const { community } = router.query;
-    if (community) {
-      const communityData = communityStateValue.currentCommunity;
+    if (searchParams) {
+      const communityId = searchParams.get('community');
+      if (communityId) {
+        const communityData = communityStateValue.currentCommunity;
 
-      if (!communityData.id) {
-        getCommunityData(community as string);
-        return;
+        if (!communityData.id) {
+          getCommunityData(communityId);
+          return;
+        }
+      } else {
+        setCommunityStateValue((prev) => ({
+          ...prev,
+          currentCommunity: defaultCommunity,
+        }));
       }
-    } else {
-      setCommunityStateValue((prev) => ({
-        ...prev,
-        currentCommunity: defaultCommunity,
-      }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router.query, communityStateValue.currentCommunity]);
+  }, [searchParams, communityStateValue.currentCommunity]);
 
   return {
     communityStateValue,

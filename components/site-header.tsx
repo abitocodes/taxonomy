@@ -1,5 +1,4 @@
 import Link from "next/link"
-
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { CommandMenu } from "@/components/command-menu"
@@ -9,29 +8,33 @@ import { MobileNav } from "@/components/mobile-nav"
 import { ModeToggle } from "@/components/mode-toggle"
 import { buttonVariants } from "@/components/shad/new-york/ui/button"
 import WalletLogin from "@/components/walletLogin"
-
 // import DeployButton from "@/components/auth/supabase/DeployButton";
 import AuthButton from "@/components/auth/AuthButton";
-import { createClient } from "@/utils/supabase/server";
-import { Suspense } from "react"
+import { supabase } from "@/utils/supabase/client";
+import { Suspense, useState, useEffect } from "react"
+import { RecoilRoot } from "recoil"
 
 export function SiteHeader() {
-  
-  const canInitSupabaseClient = () => {
-    // This function is just for the interactive tutorial.
-    // Feel free to remove it once you have Supabase connected.
-    try {
-      createClient();
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
+  const [isSupabaseConnected, setIsSupabaseConnected] = useState(false);
 
-  const isSupabaseConnected = canInitSupabaseClient();
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const { data, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        setIsSupabaseConnected(data.session !== null);
+      } catch (error) {
+        console.error('Supabase 연결 확인 중 오류 발생:', error);
+        setIsSupabaseConnected(false);
+      }
+    };
+
+    checkConnection();
+  }, []);
   
   return (
     // <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    // <RecoilRoot>
     <header className="bg-dither sticky left-0 top-0 z-50 mb-12 h-24 w-full">
       <div className="container flex h-full max-w-screen-2xl items-center">
         <MainNav />
@@ -51,5 +54,6 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
+    // </RecoilRoot>
   )
 }

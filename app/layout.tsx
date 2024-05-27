@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { Analytics } from "@/components/analytics"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
+import { RecoilRoot } from "recoil"
 
 
 const fontSans = FontSans({
@@ -84,10 +85,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {/* <RecoilRoot> */}
           {children}
           <Analytics />
           <Toaster />
           <TailwindIndicator />
+          {/* </RecoilRoot> */}
         </ThemeProvider>
       </body>
     </html>

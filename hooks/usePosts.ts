@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import { authModalState } from "@/atoms/authModalAtom";
 import { communityState } from "@/atoms/communitiesAtom";

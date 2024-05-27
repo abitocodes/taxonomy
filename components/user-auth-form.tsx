@@ -3,12 +3,12 @@
 import * as React from "react"
 import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { signIn } from "next-auth/react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+import { supabase } from "@/utils/supabase/client"
 
 import { cn } from "@/lib/utils"
-import { userAuthSchema } from "@/lib/validations/auth"
+// import { userAuthSchema } from "@/lib/validations/auth"
 import { buttonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -18,6 +18,11 @@ import { Icons } from "@/components/icons"
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 type FormData = z.infer<typeof userAuthSchema>
+
+const userAuthSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1), // 비밀번호 필드 추가, 최소 길이 1
+});
 
 export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   const {
@@ -34,15 +39,14 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(data: FormData) {
     setIsLoading(true)
 
-    const signInResult = await signIn("email", {
+    const { error } = await supabase.auth.signInWithPassword({
       email: data.email.toLowerCase(),
-      redirect: false,
-      callbackUrl: searchParams?.get("from") || "/dashboard",
+      password: data.password,
     })
 
     setIsLoading(false)
 
-    if (!signInResult?.ok) {
+    if (error) {
       return toast({
         title: "Something went wrong.",
         description: "Your sign in request failed. Please try again.",
@@ -101,9 +105,19 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
       <button
         type="button"
         className={cn(buttonVariants({ variant: "outline" }))}
-        onClick={() => {
+        onClick={async () => {
           setIsGitHubLoading(true)
-          signIn("github")
+          const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'github',
+          })
+          setIsGitHubLoading(false)
+          if (error) {
+            toast({
+              title: "GitHub Sign In Failed",
+              description: error.message,
+              variant: "destructive",
+            })
+          }
         }}
         disabled={isLoading || isGitHubLoading}
       >
