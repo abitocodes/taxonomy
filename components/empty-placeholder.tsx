@@ -41,9 +41,12 @@ EmptyPlaceholder.Icon = function EmptyPlaceHolderIcon({
     return null
   }
 
+  // ref 속성을 제거합니다.
+  const { ref, ...iconProps } = props;
+
   return (
     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-      <Icon className={cn("h-10 w-10", className)} {...props} />
+      <Icon className={cn("h-10 w-10", className)} {...iconProps} />
     </div>
   )
 }

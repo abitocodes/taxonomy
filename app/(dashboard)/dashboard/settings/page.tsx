@@ -12,6 +12,7 @@ export const metadata = {
 }
 
 export default async function SettingsPage() {
+// export default async function IndexPage() {
   const user = await getCurrentUser()
 
   if (!user) {

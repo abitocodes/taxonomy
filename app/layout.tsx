@@ -9,6 +9,7 @@ import { Analytics } from "@/components/analytics"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 
+
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",

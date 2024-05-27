@@ -23,10 +23,10 @@ import {
   Twitter,
   User,
   X,
-  type Icon as LucideIcon,
+  type XIcon as LucideIcon,
 } from "lucide-react"
 
-export type Icon = LucideIcon
+export type XIcon = typeof LucideIcon
 
 export const Icons = {
   logo: Command,
@@ -50,6 +50,7 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  twitter: Twitter,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"
@@ -67,6 +68,5 @@ export const Icons = {
       ></path>
     </svg>
   ),
-  twitter: Twitter,
   check: Check,
 }

@@ -44,7 +44,7 @@ A few people have asked me to turn this into a starter. I think we could do that
 ## Roadmap
 
 - [x] ~Add MDX support for basic pages~
-- [x] ~Build marketing pages~
+- [x] ~Build landing pages~
 - [x] ~Subscriptions using Stripe~
 - [x] ~Responsive styles~
 - [x] ~Add OG image for blog using @vercel/og~

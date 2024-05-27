@@ -23,6 +23,7 @@ export const metadata = {
 }
 
 export default async function BillingPage() {
+// export default async function IndexPage() {
   const user = await getCurrentUser()
 
   if (!user) {

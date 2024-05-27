@@ -1,3 +1,5 @@
+"use client"
+import { useEffect } from "react"
 import * as React from "react"
 import Link from "next/link"
 
@@ -13,7 +15,7 @@ interface MobileNavProps {
 }
 
 export function MobileNav({ items, children }: MobileNavProps) {
-  useLockBody()
+  // useLockBody()
 
   return (
     <div

@@ -1,51 +1,147 @@
-import { Metadata } from "next"
-import Link from "next/link"
+import Link from "next/link";
+import { headers } from "next/headers";
+import { supabase } from "@/utils/supabase/client";
+import { prisma } from "@/prisma/client";
+import { redirect } from "next/navigation";
+import { SubmitButton } from "./submit-button";
 
-import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui/button"
-import { Icons } from "@/components/icons"
-import { UserAuthForm } from "@/components/user-auth-form"
+export default function Login({
+  searchParams,
+}: {
+  searchParams: { message: string };
+}) {
+  const signIn = async (formData: FormData) => {
+    "use server";
 
-export const metadata: Metadata = {
-  title: "Login",
-  description: "Login to your account",
-}
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-export default function LoginPage() {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return redirect("/login?message=Could not authenticate user");
+    }
+
+    return redirect("/protected");
+  };
+
+  const signUp = async (formData: FormData) => {
+    "use server";
+  
+    const origin = headers().get("origin");
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+  
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${origin}/auth/callback`,
+      },
+    });
+  
+    if (error) {
+      return redirect("/login?message=Could not authenticate user");
+    }
+  
+    // 사용자가 성공적으로 생성된 후, 데이터베이스에 사용자 정보 추가
+    if (data && data.user) {
+      const user = data.user;
+  
+      // users 테이블에 사용자 정보 추가
+      const createdUser = await prisma.user.create({
+        data: {
+          id: user.id,
+          email: user.email,
+          createdAt: new Date(user.created_at),
+        },
+      });
+  
+      // accounts 테이블에 계정 정보 추가
+      if (user.identities && user.identities.length > 0) {
+        const identity = user.identities[0];
+        await prisma.account.create({
+          data: {
+            userId: createdUser.id,
+            type: "email",
+            provider: identity.provider,
+            providerAccountId: identity.id, // 이메일을 고유 계정 ID로 사용
+            createdAt: new Date(identity.created_at || 0),
+            updatedAt: new Date(identity.updated_at || 0),
+          },
+        });
+      }
+    }
+  
+    return redirect("/login?message=Check email to continue sign in process");
+  };
+
   return (
-    <div className="container flex h-screen w-screen flex-col items-center justify-center">
+    <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
       <Link
         href="/"
-        className={cn(
-          buttonVariants({ variant: "ghost" }),
-          "absolute left-4 top-4 md:left-8 md:top-8"
-        )}
+        className="absolute left-8 top-8 py-2 px-4 rounded-md no-underline text-foreground bg-btn-background hover:bg-btn-background-hover flex items-center group text-sm"
       >
-        <>
-          <Icons.chevronLeft className="mr-2 h-4 w-4" />
-          Back
-        </>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>{" "}
+        Back
       </Link>
-      <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-        <div className="flex flex-col space-y-2 text-center">
-          <Icons.logo className="mx-auto h-6 w-6" />
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Welcome back
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Enter your email to sign in to your account
+
+      <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
+        <label className="text-md" htmlFor="email">
+          Email
+        </label>
+        <input
+          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          name="email"
+          placeholder="you@example.com"
+          required
+        />
+        <label className="text-md" htmlFor="password">
+          Password
+        </label>
+        <input
+          className="rounded-md px-4 py-2 bg-inherit border mb-6"
+          type="password"
+          name="password"
+          placeholder="••••••••"
+          required
+        />
+        <SubmitButton
+          formAction={signIn}
+          className="bg-green-700 rounded-md px-4 py-2 text-foreground mb-2"
+          pendingText="Signing In..."
+        >
+          Sign In
+        </SubmitButton>
+        <SubmitButton
+          formAction={signUp}
+          className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
+          pendingText="Signing Up..."
+        >
+          Sign Up
+        </SubmitButton>
+        {searchParams?.message && (
+          <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
+            {searchParams.message}
           </p>
-        </div>
-        <UserAuthForm />
-        <p className="px-8 text-center text-sm text-muted-foreground">
-          <Link
-            href="/register"
-            className="hover:text-brand underline underline-offset-4"
-          >
-            Don&apos;t have an account? Sign Up
-          </Link>
-        </p>
-      </div>
+        )}
+      </form>
     </div>
-  )
+  );
 }

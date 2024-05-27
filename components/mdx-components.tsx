@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils"
 import { Callout } from "@/components/callout"
 import { MdxCard } from "@/components/mdx-card"
 
+const WrappedImage = ({ src, alt, ...props }: { src: string; alt: string; [key: string]: any }) => <Image {...props} src={src} alt={alt} />;
+
 const components = {
   h1: ({ className, ...props }) => (
     <h1
@@ -147,7 +149,7 @@ const components = {
       {...props}
     />
   ),
-  Image,
+  Image: WrappedImage,
   Callout,
   Card: MdxCard,
 }
