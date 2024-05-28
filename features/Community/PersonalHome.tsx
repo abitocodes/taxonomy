@@ -9,7 +9,7 @@ const PersonalHome: FC = () => {
   const { openModal } = useCommunityModal();
 
   return (
-    <div className="flex flex-col bg-white rounded-md cursor-pointer border border-gray-300 sticky">
+    <div className="flex flex-col rounded-md cursor-pointer border border-gray-300 sticky">
       <div
         className="flex items-end justify-between text-white p-[6px_10px] bg-blue-500 h-8.5 rounded-t-md font-semibold"
         style={{ backgroundImage: "url(/images/redditPersonalHome.png)", backgroundSize: "cover" }}

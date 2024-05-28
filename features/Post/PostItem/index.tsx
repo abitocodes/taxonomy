@@ -10,6 +10,7 @@ import Link from "next/link";
 import { NextRouter } from "next/router";
 
 import { Post } from "@/types/PostState";
+import { Card } from "@/components/ui/card";
 
 type PostItemContentProps = {
   post: Post;
@@ -41,7 +42,7 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
   };
 
   return (
-    <div className={`flex border ${singlePostView ? "border-white" : "border-gray-300"} bg-white rounded ${singlePostView ? "rounded-t-none" : "rounded-md"} cursor-pointer hover:border-gray-500`}
+    <Card className={`flex border ${singlePostView ? "border-white" : "border-gray-300"} bg-white rounded ${singlePostView ? "rounded-t-none" : "rounded-md"} cursor-pointer hover:border-gray-500`}
          onClick={() => onSelectPost && post && onSelectPost(post, postIdx!)}>
       <div className={`flex flex-col items-center bg-${singlePostView ? "transparent" : "gray-100"} p-2 w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
         <TbArrowBigUp className={`text-${userVoteValue === 1 ? "brand-100" : "gray-400"} text-xl cursor-pointer`}
@@ -127,7 +128,7 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
             )}
           </div>
         </div>
-      </div>
+      </Card>
   );
 };
 

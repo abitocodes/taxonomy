@@ -3,7 +3,7 @@ import { GiCheckedShield } from "react-icons/gi";
 
 const Premium: FC = () => {
   return (
-    <div className="flex flex-col bg-white rounded-md cursor-pointer p-3 border border-gray-300">
+    <div className="flex flex-col rounded-md cursor-pointer p-3 border border-gray-300">
       <div className="flex mb-2">
         <GiCheckedShield className="text-[#FF4500] text-6.5 mt-2" />
         <div className="flex flex-col space-y-1 text-xs pl-2">

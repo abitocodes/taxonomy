@@ -15,7 +15,6 @@ import { Post, PostVote } from "@/types/PostState";
 import { prisma } from "@/prisma/client";
 import { useUser } from "@/hooks/useUser";
 import { ReactElement } from "react";
-import { RecoilRoot } from 'recoil';
 import { AppProps } from 'next/app';
 import { PostState } from "@/types/PostState";
 
@@ -161,7 +160,6 @@ export default function Home(): ReactElement {
   }, [postStateValue?.posts, user?.id]);
 
   return (
-    <RecoilRoot>
     <PageContentLayout>
       <>
         <CreatePostLink />
@@ -191,6 +189,5 @@ export default function Home(): ReactElement {
         <PersonalHome />
       </div>
     </PageContentLayout>
-    </RecoilRoot>
   );
 };

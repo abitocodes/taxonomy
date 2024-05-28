@@ -12,8 +12,8 @@ interface AppLayoutProps {
   export default function LandingLayout({ children }: AppLayoutProps) {
   return (
     <>
-      <SiteHeader />
       <RecoilRoot>
+      <SiteHeader />
       <main className="flex-1">
         {children}
       </main>

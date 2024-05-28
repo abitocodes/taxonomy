@@ -43,5 +43,3 @@ export const useAuthState = (options?: AuthStateOptions): AuthStateHook => {
 
   return { user, loading, error };
 };
-
-export default useAuthState;

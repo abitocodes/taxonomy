@@ -69,7 +69,6 @@ const Posts: FC<PostsProps> = ({ communityData, userId, loadingUser }) => {
 
   return (
     <>
-    <RecoilRoot>
       {loading ? (
         <PostLoader />
       ) : (
@@ -87,7 +86,6 @@ const Posts: FC<PostsProps> = ({ communityData, userId, loadingUser }) => {
           ))}
         </div>
       )}
-      </RecoilRoot>
     </>
   );
 };

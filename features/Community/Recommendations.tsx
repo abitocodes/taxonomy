@@ -2,114 +2,109 @@ import { FC, useEffect, useState } from "react";
 import { FaReddit } from "react-icons/fa";
 import Link from "next/link";
 
-import { supabase } from "../../utils/supabase/client";
-import useCommunityData from "../../hooks/useCommunityData";
-import { Community } from "../../types/CommunityState";
-import { prisma } from "@/prisma/client";
+import useCommunityData from "@/hooks/useCommunityData";
+import { Community } from "@/types/CommunityState";
+import { Card, CardHeader, CardContent } from "@/components/shad/new-york/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+import { Button } from "@/components/ui/button";
 
 type RecommendationsProps = {};
 
 const Recommendations: FC<RecommendationsProps> = () => {
   const [communities, setCommunities] = useState<Community[]>([]);
   const [loading, setLoading] = useState(true);
-  const { communityStateValue, onJoinLeaveCommunity } = useCommunityData(); // Prisma 클라이언트를 임포트합니다.
+  const { communityStateValue, onJoinLeaveCommunity } = useCommunityData(); 
 
-  const getCommunityRecommendations = async () => {
-    try {
-      const data = await prisma.community.findMany({
-        orderBy: {
-          numberOfMembers: 'desc'
-        },
-        take: 5
-      });
-  
-      const typedData = data.map(community => ({
-        ...community,
-        privacyType: community.privacyType as "public" | "restricted" | "private",
-        imageURL: community.imageURL ?? undefined  // null을 undefined로 변환
-      }));
-  
-      setCommunities(typedData);
-    } catch (error) {
-      console.error("Error fetching communities", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  function getCommunityRecommendations() 
+  { return fetch('/api/getCommunityRecommendations'); }
 
   useEffect(() => {
-    getCommunityRecommendations();
+    try {
+      getCommunityRecommendations().then(res => res.json()).then(data => { 
+        const typedData = data.communities.map((community: Community) => ({
+          ...community,
+          privacyType: community.privacyType as "public" | "restricted" | "private",
+          imageURL: community.imageURL ?? undefined
+        }));
+        setCommunities(typedData);
+        setLoading(false);
+      });
+    }
+    catch (error) {
+      console.error("Error fetching communities", error);
+    }
   }, []);
 
   return (
-    <div className="flex flex-col bg-white rounded-md cursor-pointer border border-gray-300">
-      <div
-        className="flex items-end justify-between text-white p-[6px_10px] bg-blue-500 h-17 rounded-t-md font-semibold"
-        style={{ backgroundImage: "url(/images/recCommsArt.png)", backgroundSize: "cover", backgroundBlendMode: "multiply" }}
+    <Card className="rounded-t-sm overflow-hidden">
+      <CardHeader 
+        className="flex" // flex 박스 모델 적용 및 아이템을 하단 정렬
+        style={{ 
+          backgroundImage: "url(/images/recCommsArt.png), linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))", 
+          backgroundSize: "cover", 
+          backgroundBlendMode: "multiply",
+          height: "100%" // 높이를 100%로 설정하여 전체 높이를 사용
+        }}
       >
-        Top Communities
-      </div>
-      <div className="flex flex-col">
+        <span className="font-bold text-background">Top Communities</span>
+      </CardHeader>
+      {/* <CardContent> */}
         {loading ? (
-          <div className="mt-2 p-3 space-y-4">
-            <div className="flex justify-between items-center">
-              <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>
-              <div className="h-2.5 bg-gray-300 rounded w-7/10 animate-pulse"></div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>
-              <div className="h-2.5 bg-gray-300 rounded w-7/10 animate-pulse"></div>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="w-10 h-10 rounded-full bg-gray-300 animate-pulse"></div>
-              <div className="h-2.5 bg-gray-300 rounded w-7/10 animate-pulse"></div>
-            </div>
-          </div>
+          <div>Loading...</div>
         ) : (
-          <>
-            {communities.map((item, index) => {
-              const isJoined = !!communityStateValue.mySnippets.find((snippet) => snippet.communityId === item.id);
-              return (
-                <Link key={item.id} href={`/r/${item.id}`}>
-                  <div className="flex relative items-center text-sm border-b border-gray-200 p-[10px_12px] font-semibold">
-                    <div className="flex items-center w-4/5">
-                      <div className="w-1/5">
-                        <span className="mr-2">{index + 1}</span>
-                      </div>
-                      <div className="flex items-center w-4/5">
-                        {item.imageURL ? (
-                          <img className="rounded-full w-7 h-7 mr-2" src={item.imageURL} alt="community image" />
+          <Table>
+            <TableBody>
+              {communities.map((community, index) => {
+                const isJoined = !!communityStateValue.mySnippets.find((snippet) => snippet.communityId === community.id);
+                return (
+                  <Link key={community.id} href={`/r/${community.id}`}>
+                    <TableRow key={community.id} className="flex items-center">
+                      <TableCell className="w-1/5 flex justify-center">
+                        <span>{index + 1}</span>
+                      </TableCell>
+                      <TableCell className="flex justify-center">                        
+                        {community.imageURL ? (
+                          <Avatar className="hidden h-9 w-9 sm:flex">
+                          <AvatarImage src={community.imageURL} alt="community image" />
+                          <AvatarFallback>404</AvatarFallback>
+                          </Avatar>
                         ) : (
                           <FaReddit className="text-[#FF4500] text-7.5 mr-2" />
                         )}
-                        <span className="whitespace-nowrap overflow-hidden overflow-ellipsis">{`r/${item.id}`}</span>
-                      </div>
-                    </div>
-                    <div className="absolute right-2.5">
-                      <button
-                        className={`h-5.5 text-xs ${isJoined ? "border border-blue-500" : "bg-blue-500 text-white"} rounded-md`}
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          onJoinLeaveCommunity(item, isJoined);
-                        }}
-                      >
-                        {isJoined ? "Joined" : "Join"}
-                      </button>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-            <div className="p-[10px_20px]">
-              <button className="h-7.5 w-full bg-blue-500 text-white rounded-md">
-                View All
-              </button>
-            </div>
-          </>
+                      </TableCell>
+                      <TableCell className="w-full">
+                        <span>{`r/${community.id}`}</span>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          className={`h-5.5 text-xs ${isJoined ? "border border-blue-500" : "bg-blue-500 text-white"} rounded-md`}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onJoinLeaveCommunity(community, isJoined);
+                          }}
+                        >
+                          {isJoined ? "Joined" : "Join"}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  </Link>
+                );
+              })}
+            </TableBody>
+          </Table>
         )}
-      </div>
-    </div>
+      {/* </CardContent> */}
+    </Card>
   );
-};
+}
 
 export default Recommendations;

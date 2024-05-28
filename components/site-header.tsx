@@ -12,7 +12,6 @@ import WalletLogin from "@/components/walletLogin"
 import AuthButton from "@/components/auth/AuthButton";
 import { supabase } from "@/utils/supabase/client";
 import { Suspense, useState, useEffect } from "react"
-import { RecoilRoot } from "recoil"
 
 export function SiteHeader() {
   const [isSupabaseConnected, setIsSupabaseConnected] = useState(false);
@@ -34,7 +33,6 @@ export function SiteHeader() {
   
   return (
     // <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-    // <RecoilRoot>
     <header className="bg-dither sticky left-0 top-0 z-50 mb-12 h-24 w-full">
       <div className="container flex h-full max-w-screen-2xl items-center">
         <MainNav />
@@ -54,6 +52,5 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
-    // </RecoilRoot>
   )
 }

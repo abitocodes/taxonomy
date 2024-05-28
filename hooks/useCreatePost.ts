@@ -8,6 +8,7 @@ import { supabase } from "@/utils/supabase/client";
 import useDirectory from "@/hooks/useDirectory";
 
 const useCreatePost = () => {
+  console.log("useCreatePost called.");
   const { user, loading: authLoading, error: authError } = useAuthState();
   const setAuthModalState = useSetRecoilState(authModalState);
   const { toggleMenuOpen } = useDirectory();
