@@ -33,7 +33,6 @@ const UserList: FC<UserListProps> = () => {
   };
 
   return (
-    <DropdownMenu>
       <DropdownMenuContent>
         <DropdownMenuItem onSelect={() => {}}>
           <div className="flex items-center">
@@ -50,7 +49,6 @@ const UserList: FC<UserListProps> = () => {
           </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu>
   );
 };
 export default UserList;

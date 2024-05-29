@@ -12,6 +12,22 @@ import NoUserList from "./NoUserList";
 import UserList from "./UserList";
 import { Session } from "@supabase/supabase-js";
 
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 type MenuWrapperProps = {};
 
 const MenuWrapper: FC<MenuWrapperProps> = () => {
@@ -21,6 +37,8 @@ const MenuWrapper: FC<MenuWrapperProps> = () => {
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   return (
     <div className="relative">
+      <DropdownMenu>
+      <DropdownMenuTrigger asChild>
       <button className="cursor-pointer p-0 px-1.5 rounded-md hover:outline hover:outline-1 hover:outline-gray-200">
         <div className="flex items-center">
           <div className="flex items-center">
@@ -28,10 +46,12 @@ const MenuWrapper: FC<MenuWrapperProps> = () => {
               <>
                 <FaRedditSquare className="text-gray-300 text-3xl mr-1" />
                 <div className={`hidden lg:flex flex-col text-xs items-start mr-8`}>
-                  <span className="font-bold">{user?.id || user?.email?.split("@")[0]}</span>
-                  <div className="flex items-center">
+                  <span className="font-bold">
+                    {(user?.id ?? user?.email?.split("@")[0] ?? '').slice(0, 12) + ((user?.id ?? user?.email?.split("@")[0] ?? '').length > 12 ? '...' : '')}
+                  </span>
+                <div className="flex items-center">
                     <IoSparkles className="text-brand-100 mr-1" />
-                    <span className="text-gray-400">1 karma</span>
+                    <span className="text-gray-400">0 MIX</span>
                   </div>
                 </div>
               </>
@@ -44,9 +64,11 @@ const MenuWrapper: FC<MenuWrapperProps> = () => {
           </svg>
         </div>
       </button>
+      </DropdownMenuTrigger>
       <div className="absolute bg-white shadow-lg mt-1 rounded-md">
         {user ? <UserList /> : <NoUserList setModalState={setModalState} />}
       </div>
+      </DropdownMenu>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss"
+const { fontFamily } = require("tailwindcss/defaultTheme")
 
 const config = {
   darkMode: ["class"],
@@ -18,6 +19,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"NeoDunggeunmoPro"', ...fontFamily.mono],
+        
+      },
       backgroundImage: {
         'dither': 'linear-gradient(to bottom, hsl(var(--background)), transparent)',
         'dither-0': 'linear-gradient(to bottom, transparent, hsl(var(--background)))',

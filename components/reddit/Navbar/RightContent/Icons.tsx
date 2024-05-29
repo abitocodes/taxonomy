@@ -13,24 +13,24 @@ const ActionIcons: FC<ActionIconsProps> = () => {
     <div className="flex items-center flex-grow">
       <div className="hidden md:flex items-center border-r border-gray-200">
         <div className="mr-1.5 ml-1.5 p-1 cursor-pointer rounded hover:bg-gray-200">
-          <BsArrowUpRightCircle className="text-5xl w-10 h-10" />
+          <BsArrowUpRightCircle className="text-sm" />
         </div>
         <div className="mr-1.5 ml-1.5 p-1 cursor-pointer rounded hover:bg-gray-200">
-          <IoFilterCircleOutline className="text-5.5xl" />
+          <IoFilterCircleOutline className="text-sm" />
         </div>
         <div className="mr-1.5 ml-1.5 p-1 cursor-pointer rounded hover:bg-gray-200">
-          <IoVideocamOutline className="text-5.5xl" />
+          <IoVideocamOutline className="text-sm" />
         </div>
       </div>
-      <div>
+      <div className="hidden md:flex items-center border-r border-gray-200">
         <div className="mr-1.5 ml-1.5 p-1 cursor-pointer rounded hover:bg-gray-200">
-          <BsChatDots className="text-5xl" />
+          <BsChatDots className="text-sm" />
         </div>
         <div className="mr-1.5 ml-1.5 p-1 cursor-pointer rounded hover:bg-gray-200">
-          <IoNotificationsOutline className="text-5xl" />
+          <IoNotificationsOutline className="text-sm" />
         </div>
         <div className="hidden md:flex mr-3 ml-1.5 p-1 cursor-pointer rounded hover:bg-gray-200" onClick={toggleMenuOpen}>
-          <GrAdd className="text-5xl" />
+          <GrAdd className="text-sm" />
         </div>
       </div>
     </div>

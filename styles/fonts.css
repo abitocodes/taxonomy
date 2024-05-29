@@ -12,3 +12,9 @@
     font-style: normal;
   }
   
+  @font-face {
+    font-family: 'NeoDunggeunmoPro';
+    src: url('/fonts/NeoDunggeunmoPro-Regular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}

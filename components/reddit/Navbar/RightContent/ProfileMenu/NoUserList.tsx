@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { MdOutlineLogin } from "react-icons/md";
-// import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,12 +25,14 @@ type NoUserListProps = {
 const NoUserList: FC<NoUserListProps> = ({ setModalState }) => {
   return (
     <>
-      <DropdownMenuItem className="menuItem" onClick={() => setModalState({ open: true, view: "login" })}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <MdOutlineLogin style={{ fontSize: '20px', marginRight: '8px' }} />
-          Log In / Sign Up
-        </div>
-      </DropdownMenuItem>
+      <DropdownMenuContent>
+        <DropdownMenuItem className="menuItem" onClick={() => setModalState({ open: true, view: "login" })}>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <MdOutlineLogin style={{ fontSize: '20px', marginRight: '8px' }} />
+            Log In / Sign Up
+          </div>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
     </>
   );
 };
