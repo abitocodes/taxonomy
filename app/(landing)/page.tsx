@@ -144,7 +144,6 @@ export default function Home(): ReactElement {
           </div>
         ) : (
           <div>
-          <div className="space-y-4">
           {(postStateValue?.posts || []).map((post: Post, index) => (
             <PostItem
               key={post.id}
@@ -158,7 +157,6 @@ export default function Home(): ReactElement {
               homePage
             />
           ))}
-        </div>
         </div>
         )}
       </>

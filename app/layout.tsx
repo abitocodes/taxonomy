@@ -1,5 +1,3 @@
-import localFont from "next/font/local"
-
 import "@/styles/globals.css"
 import "@/styles/fonts.css"
 
@@ -11,22 +9,6 @@ import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 import RecoilRootWrapper from "@/components/RecoilWrapper";
 import BgRisingStars from "@/components/BgRisingStars"
-
-const fontSans = localFont({
-  src: "../public/fonts/NeoDunggeunmoPro-Regular.woff2",
-  variable: "--font-sans",
-})
-
-// Font files can be colocated inside of `pages`
-const fontHeading = localFont({
-  src: "../public/fonts/NeoDunggeunmoPro-Regular.woff2",
-  variable: "--font-heading",
-})
-
-const fontCommon = localFont({
-  src: "../public/fonts/NeoDunggeunmoPro-Regular.woff2",
-  variable: "--font-common",
-})
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -85,10 +67,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-          fontHeading.variable,
-          fontCommon.variable
+          "min-h-screen bg-background font-dots antialiased",
         )}
       >
         <RecoilRootWrapper>
@@ -97,7 +76,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
               {children}
               <Analytics />
               <Toaster />
-
               <TailwindIndicator />
           </ThemeProvider>
         </RecoilRootWrapper>

@@ -20,7 +20,7 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ['"NeoDunggeunmoPro"', ...fontFamily.mono],
+        dots: ['"NeoDunggeunmoPro"', ...fontFamily.mono],
         
       },
       backgroundImage: {

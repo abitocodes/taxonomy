@@ -10,7 +10,7 @@ import Link from "next/link";
 import { NextRouter } from "next/router";
 
 import { Post } from "@/types/PostState";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 type PostItemContentProps = {
   post: Post;
@@ -42,15 +42,15 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
   };
 
   return (
-    <Card className={`flex border ${singlePostView ? "border-white" : "border-gray-300"} rounded ${singlePostView ? "rounded-t-none" : "rounded-md"} cursor-pointer hover:border-gray-500`}
+    <CardContent className={`flex`}
          onClick={() => onSelectPost && post && onSelectPost(post, postIdx!)}>
       <div className={`flex flex-col items-center bg-${singlePostView ? "transparent" : "gray-100"} p-2 w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
-        <TbArrowBigUp className={`text-${userVoteValue === 1 ? "brand-100" : "gray-400"} text-xl cursor-pointer`}
+        <TbArrowBigUp className={`text-${userVoteValue === 1 ? "primary" : "muted"} text-xl cursor-pointer`}
                       onClick={(event) => onVote(event, post, 1, post.communityId)} />
         <span className="text-sm font-bold">
           {post.voteStatus}
         </span>
-        <TbArrowBigDown className={`text-${userVoteValue === -1 ? "blue-500" : "gray-400"} text-xl cursor-pointer`}
+        <TbArrowBigDown className={`text-${userVoteValue === -1 ? "secondary" : "muted"} text-xl cursor-pointer`}
                         onClick={(event) => onVote(event, post, -1, post.communityId)} />
       </div>
       <div className="flex flex-col flex-grow">
@@ -62,16 +62,16 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
                   {post.communityImageURL ? (
                     <img className="rounded-full w-4.5 h-4.5 mr-2" src={post.communityImageURL} alt="community image" />
                   ) : (
-                    <FaReddit className="text-blue-500 text-xl mr-1" />
+                    <FaReddit className="text-primary text-xl mr-1" />
                   )}
                   <Link href={`r/${post.communityId}`}>
                     <span className="font-bold hover:underline" onClick={(event) => event.stopPropagation()}>{`r/${post.communityId}`}</span>
                   </Link>
-                  <BsDot className="text-gray-500 text-xs" />
+                  <BsDot className="text-muted text-xs" />
                 </>
               )}
-              <span className="text-gray-500">
-                Posted by u/{post.displayName} {moment(post.createdAt).fromNow()}
+              <span className="text-muted">
+                Posted by u/{post.authorDisplayText} {moment(post.createdAt).fromNow()}
               </span>
             </div>
           )}
@@ -94,30 +94,30 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
                   <video controls src={post.mediaURL} className="max-h-96 w-full object-contain" />
                 ) : (
                   <>
-                    {loadingImage && <div className="h-52 w-full bg-gray-200 animate-pulse rounded-md"></div>}
+                    {loadingImage && <div className="h-52 w-full bg-muted animate-pulse rounded-md"></div>}
                     <img className={`max-h-96 w-full object-cover ${loadingImage ? "hidden" : "block"}`} src={post.mediaURL} onLoad={() => setLoadingImage(false)} alt="Post Image" />
                   </>
                 )}
               </div>
             )}
           </div>
-          <div className="ml-1 mb-1 text-gray-500 font-bold flex">
-            <div className="flex items-center p-2 rounded-md hover:bg-gray-200 cursor-pointer">
+          <div className="ml-1 mb-1 text-muted font-bold flex">
+            <div className="flex items-center p-2 rounded-md hover:bg-muted cursor-pointer">
               <BsChat className="mr-2" />
               <span className="text-sm">{post.numberOfComments}</span>
             </div>
-            <div className="flex items-center p-2 rounded-md hover:bg-gray-200 cursor-pointer">
+            <div className="flex items-center p-2 rounded-md hover:bg-muted cursor-pointer">
               <IoArrowRedoOutline className="mr-2" />
               <span className="text-sm">Share</span>
             </div>
-            <div className="flex items-center p-2 rounded-md hover:bg-gray-200 cursor-pointer">
+            <div className="flex items-center p-2 rounded-md hover:bg-muted cursor-pointer">
               <IoBookmarkOutline className="mr-2" />
               <span className="text-sm">Save</span>
             </div>
             {userIsCreator && (
-              <div className="flex items-center p-2 rounded-md hover:bg-gray-200 cursor-pointer" onClick={handleDelete}>
+              <div className="flex items-center p-2 rounded-md hover:bg-destructive cursor-pointer" onClick={handleDelete}>
                 {loadingDelete ? (
-                  <svg className="animate-spin h-5 w-5 border-t-2 border-blue-500 rounded-full" viewBox="0 0 24 24"></svg>
+                  <svg className="animate-spin h-5 w-5 border-t-2 border-primary rounded-full" viewBox="0 0 24 24"></svg>
                 ) : (
                   <>
                     <AiOutlineDelete className="mr-2" />
@@ -128,7 +128,7 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
             )}
           </div>
         </div>
-      </Card>
+      </CardContent>
   );
 };
 
