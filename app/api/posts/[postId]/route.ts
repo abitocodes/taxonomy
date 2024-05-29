@@ -1,8 +1,7 @@
-import { getServerSession } from "next-auth"
+import { supabase } from "@/utils/supabase/client"
 import * as z from "zod"
 
-import { authOptions } from "@/lib/auth"
-import { db } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { postPatchSchema } from "@/lib/validations/post"
 
 const routeContextSchema = z.object({
@@ -16,16 +15,13 @@ export async function DELETE(
   context: z.infer<typeof routeContextSchema>
 ) {
   try {
-    // Validate the route params.
     const { params } = routeContextSchema.parse(context)
 
-    // Check if the user has access to this post.
     if (!(await verifyCurrentUserHasAccessToPost(params.postId))) {
       return new Response(null, { status: 403 })
     }
 
-    // Delete the post.
-    await db.post.delete({
+    await prisma.post.delete({
       where: {
         id: params.postId as string,
       },
@@ -46,27 +42,22 @@ export async function PATCH(
   context: z.infer<typeof routeContextSchema>
 ) {
   try {
-    // Validate route params.
     const { params } = routeContextSchema.parse(context)
 
-    // Check if the user has access to this post.
     if (!(await verifyCurrentUserHasAccessToPost(params.postId))) {
       return new Response(null, { status: 403 })
     }
 
-    // Get the request body and validate it.
     const json = await req.json()
     const body = postPatchSchema.parse(json)
 
-    // Update the post.
-    // TODO: Implement sanitization for content.
-    await db.post.update({
+    await prisma.post.update({
       where: {
         id: params.postId,
       },
       data: {
         title: body.title,
-        content: body.content,
+        body: body.content,
       },
     })
 
@@ -81,11 +72,18 @@ export async function PATCH(
 }
 
 async function verifyCurrentUserHasAccessToPost(postId: string) {
-  const session = await getServerSession(authOptions)
-  const count = await db.post.count({
+  const { data, error } = await supabase.auth.getSession()
+  const session = data.session;
+
+  if (error) {
+    console.error("Failed to retrieve session:", error.message)
+    return false
+  }
+
+  const count = await prisma.post.count({
     where: {
       id: postId,
-      authorId: session?.user.id,
+      creatorId: session?.user.id,
     },
   })
 

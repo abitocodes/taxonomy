@@ -8,6 +8,8 @@ import { SUPABASE_ERRORS } from "@/utils/supabase/errors";
 import { CreateUpdateUser } from "@/helpers/CreateUpdateUser";
 import { ModalView } from "@/types/AuthModalState";
 
+import { User } from "@supabase/supabase-js";
+
 import { Session } from "@supabase/supabase-js";
 type LoginProps = {
   toggleView: (view: ModalView) => void;
@@ -43,7 +45,7 @@ const Login: FC<LoginProps> = ({ toggleView }) => {
 
   useEffect(() => {
     if (userCred && 'user' in userCred) {
-      CreateUpdateUser(userCred.user);
+      CreateUpdateUser(userCred.user as User);
     }
   }, [userCred]);
 

@@ -13,7 +13,7 @@ const ActionIcons: FC<ActionIconsProps> = () => {
     <div className="flex items-center flex-grow">
       <div className="hidden md:flex items-center border-r border-gray-200">
         <div className="mr-1.5 ml-1.5 p-1 cursor-pointer rounded hover:bg-gray-200">
-          <BsArrowUpRightCircle className="text-5xl" />
+          <BsArrowUpRightCircle className="text-5xl w-10 h-10" />
         </div>
         <div className="mr-1.5 ml-1.5 p-1 cursor-pointer rounded hover:bg-gray-200">
           <IoFilterCircleOutline className="text-5.5xl" />

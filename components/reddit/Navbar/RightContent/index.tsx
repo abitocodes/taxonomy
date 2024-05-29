@@ -12,7 +12,6 @@ interface RightContentProps {
 }
 
 const RightContent: FC<RightContentProps> = ({ user }) => {
-  console.log("RightContent rendered, user:", user);
   return (
     <>
       <AuthModal />

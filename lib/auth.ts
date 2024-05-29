@@ -1,105 +1,53 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import { NextAuthOptions } from "next-auth"
-import EmailProvider from "next-auth/providers/email"
-import GitHubProvider from "next-auth/providers/github"
-import { Client } from "postmark"
-
+import { createClient } from '@supabase/supabase-js'
 import { env } from "@/env.mjs"
-import { siteConfig } from "@/config/site"
-import { db } from "@/lib/db"
+import { supabase } from '@/utils/supabase/client';
 
-const postmarkClient = new Client(env.POSTMARK_API_TOKEN)
+export async function signUpWithEmail(email: string, password: string) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
+  if (error) throw error;
+  return data;
+}
 
-export const authOptions: NextAuthOptions = {
-  // huh any! I know.
-  // This is a temporary fix for prisma client.
-  // @see https://github.com/prisma/prisma/issues/16117
-  adapter: PrismaAdapter(db as any),
-  session: {
-    strategy: "jwt",
-  },
-  pages: {
-    signIn: "/login",
-  },
-  providers: [
-    GitHubProvider({
-      clientId: env.GITHUB_CLIENT_ID,
-      clientSecret: env.GITHUB_CLIENT_SECRET,
-    }),
-    EmailProvider({
-      from: env.SMTP_FROM,
-      sendVerificationRequest: async ({ identifier, url, provider }) => {
-        const user = await db.user.findUnique({
-          where: {
-            email: identifier,
-          },
-          select: {
-            emailVerified: true,
-          },
-        })
+// 이메일로 로그인 처리
+export async function signInWithEmail(email: string, password: string) {
+  const { data, error } = await await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (error) throw error;
+  return data;
+}
 
-        const templateId = user?.emailVerified
-          ? env.POSTMARK_SIGN_IN_TEMPLATE
-          : env.POSTMARK_ACTIVATION_TEMPLATE
-        if (!templateId) {
-          throw new Error("Missing template id")
-        }
+// Google 공급자를 통한 OAuth 로그인 처리
+export async function signInWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google'
+  })
+  if (error) throw error;
+  return { data };
+}
 
-        const result = await postmarkClient.sendEmailWithTemplate({
-          TemplateId: parseInt(templateId),
-          To: identifier,
-          From: provider.from as string,
-          TemplateModel: {
-            action_url: url,
-            product_name: siteConfig.name,
-          },
-          Headers: [
-            {
-              // Set this to prevent Gmail from threading emails.
-              // See https://stackoverflow.com/questions/23434110/force-emails-not-to-be-grouped-into-conversations/25435722.
-              Name: "X-Entity-Ref-ID",
-              Value: new Date().getTime() + "",
-            },
-          ],
-        })
+// GitHub 공급자를 통한 OAuth 로그인 처리
+export async function signInWithGitHub() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'github'
+  })
+  if (error) throw error;
+  return { data };
+}
 
-        if (result.ErrorCode) {
-          throw new Error(result.Message)
-        }
-      },
-    }),
-  ],
-  callbacks: {
-    async session({ token, session }) {
-      if (token) {
-        session.user.id = token.id
-        session.user.name = token.name
-        session.user.email = token.email
-        session.user.image = token.picture
-      }
+// 세션 검증 및 사용자 정보 가져오기
+export async function getSession() {
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  return data;
+}
 
-      return session
-    },
-    async jwt({ token, user }) {
-      const dbUser = await db.user.findFirst({
-        where: {
-          email: token.email,
-        },
-      })
-
-      if (!dbUser) {
-        if (user) {
-          token.id = user?.id
-        }
-        return token
-      }
-
-      return {
-        id: dbUser.id,
-        name: dbUser.name,
-        email: dbUser.email,
-        picture: dbUser.image,
-      }
-    },
-  },
+// 로그아웃 처리
+export async function signOut() {
+  const { error } = await supabase.auth.signOut();
+  if (error) throw error;
 }

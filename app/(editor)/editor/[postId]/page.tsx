@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation"
 import { Post, User } from "@prisma/client"
 
 import { authOptions } from "@/lib/auth"
-import { db } from "@/lib/db"
+import { db } from "@/lib/prisma"
 import { getCurrentUser } from "@/lib/session"
 import { Editor } from "@/components/editor"
 
