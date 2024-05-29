@@ -12,6 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
         creatorId: userId
       },
+      include: {
+        creator: true,
+        labels: true
+      },
       orderBy: {
         createdAt: 'desc'
       },

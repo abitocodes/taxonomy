@@ -5,7 +5,7 @@ import PostLoader from "@/components/reddit/Loader/PostLoader";
 import { supabase } from "@/utils/supabase/client";
 import usePosts from "@/hooks/usePosts";
 import { Community } from "@/types/CommunityState";
-import { Post } from "@/types/PostState";
+import { Post } from "@prisma/client";
 import PostItem from "./PostItem";
 import { RecoilRoot } from "recoil";
 
@@ -19,10 +19,10 @@ const Posts: FC<PostsProps> = ({ communityData, userId, loadingUser }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const { postStateValue, setPostStateValue, onVote, onDeletePost } = usePosts(communityData!);
+  const { postStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(communityData!);
 
   const onSelectPost = (post: Post, postIdx: number) => {
-    setPostStateValue((prev) => ({
+    setPostsStateValue((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
@@ -31,7 +31,7 @@ const Posts: FC<PostsProps> = ({ communityData, userId, loadingUser }) => {
 
   useEffect(() => {
     if (postStateValue.postsCache[communityData?.id!] && !postStateValue.postUpdateRequired) {
-      setPostStateValue((prev) => ({
+      setPostsStateValue((prev) => ({
         ...prev,
         posts: postStateValue.postsCache[communityData?.id!],
       }));
@@ -52,7 +52,7 @@ const Posts: FC<PostsProps> = ({ communityData, userId, loadingUser }) => {
 
       if (error) throw error;
 
-      setPostStateValue((prev) => ({
+      setPostsStateValue((prev) => ({
         ...prev,
         posts: posts as Post[],
         postsCache: {
@@ -94,7 +94,7 @@ export default Posts;
 
 // useEffect(() => {
 //   if (postStateValue.postsCache[communityData?.id!] && !postStateValue.postUpdateRequired) {
-//     setPostStateValue((prev) => ({
+//     setPostsStateValue((prev) => ({
 //       ...prev,
 //       posts: postStateValue.postsCache[communityData?.id!],
 //     }));

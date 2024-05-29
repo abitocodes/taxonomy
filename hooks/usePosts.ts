@@ -10,15 +10,16 @@ import { communityState } from "@/atoms/communitiesAtom";
 import { postState } from "@/atoms/postsAtom";
 import { supabase } from "@/utils/supabase/client";
 import { Community } from "@/types/CommunityState";
-import { Post, PostVote } from "@/types/PostState";
+import { Post, PostVote } from "@prisma/client";
 import { RecoilRoot } from 'recoil';
 import { AppProps } from 'next/app';
 import { Session } from "@supabase/supabase-js";
+import { prisma } from "@/prisma/client";
 
 const usePosts = (communityData?: Community) => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
-  const [postStateValue, setPostStateValue] = useRecoilState(postState);
+  const [postStateValue, setPostsStateValue] = useRecoilState(postState);
   const setAuthModalState = useSetRecoilState(authModalState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -26,7 +27,7 @@ const usePosts = (communityData?: Community) => {
   const communityStateValue = useRecoilValue(communityState);
 
   const onSelectPost = (post: Post, postIdx: number) => {
-    setPostStateValue((prev) => ({
+    setPostsStateValue((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
@@ -56,15 +57,14 @@ const usePosts = (communityData?: Community) => {
       let updatedPostVotes = [...postStateValue.postVotes];
 
       if (!existingVote) {
-        const { data: newVote, error } = await supabase
-          .from('postVotes')
-          .insert([{
+        const newVote = await prisma.postVote.create({
+          data: {
             postId: post.id,
             communityId,
             voteValue: vote,
             userId: user.id
-          }])
-          .single();
+          }
+        });
 
         if (error) throw error;
 
@@ -82,11 +82,10 @@ const usePosts = (communityData?: Community) => {
         } else {
           voteChange = 2 * vote;
           updatedPost.voteStatus = voteStatus + 2 * vote;
-          const { data: updatedVote, error } = await supabase
-            .from('postVotes')
-            .update({ voteValue: vote })
-            .match({ id: existingVote.id })
-            .single();
+          const updatedVote = await prisma.postVote.update({
+            where: { id: existingVote.id },
+            data: { voteValue: vote }
+          });
 
           if (error) throw error;
 
@@ -117,12 +116,12 @@ const usePosts = (communityData?: Community) => {
         };
       }
 
-      setPostStateValue(updatedState);
+      setPostsStateValue(updatedState);
 
-      await supabase
-        .from('posts')
-        .update({ voteStatus: voteStatus + voteChange })
-        .match({ id: post.id });
+      await prisma.post.update({
+        where: { id: post.id },
+        data: { voteStatus: voteStatus + voteChange }
+      });
     } catch (error) {
       console.error("onVote error", error);
     }
@@ -137,14 +136,13 @@ const usePosts = (communityData?: Community) => {
         .remove([`media/${post.id}`]);
     }
 
-    const { error } = await supabase
-      .from('posts')
-      .delete()
-      .match({ id: post.id });
+    await prisma.post.delete({
+      where: { id: post.id }
+    });
 
     if (error) throw error;
 
-    setPostStateValue((prev) => ({
+    setPostsStateValue((prev) => ({
       ...prev,
       posts: prev.posts.filter((item) => item.id !== post.id),
       postsCache: {
@@ -162,15 +160,16 @@ const usePosts = (communityData?: Community) => {
 
 const getCommunityPostVotes = async (communityId: string) => {
   try {
-    const { data: postVotes, error } = await supabase
-      .from('postVotes')
-      .select('*')
-      .eq('communityId', communityId)
-      .eq('userId', user?.id);
+    const postVotes = await prisma.postVote.findMany({
+      where: {
+        communityId: communityId,
+        userId: user?.id
+      }
+    });
 
     if (error) throw error;
 
-    setPostStateValue((prev) => ({
+    setPostsStateValue((prev) => ({
       ...prev,
       postVotes: postVotes as PostVote[],
     }));
@@ -186,7 +185,7 @@ useEffect(() => {
 
 useEffect(() => {
   if (!user?.id) {
-    setPostStateValue((prev) => ({
+    setPostsStateValue((prev) => ({
       ...prev,
       postVotes: [],
     }));
@@ -195,7 +194,7 @@ useEffect(() => {
 
 return {
   postStateValue,
-  setPostStateValue,
+  setPostsStateValue,
   onSelectPost,
   onDeletePost,
   loading,

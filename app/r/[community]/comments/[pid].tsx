@@ -11,7 +11,7 @@ import Comments from "@/features/Post/Comments";
 import PostItem from "@/features/Post/PostItem";
 import useCommunityData from "@/hooks/useCommunityData";
 import usePosts from "@/hooks/usePosts";
-import { Post } from "@/types/PostState";
+import { Post } from "@prisma/client";
 import { useState } from "react";
 import { Session } from "@supabase/supabase-js";
 
@@ -24,7 +24,7 @@ const PostPage: FC<PostPageProps> = () => {
   const { community, pid } = router.query;
   const { communityStateValue } = useCommunityData();
 
-  const { postStateValue, setPostStateValue, onDeletePost, loading, setLoading, onVote } = usePosts(communityStateValue.currentCommunity);
+  const { postStateValue, setPostsStateValue, onDeletePost, loading, setLoading, onVote } = usePosts(communityStateValue.currentCommunity);
 
   const fetchPost = async () => {
     setLoading(true);
@@ -37,7 +37,7 @@ const PostPage: FC<PostPageProps> = () => {
 
       if (error) throw error;
 
-      setPostStateValue((prev) => ({
+      setPostsStateValue((prev) => ({
         ...prev,
         selectedPost: { id: data.id, ...data } as Post,
       }));

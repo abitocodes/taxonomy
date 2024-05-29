@@ -156,7 +156,7 @@ export default async function PostPage({ params }: PostPageProps) {
           priority
         />
       )}
-      <Mdx code={post.body.code} />
+      <Mdx code={post.description.code} />
       <hr className="mt-12" />
       <div className="flex justify-center py-6 lg:py-10">
         <Link href="/blog" className={cn(buttonVariants({ variant: "ghost" }))}>

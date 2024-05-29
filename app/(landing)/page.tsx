@@ -12,18 +12,20 @@ import Premium from "@/features/Community/Premium";
 import Recommendations from "@/features/Community/Recommendations";
 import PostItem from "@/features/Post/PostItem";
 import usePosts from "@/hooks/usePosts";
-import { Post, PostVote } from "@/types/PostState";
+import { PostVote } from "@prisma/client";
 import { useUser } from "@/hooks/useUser";
 import { ReactElement } from "react";
 import { AppProps } from 'next/app';
-import { PostState } from "@/types/PostState";
 import { Session } from "@supabase/supabase-js";
 import { useAuthState } from "@/hooks/useAuthState";
+import { Container } from "@radix-ui/themes";
+
+import { PostWith } from "@/types/Post";
 
 export default function Home(): ReactElement {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
-  const { postStateValue, setPostStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
+  const { postStateValue, setPostsStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
   const communityStateValue = useRecoilValue(communityState);
 
   const getUserHomePosts = async () => {
@@ -37,10 +39,10 @@ export default function Home(): ReactElement {
         body: JSON.stringify({ userId: user?.id, communityIds: communityStateValue.mySnippets.map(snippet => snippet.communityId) })
       });
       const posts = await response.json();
-      setPostStateValue((prev) => {
+      setPostsStateValue((prev) => {
         const newState = {
           ...prev,
-          posts: posts as Post[],
+          posts: posts as PostWith[],
         };
         console.log("Updated postStateValue", newState);
         return newState;
@@ -58,10 +60,10 @@ export default function Home(): ReactElement {
       const response = await fetch('/api/getNoUserHomePosts');
       const data = await response.json();
       const posts = data.posts
-      setPostStateValue((prev) => {
+      setPostsStateValue((prev) => {
         const newState = {
           ...prev,
-          posts: posts as Post[],
+          posts: posts as PostWith[],
         };
         return newState;
       });
@@ -73,24 +75,19 @@ export default function Home(): ReactElement {
   };
 
   const getUserPostVotes = async () => {
-    if (!postStateValue) return;
+    console.log("getUserPostVotes called");
+    if (!postStateValue) {
+      console.log("postStateValue is undefined");
+      return;
+    }
     const postIds = postStateValue.posts.map((post) => post.id);
     try {
-      const response = await fetch('/api/getUserPostVotes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userId: user?.id, postIds: postIds })
-      });
-      const postVotes = await response.json();
-      setPostStateValue((prev) => ({
+      const response = await fetch(`/api/getUserPostVotes?postIds=${postIds}`);
+      const data = await response.json();
+      const postVotes = data.postVotes;
+      setPostsStateValue((prev) => ({
         ...prev,
         postVotes: postVotes as PostVote[],
-        selectedPost: prev?.selectedPost ?? null,
-        posts: prev?.posts ?? [], // 'undefined' 대신 빈 배열 사용
-        postsCache: prev?.postsCache ?? {},
-        postUpdateRequired: prev?.postUpdateRequired ?? false
       }));
     } catch (error: any) {
       console.error("Error fetching user post votes:", error.message);
@@ -116,55 +113,46 @@ export default function Home(): ReactElement {
   useEffect(() => {
     if (!user?.id || !postStateValue?.posts.length) return;
     getUserPostVotes();
-  }, [postStateValue?.posts, user?.id]);
-
-  useEffect(() => {
-    if (!user?.id || !postStateValue?.posts.length) return;
-    getUserPostVotes();
   
     return () => {
-      setPostStateValue((prev) => ({
+      setPostsStateValue((prev) => ({
         ...prev,
         postVotes: [],
-        selectedPost: prev?.selectedPost ?? null,
-        posts: prev?.posts ?? [], // 'undefined' 대신 빈 배열 사용
-        postsCache: prev?.postsCache ?? {},
-        postUpdateRequired: prev?.postUpdateRequired ?? false
       }));
     };
   }, [postStateValue?.posts, user?.id]);
 
   return (
     <PageContentLayout>
-      <>
+      <Container>
         <CreatePostLink />
-        {loading ? (
-          <div>
-          <PostLoader />
-          </div>
-        ) : (
-          <div>
-          {(postStateValue?.posts || []).map((post: Post, index) => (
-            <PostItem
-              key={post.id}
-              post={post}
-              postIdx={index}
-              onVote={onVote}
-              onDeletePost={onDeletePost}
-              userVoteValue={postStateValue?.postVotes.find((item) => item.postId === post.id)?.voteValue}
-              userIsCreator={user?.id === post.creatorId}
-              onSelectPost={onSelectPost}
-              homePage
-            />
-          ))}
+      {loading ? (
+        <div>
+        <PostLoader />
         </div>
-        )}
-      </>
-      <div className="sticky top-14 space-y-5">
+      ) : (
+        <div className="space-y-6">
+        {(postStateValue?.posts || []).map((post: PostWith, index: number) => (
+          <PostItem
+            key={index}
+            post={post}
+            postIdx={index}
+            onVote={onVote}
+            onDeletePost={onDeletePost}
+            userVoteValue={postStateValue?.postVotes.find((item) => item.postId === post.id)?.voteValue}
+            userIsCreator={user?.id === post.creatorId}
+            onSelectPost={onSelectPost}
+            homePage
+          />
+        ))}
+      </div>
+      )}
+      </Container>
+      <Container className="sticky top-14 space-y-5">
         <Recommendations />
         <Premium />
         <PersonalHome />
-      </div>
+      </Container>
     </PageContentLayout>
   );
 };

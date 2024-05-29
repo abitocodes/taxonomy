@@ -1,19 +1,27 @@
 import { prisma } from "@/prisma/client";
-import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log("app/api/getUserPostVotes/route.ts req.body", req.body);
-  const { userId, postIds } = req.body;
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  console.log("app/api/getUserPostVotes/route.ts searchParams", searchParams);
+  const postIds = searchParams.get('postIds')?.split(',') || [];
+  console.log("app/api/getUserPostVotes/route.ts postIds", postIds);
+
   try {
     const postVotes = await prisma.postVote.findMany({
       where: {
-        postId: { in: postIds },
-        userId: userId
+        postId: { in: postIds }
       }
     });
     console.log("app/api/getUserPostVotes/route.ts getUserPostVotes", postVotes);
-    res.status(200).json(postVotes);
+    return Response.json({
+      statusCode: 200,
+      message: '200 OK',
+      postVotes: postVotes,
+  });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    return Response.json({
+      statusCode: 500,
+      message: 'An error occurred while retrieving posts'
+  });
   }
 }

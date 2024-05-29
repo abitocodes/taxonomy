@@ -4,8 +4,8 @@ generator client {
 
 datasource db {
   provider  = "postgresql"
-  url       = "postgres://postgres.zinpvmxkmnvxkrnxyudv:!Otiba13245678@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
-  directUrl = "postgres://postgres.zinpvmxkmnvxkrnxyudv:!Otiba13245678@aws-0-ap-southeast-1.pooler.supabase.com:5432"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Account {
@@ -42,11 +42,11 @@ model Session {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
+  nickName      String 
+  handler       String    @unique
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  authorDisplayText String?  // 유지
   createdAt     DateTime  @default(now())
   editedAt      DateTime  @default(now())
 
@@ -74,23 +74,35 @@ model VerificationToken {
   @@map(name: "verification_tokens")
 }
 
+model Label {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String   // 라벨 색상을 나타내는 필드
+  createdAt DateTime @default(now())
+
+  posts     Post[]   // Post 모델과의 관계를 나타내는 필드
+
+  @@map(name: "labels")
+}
+
 model Post {
   id                String     @id @default(cuid())
   title             String
-  body              String?    // 선택적 필드로 변경
-  link              String?    // 선택적 필드로 변경
+  description       String
+  link              String?    
   numberOfComments  Int        @default(0)
-  voteStatus        Int        // 필수 필드로 변경
+  voteStatus        Int        
   createdAt         DateTime   @default(now())
   editedAt          DateTime   @default(now())
   communityId       String
   communityImageURL String?
-  creatorId         String     // 필수 필드로 변경
-  mediaType         String?    // 이미 선택적 필드
+  creatorId         String
+  mediaType         String?
   mediaURL          String?
-  postIdx           Int?       // 이미 선택적 필드
+  postIdx           Int?
+  labels            Label[]
 
-  creator           User       @relation(fields: [creatorId], references: [id]) // 필수 관계로 변경
+  creator           User       @relation(fields: [creatorId], references: [id])
   comments          Comment[]
   votes             PostVote[]
   currentUserVotes  PostVote[] @relation("currentUserVotes")
@@ -125,6 +137,7 @@ model Community {
   imageURL        String?
 
   snippets        CommunitySnippet[]
+  postVotes       PostVote[]
 
   @@map(name: "communities")
 }
@@ -136,20 +149,22 @@ model CommunitySnippet {
   isModerator Boolean? @default(false)
   imageURL    String?
   community   Community @relation(fields: [communityId], references: [id])
-  user        User?     @relation(fields: [userId], references: [id]) // User 모델과의 관계 추가
+  user        User?     @relation(fields: [userId], references: [id])
 
   @@map(name: "communities_snippets")
 }
 
 model PostVote {
-  id        String   @id @default(cuid())
-  postId    String
-  voteValue Int
-  userId    String
+  id          String   @id @default(cuid())
+  postId      String
+  voteValue   Int
+  userId      String
+  communityId String
 
-  post Post @relation(fields: [postId], references: [id])
-  user User @relation(fields: [userId], references: [id])
+  post    Post    @relation(fields: [postId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
   currentUserPost Post? @relation("currentUserVotes", fields: [postId], references: [id], map: "unique_post_votes_postId_fkey")
+  community Community @relation(fields: [communityId], references: [id]) 
 
   @@map(name: "post_votes")
 }

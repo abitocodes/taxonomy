@@ -1,4 +1,4 @@
-import { Post, PostVote } from "@/types/PostState";
+import { Post, PostVote } from "@prisma/client";
 import { getAuthorDisplayText } from "@/prisma/functions/getAuthorDisplayText";
 
 export async function mapPrismaPostToStatePost(prismaPost: Post): Promise<Post> {
@@ -9,7 +9,7 @@ export async function mapPrismaPostToStatePost(prismaPost: Post): Promise<Post> 
     createdAt: prismaPost.createdAt,
     editedAt: prismaPost.editedAt,
     communityId: prismaPost.communityId || "defaultCommunityId",
-    authorDisplayText: prismaPost.displayName || "defaultauthorDisplayText",
+    nickName: prismaPost.displayName || "defaultnickName",
     creatorId: prismaPost.creatorId,
     voteStatus: prismaPost.voteStatus,
     link: prismaPost.link || '',  // 선택적 필드, 기본값 ''

@@ -5,6 +5,10 @@ export async function GET(req: Request, res: Response) {
   try {
     const posts = await prisma.post.findMany({
       orderBy: { voteStatus: 'desc' },
+      include: {
+        creator: true,
+        labels: true
+      },
       take: 10
     });
     console.log("app/api/getNoUserHomePosts/route.ts getNoUserHomePosts", posts);

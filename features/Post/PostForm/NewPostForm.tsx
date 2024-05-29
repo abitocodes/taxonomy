@@ -72,7 +72,7 @@ const NewPostForm: FC<NewPostFormProps> = ({ communityId, communityImageURL, use
         communityId,
         communityImageURL: communityImageURL || "",
         creatorId: user.uid,
-        authorDisplayText: user.email!.split("@")[0],
+        nickName: user.email!.split("@")[0],
         title: titleInput,
         body: selectedTab === "Post" ? textInputs : "",
         link: selectedTab === "Link" ? linkText : "",

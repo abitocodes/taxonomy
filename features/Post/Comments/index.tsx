@@ -9,7 +9,7 @@ import { authModalState } from "../@/atoms/authModalAtom";
 import { postState } from "../@/atoms/postsAtom";
 import { firestore } from "../../../utils/supabase/client";
 import { Comment } from "../../../types/Comment";
-import { Post } from "../../../types/PostState";
+import { Post } from "../../../types/PostsState";
 import CommentItem from "./CommentItem";
 import CommentInput from "./Input";
 
@@ -26,7 +26,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, community }) => {
   const [commentCreateLoading, setCommentCreateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState("");
   const setAuthModalState = useSetRecoilState(authModalState);
-  const setPostState = useSetRecoilState(postState);
+  const setPostsState = useSetRecoilState(postState);
 
   const onCreateComment = async (comment: string) => {
     if (!user) {
@@ -77,7 +77,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, community }) => {
       ]);
 
       // Fetch posts again to update number of comments
-      setPostState((prev) => ({
+      setPostsState((prev) => ({
         ...prev,
         selectedPost: {
           ...prev.selectedPost,
@@ -106,7 +106,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, community }) => {
 
         await batch.commit();
 
-        setPostState((prev) => ({
+        setPostsState((prev) => ({
           ...prev,
           selectedPost: {
             ...prev.selectedPost,
@@ -123,7 +123,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, community }) => {
       }
       setDeleteLoading("");
     },
-    [setComments, setPostState]
+    [setComments, setPostsState]
   );
 
   const getPostComments = async () => {

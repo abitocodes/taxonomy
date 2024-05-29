@@ -1,8 +1,8 @@
 import { atom } from "recoil";
 
-import { PostState } from "../types/PostState";
+import { PostsState } from "../types/PostsState";
 
-export const defaultPostState: PostState = {
+export const defaultPostsState: PostsState = {
   selectedPost: null,
   posts: [],
   postVotes: [],
@@ -10,7 +10,7 @@ export const defaultPostState: PostState = {
   postUpdateRequired: true,
 };
 
-export const postState = atom<PostState>({
+export const postState = atom<PostsState>({
   key: "postState",
-  default: defaultPostState,
+  default: defaultPostsState,
 });
