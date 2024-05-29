@@ -14,26 +14,32 @@ import ResetPassword from "./ResetPassword";
 import { Session } from "@supabase/supabase-js";
 import { ModalView } from "@/types/AuthModalState";
 
-
 type AuthModalProps = {};
 
 const AuthModal: FC<AuthModalProps> = () => {
   const [modalState, setModalState] = useRecoilState(authModalState);
   const [session, setSession] = useState<Session | null>(null);
-  // const handleClose = () =>
-  //   setModalState((prev) => ({
-  //     ...prev,
-  //     open: false,
-  //   }));
+
   const handleClose = () => {
-    console.log("handleClose called, current state:", modalState);
     setModalState(prev => ({ ...prev, open: false }));
+  };
+
+  const toggleView = (view: ModalView) => {
+    setModalState(prev => ({ ...prev, view }));
   };
 
   const currentUser = useRecoilValue(userState);
   const authState = useAuthState(session);
   const user = authState.user
   const error = authState.error;
+
+  useEffect(() => {
+    if (currentUser) handleClose();
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (user) handleClose();
+  }, [user]);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -48,51 +54,28 @@ const AuthModal: FC<AuthModalProps> = () => {
     fetchSession();
   }, []);
 
-  useEffect(() => {
-    if (currentUser) handleClose();
-  }, [currentUser]);
-
-  // const toggleView = (view: string) => {
-  //   setModalState({
-  //     ...modalState,
-  //     view: view as typeof modalState.view,
-  //   });
-  //   console.log("hi modalState", modalState)
-  // };
-
-  const toggleView = (view: ModalView) => {
-    setModalState(prev => ({ ...prev, view }));
-  };
-
-  useEffect(() => {
-    if (user) handleClose();
-  }, [user]);
-
-  console.log("AuthModal rendered, modalState:", modalState);
-
   return (
     <Dialog 
     open={modalState.open} 
     onOpenChange={(open) => {
-      console.log("Dialog onOpenChange called, open:", open);
       setModalState(prev => ({ ...prev, open }));
     }}
   >
-    <DialogContent className="overflow-hidden p-0">
-      <div className="flex flex-col items-center">
+    <DialogContent className="overflow-hidden p-0 ">
+      <div className="flex flex-col mt-4 items-center text-2xl font-semibold tracking-tight space-y-2">
         {modalState.view === "login" && <div>Login</div>}
         {modalState.view === "signup" && <div>Sign Up</div>}
         {modalState.view === "resetPassword" && <div>Reset Password</div>}
       </div>
-      <button onClick={handleClose} className="absolute top-0 right-0 p-2">Close</button>
+      {/* <button onClick={handleClose} className="absolute top-0 right-0 p-2">Close</button> */}
       
       <div className="flex flex-col items-center justify-center p-6">
         <div className="flex flex-col items-center justify-center w-3/4">
           {modalState.view === "login" || modalState.view === "signup" ? (
             <>
-              <OAuthButtons />
-              <div>OR</div>
               <AuthInputs toggleView={toggleView} />
+              <div>OR</div>
+              <OAuthButtons />
             </>
           ) : (
             <ResetPassword toggleView={toggleView} />

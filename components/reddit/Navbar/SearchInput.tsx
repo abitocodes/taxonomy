@@ -1,32 +1,40 @@
-import { FC } from "react";
+"use client"
+
+import * as React from "react"
+
+import { cn } from "@/lib/utils"
+import { Input } from "@/components/ui/input"
+import { toast } from "@/components/ui/use-toast"
 import { User } from "@supabase/supabase-js";
-import * as Form from '@radix-ui/react-form';
-import { SearchIcon } from "lucide-react";
 
-type SearchInputProps = {
+interface SearchInputProps extends React.HTMLAttributes<HTMLFormElement> {
   user: User | null;
-};
+}
 
-const SearchInput: FC<SearchInputProps> = ({ user }) => {
+export default function SearchInput({ className, ...props }: SearchInputProps) {
+  function onSubmit(event: React.SyntheticEvent) {
+    event.preventDefault()
+
+    return toast({
+      title: "Not implemented",
+      description: "We're still working on the search.",
+    })
+  }
+
   return (
-    <div className={`flex flex-grow ${user ? "max-w-full" : "max-w-[600px]"} mr-2 items-center`}>
-      <Form.Root>
-        <Form.Field name="search" className="flex items-center">
-          <Form.Label className="sr-only">Search Reddit</Form.Label>
-          <Form.Control asChild>
-            <input
-              className="pl-10 pr-3 py-1.5 border border-gray-300 focus:border-blue-500 focus:outline-none rounded-md"
-              placeholder="Search Reddit"
-              type="text"
-            />
-          </Form.Control>
-          <div className="absolute ml-2 pointer-events-none text-gray-400">
-            <SearchIcon/>
-          </div>
-        </Form.Field>
-      </Form.Root>
-    </div>
-  );
-};
-
-export default SearchInput;
+    <form
+      onSubmit={onSubmit}
+      className={cn("relative w-full", className)}
+      {...props}
+    >
+      <Input
+        type="search"
+        placeholder="Search documentation..."
+        className="h-8 w-full sm:w-64 sm:pr-12"
+      />
+      <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 sm:flex">
+        <span className="text-xs">⌘</span>K
+      </kbd>
+    </form>
+  )
+}

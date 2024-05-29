@@ -11,7 +11,7 @@ interface AppLayoutProps {
   export default function LandingLayout({ children }: AppLayoutProps) {
   return (
     <>
-      {/* <SiteHeader /> */}
+      <SiteHeader />
       {/* <Navbar/> */}
       <main className="flex-1">
         {children}

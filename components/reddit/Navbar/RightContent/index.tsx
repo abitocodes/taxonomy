@@ -17,8 +17,8 @@ const RightContent: FC<RightContentProps> = ({ user }) => {
     <>
       <AuthModal />
       <div className="flex justify-between items-center">
-        {user ? <Icons /> : <AuthButtons />}
-        <MenuWrapper />
+        {user ? <><Icons /><MenuWrapper /></> : <AuthButtons />}
+        
       </div>
     </>
   );

@@ -5,9 +5,13 @@ import { useSignInWithGoogle } from "@/hooks/useSignInWithGoogle";
 
 import { CreateUpdateUser } from "@/helpers/CreateUpdateUser";
 import Image from "next/image";
+import { Spinner } from "@radix-ui/themes";
 
 type OAuthButtonsProps = {};
 import { Session } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
+import { GitHubLogoIcon } from "@radix-ui/react-icons";
+import { CgGoogle } from "react-icons/cg";
 
 const OAuthButtons: FC<OAuthButtonsProps> = () => {
   const [session, setSession] = useState<Session | null>(null);
@@ -20,16 +24,28 @@ const OAuthButtons: FC<OAuthButtonsProps> = () => {
   }, [userCred]);
 
   return (
-    <div className="flex flex-col mb-4 w-full">
-      <button
-        className={`oauth mb-2 ${loading ? "loading" : ""}`}
+    <div className="space-x-2">
+      <Button
+        variant="outline"
         onClick={() => signInWithGoogle()}
         disabled={loading}
-      >
-        <Image src="/images/googlelogo.png" width={20} height={20} className="mr-4" alt="Continue with Google" />
-        Continue with Google
-      </button>
-      <button className="oauth">Some Other Provider</button>
+        >
+          {loading ? (
+            <Spinner className="mr-2 animate-spin" />
+          ) : (
+            <CgGoogle className="mr-2" />
+          )}{" "}
+            {/* Google */}
+      </Button>
+
+      <Button variant="outline" type="button" disabled={loading}>
+        {loading ? (
+          <Spinner className="mr-2 h-4 w-4 animate-spin" />
+        ) : (
+          <GitHubLogoIcon className="mr-2 h-4 w-4" />
+        )}{" "}
+        {/* GitHub */}
+      </Button>
       {error && (
         <p className="text-center text-sm text-red-500 mt-2">
           {error}

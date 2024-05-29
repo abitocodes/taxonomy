@@ -11,6 +11,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import RecoilRootWrapper from "@/components/RecoilWrapper";
 import Navbar from "@/components/reddit/Navbar"
 import DialogWrapper from "@/components/reddit/Dialog/DialogWrapper"
+import BgRisingStars from "@/components/BgRisingStars"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -86,11 +87,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <RecoilRootWrapper>
+          <BgRisingStars /> 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <Navbar/>  
               {children}
               <Analytics />
               <Toaster />
+
               <TailwindIndicator />
           </ThemeProvider>
         </RecoilRootWrapper>

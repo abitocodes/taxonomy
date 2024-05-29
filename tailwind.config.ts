@@ -18,6 +18,12 @@ const config = {
       },
     },
     extend: {
+      backgroundImage: {
+        'dither': 'linear-gradient(to bottom, hsl(var(--background)), transparent)',
+        'dither-0': 'linear-gradient(to bottom, transparent, hsl(var(--background)))',
+        'dither-1': 'linear-gradient(to bottom, transparent, #f2f2f2)',
+        'player': 'linear-gradient(to bottom, #f2f2f2, #f2f2f2)',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

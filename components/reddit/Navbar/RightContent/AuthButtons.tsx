@@ -12,19 +12,21 @@ const AuthButtons: FC<AuthButtonsProps> = () => {
 
   return (
     <>
+      {/* <div className="flex items-center space-x-4"> */}
       <Button
-        className="border border-gray-300 text-gray-700 py-1 hidden sm:flex w-18 md:w-28 mr-2"
+        variant="ghost"
         onClick={() => setAuthModalState({ open: true, view: "login" })}
       >
         Log In
       </Button>
       <Button
-        className="bg-blue-500 text-white py-1 hidden sm:flex w-18 md:w-28 mr-2"
         onClick={() => setAuthModalState({ open: true, view: "signup" })}
       >
         Sign Up
       </Button>
+      {/* </div> */}
     </>
   );
 };
 export default AuthButtons;
+
