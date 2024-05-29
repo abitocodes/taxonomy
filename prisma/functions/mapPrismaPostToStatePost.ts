@@ -9,7 +9,7 @@ export async function mapPrismaPostToStatePost(prismaPost: Post): Promise<Post> 
     createdAt: prismaPost.createdAt,
     editedAt: prismaPost.editedAt,
     communityId: prismaPost.communityId || "defaultCommunityId",
-    authorDisplayText: prismaPost.authorDisplayText || "defaultauthorDisplayText",
+    authorDisplayText: prismaPost.displayName || "defaultauthorDisplayText",
     creatorId: prismaPost.creatorId,
     voteStatus: prismaPost.voteStatus,
     link: prismaPost.link || '',  // 선택적 필드, 기본값 ''

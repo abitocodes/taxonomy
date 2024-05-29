@@ -8,9 +8,11 @@ import { communityState, defaultCommunity } from "@/atoms/communitiesAtom";
 import { getMySnippets } from "@/helpers/supabase";
 import { Community, CommunitySnippet } from "@/types/CommunityState";
 import { prisma } from "@/prisma/client";
+import { Session } from "@supabase/supabase-js";
 
 const useCommunityData = (ssrCommunityData?: boolean) => {
-  const { user, loading: authLoading, error: authError } = useAuthState();
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: authLoading, error: authError } = useAuthState(session);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [communityStateValue, setCommunityStateValue] = useRecoilState(communityState);

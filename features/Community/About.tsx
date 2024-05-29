@@ -10,8 +10,9 @@ import moment from "moment";
 import Link from "next/link";
 
 import { communityState } from "@/atoms/communitiesAtom";
-import { supabase } from "../../utils/supabase/client";
-import { Community } from "../../types/CommunityState";
+import { supabase } from "@/utils/supabase/client";
+import { Community } from "@/types/CommunityState";
+import { Session } from "@supabase/supabase-js";
 
 type AboutProps = {
   communityData: Community;
@@ -21,7 +22,8 @@ type AboutProps = {
 };
 
 const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => {
-  const { user, loading: authLoading, error: authError } = useAuthState();
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: authLoading, error: authError } = useAuthState(session);
   const searchParams = useSearchParams()
   const selectFileRef = useRef<HTMLInputElement>(null);
   const setCommunityStateValue = useSetRecoilState(communityState);

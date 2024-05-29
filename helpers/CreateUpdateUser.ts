@@ -1,7 +1,7 @@
-import { User } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { User } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
-import { firestore } from "../firebase/clientApp";
+import { supabase } from "@/utils/supabase/client";
 
 // ignore specific user properties
 const replacer = (key: string, value: any) => {
@@ -12,6 +12,10 @@ const replacer = (key: string, value: any) => {
 };
 
 export const CreateUpdateUser = async (user: User) => {
-  const userDocRef = doc(firestore, "users", user.uid);
-  await setDoc(userDocRef, JSON.parse(JSON.stringify(user, replacer)));
+  const userData = JSON.parse(JSON.stringify(user, replacer));
+  const { data, error } = await supabase
+    .from('users')
+    .upsert({ id: user.id, ...userData }, { onConflict: 'id' });
+
+  if (error) throw error;
 };

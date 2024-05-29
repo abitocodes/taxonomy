@@ -1,9 +1,22 @@
 import { FC } from "react";
 import { MdOutlineLogin } from "react-icons/md";
+// import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
 
-import { Flex, Icon, MenuItem } from "@chakra-ui/react";
-
-import { AuthModalState } from "../../../../types/AuthModalState";
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { AuthModalState } from "@/types/AuthModalState";
 
 type NoUserListProps = {
   setModalState: (value: AuthModalState) => void;
@@ -12,12 +25,12 @@ type NoUserListProps = {
 const NoUserList: FC<NoUserListProps> = ({ setModalState }) => {
   return (
     <>
-      <MenuItem fontSize="10pt" fontWeight={700} _hover={{ bg: "blue.500", color: "white" }} onClick={() => setModalState({ open: true, view: "login" })}>
-        <Flex alignItems="center">
-          <Icon fontSize={20} mr={2} as={MdOutlineLogin} />
+      <DropdownMenuItem className="menuItem" onClick={() => setModalState({ open: true, view: "login" })}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <MdOutlineLogin style={{ fontSize: '20px', marginRight: '8px' }} />
           Log In / Sign Up
-        </Flex>
-      </MenuItem>
+        </div>
+      </DropdownMenuItem>
     </>
   );
 };

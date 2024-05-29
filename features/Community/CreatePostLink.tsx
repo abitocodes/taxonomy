@@ -12,6 +12,7 @@ type CreatePostProps = {};
 
 const CreatePostLink: FC<CreatePostProps> = () => {
   const { onClick } = useCreatePost();
+  
     return (
       <Card className="flex justify-evenly items-center h-14 rounded-md border border-gray-300 p-2 mb-4">
         <FaReddit className="text-gray-300 text-9xl mr-4" />

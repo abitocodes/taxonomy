@@ -1,5 +1,6 @@
 "use client"
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { communityState } from "@/atoms/communitiesAtom";
@@ -12,105 +13,77 @@ import Recommendations from "@/features/Community/Recommendations";
 import PostItem from "@/features/Post/PostItem";
 import usePosts from "@/hooks/usePosts";
 import { Post, PostVote } from "@/types/PostState";
-import { prisma } from "@/prisma/client";
 import { useUser } from "@/hooks/useUser";
 import { ReactElement } from "react";
 import { AppProps } from 'next/app';
 import { PostState } from "@/types/PostState";
+import { Session } from "@supabase/supabase-js";
+import { useAuthState } from "@/hooks/useAuthState";
 
 export default function Home(): ReactElement {
-  const { user, loadingUser } = useUser();
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { postStateValue, setPostStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
   const communityStateValue = useRecoilValue(communityState);
-  // const { postStateValue, setPostStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
-  const [postStateValue, setPostStateValue] = useState<PostState | undefined>(undefined);
-  const [onVote, setOnVote] = useState<(event: React.MouseEvent<SVGElement, MouseEvent>, post: Post, vote: number, communityId: string, postIdx?: number) => void>(() => {});
-  const [onDeletePost, setOnDeletePost] = useState<(post: Post) => Promise<boolean>>(async () => true);
-  const [onSelectPost, setOnSelectPost] = useState<(value: Post, postIdx: number) => void>();
-
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const initPosts = async () => {
-      const { postStateValue, onVote, onSelectPost, onDeletePost, loading } = usePosts();
-      setPostStateValue(postStateValue);
-      setOnVote(onVote);
-      setOnSelectPost(onSelectPost);
-      setOnDeletePost(await onDeletePost);
-      setLoading(loading);
-    };
-  
-    initPosts();
-  }, []);
 
   const getUserHomePosts = async () => {
     setLoading(true);
     try {
-      let whereClause = {};
-  
-      if (communityStateValue.mySnippets.length) {
-        const myCommunityIds = communityStateValue.mySnippets.map((snippet) => snippet.communityId);
-        whereClause = {
-          communityId: {
-            in: myCommunityIds
-          }
-        };
-      }
-  
-      const posts = await prisma.post.findMany({
-        where: whereClause,
-        orderBy: {
-          createdAt: 'desc'
+      const response = await fetch('/api/getUserHomePosts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
         },
-        take: 10
+        body: JSON.stringify({ userId: user?.id, communityIds: communityStateValue.mySnippets.map(snippet => snippet.communityId) })
       });
-  
-      setPostStateValue((prev) => ({
-        ...prev,
-        posts: posts as Post[],
-        selectedPost: prev?.selectedPost ?? null, // null이나 기존 값 사용
-        postVotes: prev?.postVotes ?? [],
-        postsCache: prev?.postsCache ?? {},
-        postUpdateRequired: prev?.postUpdateRequired ?? false
-      }));
+      const posts = await response.json();
+      setPostStateValue((prev) => {
+        const newState = {
+          ...prev,
+          posts: posts as Post[],
+        };
+        console.log("Updated postStateValue", newState);
+        return newState;
+      });
     } catch (error: any) {
-      console.error("getUserHomePosts error", error.message);
+      console.error("getNoUserHomePosts error", error.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
-
+  
   const getNoUserHomePosts = async () => {
     setLoading(true);
     try {
-      const posts = await prisma.post.findMany({
-        orderBy: { voteStatus: 'desc' },
-        take: 10
+      const response = await fetch('/api/getNoUserHomePosts');
+      const data = await response.json();
+      const posts = data.posts
+      setPostStateValue((prev) => {
+        const newState = {
+          ...prev,
+          posts: posts as Post[],
+        };
+        return newState;
       });
-
-      setPostStateValue((prev) => ({
-        ...prev,
-        posts: posts as Post[],
-        selectedPost: prev?.selectedPost ?? null, // null이나 기존 값 사용
-        postVotes: prev?.postVotes ?? [],
-        postsCache: prev?.postsCache ?? {},
-        postUpdateRequired: prev?.postUpdateRequired ?? false
-      }));
     } catch (error: any) {
       console.error("getNoUserHomePosts error", error.message);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const getUserPostVotes = async () => {
     if (!postStateValue) return;
     const postIds = postStateValue.posts.map((post) => post.id);
     try {
-      const postVotes = await prisma.postVote.findMany({
-        where: {
-          postId: { in: postIds },
-          userId: user?.id
-        }
+      const response = await fetch('/api/getUserPostVotes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId: user?.id, postIds: postIds })
       });
-  
+      const postVotes = await response.json();
       setPostStateValue((prev) => ({
         ...prev,
         postVotes: postVotes as PostVote[],
@@ -119,8 +92,10 @@ export default function Home(): ReactElement {
         postsCache: prev?.postsCache ?? {},
         postUpdateRequired: prev?.postUpdateRequired ?? false
       }));
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching user post votes:", error.message);
+    } finally {
+      console.log("getUserPostVotes finished");
     }
   };
 
@@ -133,10 +108,10 @@ export default function Home(): ReactElement {
   }, [user, communityStateValue.initSnippetsFetched]);
 
   useEffect(() => {
-    if (!user && !loadingUser) {
+    if (!user && !authLoading) {
       getNoUserHomePosts();
     }
-  }, [user, loadingUser]);
+  }, [user, authLoading]);
 
   useEffect(() => {
     if (!user?.id || !postStateValue?.posts.length) return;
@@ -164,8 +139,11 @@ export default function Home(): ReactElement {
       <>
         <CreatePostLink />
         {loading ? (
+          <div>
           <PostLoader />
+          </div>
         ) : (
+          <div>
           <div className="space-y-4">
           {(postStateValue?.posts || []).map((post: Post, index) => (
             <PostItem
@@ -180,6 +158,7 @@ export default function Home(): ReactElement {
               homePage
             />
           ))}
+        </div>
         </div>
         )}
       </>

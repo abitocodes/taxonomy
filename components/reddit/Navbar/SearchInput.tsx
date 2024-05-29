@@ -1,39 +1,32 @@
 import { FC } from "react";
-
-import { SearchIcon } from "@chakra-ui/icons";
-import { Flex, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
-import { User } from "firebase/auth";
+import { User } from "@supabase/supabase-js";
+import * as Form from '@radix-ui/react-form';
+import { SearchIcon } from "lucide-react";
 
 type SearchInputProps = {
-  user: User;
+  user: User | null;
 };
 
 const SearchInput: FC<SearchInputProps> = ({ user }) => {
   return (
-    <Flex flexGrow={1} maxWidth={user ? "auto" : "600px"} mr={2} alignItems="center">
-      <InputGroup>
-        <InputLeftElement pointerEvents="none" color="gray.400">
-          <SearchIcon mb={2} />
-        </InputLeftElement>
-        <Input
-          placeholder="Search Reddit"
-          fontSize="10pt"
-          _placeholder={{ color: "gray.500" }}
-          _hover={{
-            bg: "white",
-            border: "1px solid",
-            borderColor: "blue.500",
-          }}
-          _focus={{
-            outline: "none",
-            border: "1px solid",
-            borderColor: "blue.500",
-          }}
-          height="34px"
-          bg="gray.50"
-        />
-      </InputGroup>
-    </Flex>
+    <div className={`flex flex-grow ${user ? "max-w-full" : "max-w-[600px]"} mr-2 items-center`}>
+      <Form.Root>
+        <Form.Field name="search" className="flex items-center">
+          <Form.Label className="sr-only">Search Reddit</Form.Label>
+          <Form.Control asChild>
+            <input
+              className="pl-10 pr-3 py-1.5 border border-gray-300 focus:border-blue-500 focus:outline-none rounded-md"
+              placeholder="Search Reddit"
+              type="text"
+            />
+          </Form.Control>
+          <div className="absolute ml-2 pointer-events-none text-gray-400">
+            <SearchIcon/>
+          </div>
+        </Form.Field>
+      </Form.Root>
+    </div>
   );
 };
+
 export default SearchInput;

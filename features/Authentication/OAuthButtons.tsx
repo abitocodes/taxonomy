@@ -1,35 +1,41 @@
-import { FC, useEffect } from "react";
-import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+"use client"
 
-import { Button, Flex, Image, Text } from "@chakra-ui/react";
+import { FC, useEffect, useState } from "react";
+import { useSignInWithGoogle } from "@/hooks/useSignInWithGoogle";
 
-import { auth } from "../../utils/supabase/client";
-import { CreateUpdateUser } from "../../helpers/CreateUpdateUser";
+import { CreateUpdateUser } from "@/helpers/CreateUpdateUser";
+import Image from "next/image";
 
 type OAuthButtonsProps = {};
+import { Session } from "@supabase/supabase-js";
 
 const OAuthButtons: FC<OAuthButtonsProps> = () => {
-  const [signInWithGoogle, userCred, loading, error] = useSignInWithGoogle(auth);
+  const [session, setSession] = useState<Session | null>(null);
+  const { signInWithGoogle, userCred, loading, authError: error } = useSignInWithGoogle(session);
 
   useEffect(() => {
     if (userCred) {
-      CreateUpdateUser(userCred.user);
+      CreateUpdateUser(userCred);
     }
   }, [userCred]);
 
   return (
-    <Flex direction="column" mb={4} width="100%">
-      <Button variant="oauth" mb={2} onClick={() => signInWithGoogle()} isLoading={loading}>
-        <Image src="/images/googlelogo.png" height="20px" mr={4} alt="Continue with Google" />
+    <div className="flex flex-col mb-4 w-full">
+      <button
+        className={`oauth mb-2 ${loading ? "loading" : ""}`}
+        onClick={() => signInWithGoogle()}
+        disabled={loading}
+      >
+        <Image src="/images/googlelogo.png" width={20} height={20} className="mr-4" alt="Continue with Google" />
         Continue with Google
-      </Button>
-      <Button variant="oauth">Some Other Provider</Button>
+      </button>
+      <button className="oauth">Some Other Provider</button>
       {error && (
-        <Text textAlign="center" fontSize="10pt" color="red" mt={2}>
-          {error.message}
-        </Text>
+        <p className="text-center text-sm text-red-500 mt-2">
+          {error}
+        </p>
       )}
-    </Flex>
+    </div>
   );
 };
 export default OAuthButtons;

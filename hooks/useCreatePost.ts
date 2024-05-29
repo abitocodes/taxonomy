@@ -1,28 +1,42 @@
+import { useEffect, useState } from 'react';
 import { useAuthState } from "@/hooks/useAuthState"
 import { useSetRecoilState } from "recoil";
-
-import router from "next/router";
-
+import { useRouter, useSearchParams } from "next/navigation";
 import { authModalState } from "@/atoms/authModalAtom";
-import { supabase } from "@/utils/supabase/client";
 import useDirectory from "@/hooks/useDirectory";
+import { supabase } from '@/utils/supabase/client'; // supabase 클라이언트 경로에 맞게 조정해주세요.
+import { Session } from '@supabase/supabase-js';
 
 const useCreatePost = () => {
-  console.log("useCreatePost called.");
-  const { user, loading: authLoading, error: authError } = useAuthState();
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: authLoading, error: authError } = useAuthState(session);
   const setAuthModalState = useSetRecoilState(authModalState);
   const { toggleMenuOpen } = useDirectory();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Failed to fetch session:', error);
+      } else {
+        setSession(data.session);
+      }
+    };
+
+    fetchSession();
+  }, []);
 
   const onClick = () => {
-    // check for user to open auth modal before redirecting to submit
     if (!user?.id) {
       setAuthModalState({ open: true, view: "login" });
       return;
     }
 
-    const { community } = router.query;
+    const community = searchParams?.get('community');
     if (community) {
-      router.push(`/r/${router.query.community}/submit`);
+      router.push(`/r/${community}/submit`);
       return;
     }
     // Open directory menu to select community to post to

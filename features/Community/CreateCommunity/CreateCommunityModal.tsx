@@ -2,32 +2,13 @@ import { FC, useState } from "react";
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
 import { HiLockClosed } from "react-icons/hi";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-
-import {
-  Box,
-  Button,
-  Checkbox,
-  Divider,
-  Flex,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  ModalBody,
-  ModalCloseButton,
-  ModalFooter,
-  ModalHeader,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/utils/supabase/client"; // Supabase 클라이언트 가져오기
 
-import { communityState } from "../@/atoms/communitiesAtom";
-import { communityModalState } from "../@/atoms/communityModalAtom";
-import ModalWrapper from "../../../components/Modal/ModalWrapper";
-import { firestore } from "../../../utils/supabase/client";
-import useCommunityModal from "../../../hooks/useCommunityModal";
+import { communityState } from "@/atoms/communitiesAtom";
+import { communityModalState } from "@/atoms/communityModalAtom";
+import ModalWrapper from "@/components/reddit/Dialog/DialogWrapper";
+import useCommunityModal from "@/hooks/useCommunityModal";
 
 type CreateCommunityModalProps = {
   userId: string;
@@ -72,37 +53,52 @@ const CreateCommunityModal: FC<CreateCommunityModalProps> = ({ userId }) => {
 
     setLoading(true);
     try {
-      // Create community document and communitySnippet subcollection document on user
-      const communityDocRef = doc(firestore, "communities", name);
-      await runTransaction(firestore, async (transaction) => {
-        const communityDoc = await transaction.get(communityDocRef);
-        if (communityDoc.exists()) {
-          throw new Error(`Sorry, /r${name} is taken. Try another.`);
-        }
+      const { data: communityDoc, error } = await supabase
+        .from('communities')
+        .select('*')
+        .eq('name', name)
+        .single();
 
-        transaction.set(communityDocRef, {
-          creatorId: userId,
-          createdAt: serverTimestamp(),
-          numberOfMembers: 1,
-          privacyType: "public",
-        });
+      if (error) throw new Error(error.message);
+      if (communityDoc) throw new Error(`Sorry, /r${name} is taken. Try another.`);
 
-        transaction.set(doc(firestore, `users/${userId}/communitySnippets`, name), {
-          communityId: name,
-          isModerator: true,
-        });
-      });
+      const { error: insertError } = await supabase
+        .from('communities')
+        .insert([
+          {
+            name: name,
+            creatorId: userId,
+            createdAt: new Date(),
+            numberOfMembers: 1,
+            privacyType: communityType,
+          },
+        ]);
+
+      if (insertError) throw new Error(insertError.message);
+
+      const { error: snippetError } = await supabase
+        .from('communitySnippets')
+        .insert([
+          {
+            communityId: name,
+            userId: userId,
+            isModerator: true,
+          },
+        ]);
+
+      if (snippetError) throw new Error(snippetError.message);
     } catch (error: any) {
-      // console.log("Transaction error", error);
       setNameError(error.message);
+    } finally {
+      setLoading(false);
     }
+
     setSnippetState((prev) => ({
       ...prev,
       mySnippets: [],
     }));
     handleModalClose();
     router.push(`/r/${name}`);
-    setLoading(false);
   };
 
   const onCommunityTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,84 +111,77 @@ const CreateCommunityModal: FC<CreateCommunityModalProps> = ({ userId }) => {
 
   return (
     <ModalWrapper isOpen={isOpen} onClose={handleModalClose}>
-      <ModalHeader display="flex" flexDirection="column" fontSize={15} padding={3}>
+      <div className="flex flex-col p-3 text-sm">
         Create a community
-      </ModalHeader>
-      <Box pr={3} pl={3}>
-        <Divider />
-        <ModalCloseButton />
-        <ModalBody display="flex" flexDirection="column" padding="10px 0px">
-          <Text fontWeight={600} fontSize={15}>
+      </div>
+      <div className="pr-3 pl-3">
+        <hr />
+        <button onClick={handleModalClose} className="absolute top-3 right-3">X</button>
+        <div className="flex flex-col p-2.5">
+          <span className="font-semibold text-sm">
             Name
-          </Text>
-          <Text fontSize={11} color="gray.500">
+          </span>
+          <span className="text-xs text-gray-500">
             Community names including capitalization cannot be changed
-          </Text>
-          <InputGroup>
-            <InputLeftElement pointerEvents="none" height="2rem">
-              <Text color="gray.400" width="20px">
-                r/
-              </Text>
-            </InputLeftElement>
-            <Input name="name" value={name} onChange={handleChange} pl="22px" type={""} size="sm" />
-          </InputGroup>
-          <Text fontSize="9pt" color={charsRemaining === 0 ? "red" : "gray.500"} pt={2}>
+          </span>
+          <div className="flex items-center mt-1">
+            <span className="text-gray-400 text-xs absolute ml-2">
+              r/
+            </span>
+            <input className="pl-8 text-sm" name="name" value={name} onChange={handleChange} type="text" />
+          </div>
+          <span className={`text-xs pt-2 ${charsRemaining === 0 ? "text-red-500" : "text-gray-500"}`}>
             {charsRemaining} Characters remaining
-          </Text>
-          <Text fontSize="9pt" color="red" pt={1}>
+          </span>
+          <span className="text-xs text-red-500 pt-1">
             {nameError}
-          </Text>
-          <Box mt={4} mb={4}>
-            <Text fontWeight={600} fontSize={15}>
+          </span>
+          <div className="mt-4 mb-4">
+            <span className="font-semibold text-sm">
               Community Type
-            </Text>
-            <Stack spacing={2} pt={1}>
-              <Checkbox colorScheme="blue" name="public" isChecked={communityType === "public"} onChange={onCommunityTypeChange}>
-                <Flex alignItems="center">
-                  <Icon as={BsFillPersonFill} mr={2} color="gray.500" />
-                  <Text as="b" fontSize="10pt" mr={1}>
-                    Public
-                  </Text>
-                  <Text fontSize="8pt" color="gray.500">
-                    Anyone can view, post, and comment to this community
-                  </Text>
-                </Flex>
-              </Checkbox>
-              <Checkbox colorScheme="blue" name="restricted" isChecked={communityType === "restricted"} onChange={onCommunityTypeChange}>
-                <Flex alignItems="center">
-                  <Icon as={BsFillEyeFill} color="gray.500" mr={2} />
-                  <Text as="b" fontSize="10pt" mr={1}>
-                    Restricted
-                  </Text>
-                  <Text fontSize="8pt" color="gray.500">
-                    Anyone can view this community, but only approved users can post
-                  </Text>
-                </Flex>
-              </Checkbox>
-              <Checkbox colorScheme="blue" name="private" isChecked={communityType === "private"} onChange={onCommunityTypeChange}>
-                <Flex alignItems="center">
-                  <Icon as={HiLockClosed} color="gray.500" mr={2} />
-                  <Text as="b" fontSize="10pt" mr={1}>
-                    Private
-                  </Text>
-                  <Text fontSize="8pt" color="gray.500">
-                    Only approved users can view and submit to this community
-                  </Text>
-                </Flex>
-              </Checkbox>
-            </Stack>
-          </Box>
-        </ModalBody>
-      </Box>
-      <ModalFooter bg="gray.100" borderRadius="0px 0px 10px 10px">
-        <Button variant="outline" height="30px" mr={2} onClick={handleModalClose}>
-          Cancel
-        </Button>
-        <Button variant="solid" height="30px" onClick={handleCreateCommunity} isLoading={loading}>
-          Create Community
-        </Button>
-      </ModalFooter>
+            </span>
+            <div className="space-y-2 pt-1">
+              <label className="flex items-center space-x-2">
+                <input type="checkbox" name="public" checked={communityType === "public"} onChange={onCommunityTypeChange} className="text-blue-500" />
+                <span className="text-sm font-bold mr-1">
+                  Public
+                </span>
+                <span className="text-xs text-gray-500">
+                  Anyone can view, post, and comment to this community
+                </span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input type="checkbox" name="restricted" checked={communityType === "restricted"} onChange={onCommunityTypeChange} className="text-blue-500" />
+                <span className="text-sm font-bold mr-1">
+                  Restricted
+                </span>
+                <span className="text-xs text-gray-500">
+                  Anyone can view this community, but only approved users can post
+                </span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input type="checkbox" name="private" checked={communityType === "private"} onChange={onCommunityTypeChange} className="text-blue-500" />
+                <span className="text-sm font-bold mr-1">
+                  Private
+                </span>
+                <span className="text-xs text-gray-500">
+                  Only approved users can view and submit to this community
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-gray-100 rounded-b-lg p-3 flex justify-end space-x-2">
+        <button className="border border-gray-300 text-sm p-1 er border-gray-300 text-sm p-1.5" onClick={handleModalClose}>
+        Cancel
+      </button>
+      <button className="bg-blue-500 text-white text-sm p-1.5" onClick={handleCreateCommunity} disabled={loading}>
+        Create Community
+      </button>
+    </div>
     </ModalWrapper>
   );
 };
+
 export default CreateCommunityModal;

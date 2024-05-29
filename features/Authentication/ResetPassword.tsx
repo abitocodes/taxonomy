@@ -1,11 +1,9 @@
 import { FC, useState } from "react";
-import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
+import { useSendPasswordResetEmail } from "@/hooks/useSendPasswordResetEmail";
 import { BsDot, BsReddit } from "react-icons/bs";
 
-import { Button, Flex, Icon, Input, Text } from "@chakra-ui/react";
-
-import { auth } from "../../utils/supabase/client";
-import { ModalView } from "../../types/AuthModalState";
+import { ModalView } from "@/types/AuthModalState";
+import { Session } from "@supabase/supabase-js";
 
 type ResetPasswordProps = {
   toggleView: (view: ModalView) => void;
@@ -14,7 +12,8 @@ type ResetPasswordProps = {
 const ResetPassword: FC<ResetPasswordProps> = ({ toggleView }) => {
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
-  const [sendPasswordResetEmail, sending, error] = useSendPasswordResetEmail(auth);
+  const [session, setSession] = useState<Session | null>(null);
+  const { sendPasswordResetEmail, loading: sending, error } = useSendPasswordResetEmail(session);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -23,56 +22,42 @@ const ResetPassword: FC<ResetPasswordProps> = ({ toggleView }) => {
     setSuccess(true);
   };
   return (
-    <Flex direction="column" alignItems="center" width="100%">
-      <Icon as={BsReddit} color="brand.100" fontSize={40} mb={2} />
-      <Text fontWeight={700} mb={2}>
+    <div className="flex flex-col items-center w-full">
+      <BsReddit className="text-brand-100 text-5xl mb-2" />
+      <p className="font-bold mb-2">
         Reset your password
-      </Text>
+      </p>
       {success ? (
-        <Text mb={4}>Check your email :)</Text>
+        <p className="mb-4">Check your email :)</p>
       ) : (
         <>
-          <Text fontSize="sm" textAlign="center" mb={2}>
+          <p className="text-sm text-center mb-2">
             Enter the email associated with your account and we will send you a reset link
-          </Text>
-          <form onSubmit={onSubmit} style={{ width: "100%" }}>
-            <Input
+          </p>
+          <form onSubmit={onSubmit} className="w-full">
+            <input
               required
               name="email"
               placeholder="email"
               type="email"
-              mb={2}
+              className="mb-2 text-sm placeholder-gray-500 hover:bg-white hover:border-blue-500 focus:outline-none focus:bg-white focus:border-blue-500 bg-gray-50 w-full p-2 border border-gray-300"
               onChange={(event) => setEmail(event.target.value)}
-              fontSize="10pt"
-              _placeholder={{ color: "gray.500" }}
-              _hover={{
-                bg: "white",
-                border: "1px solid",
-                borderColor: "blue.500",
-              }}
-              _focus={{
-                outline: "none",
-                bg: "white",
-                border: "1px solid",
-                borderColor: "blue.500",
-              }}
-              bg="gray.50"
             />
-            <Text textAlign="center" fontSize="10pt" color="red">
-              {error?.message}
-            </Text>
-            <Button width="100%" height="36px" mb={2} mt={2} type="submit" isLoading={sending}>
+            <p className="text-center text-sm text-red-500">
+              {error}
+            </p>
+            <button type="submit" className={`w-full h-9 mb-2 mt-2 ${sending ? 'loading' : ''} bg-blue-500 text-white font-bold`}>
               Reset Password
-            </Button>
+            </button>
           </form>
         </>
       )}
-      <Flex alignItems="center" fontSize="9pt" color="blue.500" fontWeight={700} cursor="pointer">
-        <Text onClick={() => toggleView("login")}>LOGIN</Text>
-        <Icon as={BsDot} />
-        <Text onClick={() => toggleView("signup")}>SIGN UP</Text>
-      </Flex>
-    </Flex>
+      <div className="flex items-center text-sm text-blue-500 font-bold cursor-pointer">
+        <p onClick={() => toggleView("login")}>LOGIN</p>
+        <BsDot />
+        <p onClick={() => toggleView("signup")}>SIGN UP</p>
+      </div>
+    </div>
   );
 };
 export default ResetPassword;

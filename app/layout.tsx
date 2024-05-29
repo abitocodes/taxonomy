@@ -3,11 +3,14 @@ import localFont from "next/font/local"
 
 import "@/styles/globals.css"
 import { siteConfig } from "@/config/site"
-import { absoluteUrl, cn } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { Toaster } from "@/components/ui/toaster"
 import { Analytics } from "@/components/analytics"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
+import RecoilRootWrapper from "@/components/RecoilWrapper";
+import Navbar from "@/components/reddit/Navbar"
+import DialogWrapper from "@/components/reddit/Dialog/DialogWrapper"
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -82,12 +85,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontHeading.variable
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-          <Analytics />
-          <Toaster />
-          <TailwindIndicator />
-        </ThemeProvider>
+        <RecoilRootWrapper>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <Navbar/>  
+              {children}
+              <Analytics />
+              <Toaster />
+              <TailwindIndicator />
+          </ThemeProvider>
+        </RecoilRootWrapper>
       </body>
     </html>
   )

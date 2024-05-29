@@ -94,7 +94,7 @@ export async function GET(req: Request): Promise<Response> {
           tw="flex text-xl"
           style={{ fontFamily: "Inter", fontWeight: "normal" }}
         >
-          tx.shadcn.com
+          localhost:3000
         </div>
         <div
           tw="flex items-center text-xl"

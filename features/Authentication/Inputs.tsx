@@ -1,8 +1,6 @@
 import { FC } from "react";
 import { useRecoilValue } from "recoil";
 
-import { Flex } from "@chakra-ui/react";
-
 import { authModalState } from "@/atoms/authModalAtom";
 import { ModalView } from "../../types/AuthModalState";
 import Login from "./Login";
@@ -16,9 +14,9 @@ const AuthInputs: FC<AuthInputsProps> = ({ toggleView }) => {
   const modalState = useRecoilValue(authModalState);
 
   return (
-    <Flex direction="column" alignItems="center" width="100%" mt={4}>
+    <div className="flex flex-col items-center w-full mt-4">
       {modalState.view === "login" ? <Login toggleView={toggleView} /> : <SignUp toggleView={toggleView} />}
-    </Flex>
+    </div>
   );
 };
 export default AuthInputs;

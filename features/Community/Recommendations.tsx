@@ -47,17 +47,16 @@ const Recommendations: FC<RecommendationsProps> = () => {
   return (
     <Card className="rounded-t-sm overflow-hidden">
       <CardHeader 
-        className="flex" // flex 박스 모델 적용 및 아이템을 하단 정렬
+        className="flex"
         style={{ 
           backgroundImage: "url(/images/recCommsArt.png), linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))", 
           backgroundSize: "cover", 
           backgroundBlendMode: "multiply",
-          height: "100%" // 높이를 100%로 설정하여 전체 높이를 사용
+          height: "100%"
         }}
       >
         <span className="font-bold text-background">Top Communities</span>
       </CardHeader>
-      {/* <CardContent> */}
         {loading ? (
           <div>Loading...</div>
         ) : (
@@ -66,24 +65,29 @@ const Recommendations: FC<RecommendationsProps> = () => {
               {communities.map((community, index) => {
                 const isJoined = !!communityStateValue.mySnippets.find((snippet) => snippet.communityId === community.id);
                 return (
-                  <Link key={community.id} href={`/r/${community.id}`}>
                     <TableRow key={community.id} className="flex items-center">
                       <TableCell className="w-1/5 flex justify-center">
                         <span>{index + 1}</span>
                       </TableCell>
-                      <TableCell className="flex justify-center">                        
-                        {community.imageURL ? (
-                          <Avatar className="hidden h-9 w-9 sm:flex">
-                          <AvatarImage src={community.imageURL} alt="community image" />
-                          <AvatarFallback>404</AvatarFallback>
-                          </Avatar>
-                        ) : (
-                          <FaReddit className="text-[#FF4500] text-7.5 mr-2" />
-                        )}
+
+                      <TableCell className="flex justify-center"> 
+                        <Link href={`/r/${community.id}`}>       
+                          {community.imageURL ? (
+                            <Avatar className="hidden h-9 w-9 sm:flex">
+                            <AvatarImage src={community.imageURL} alt="community image" />
+                            <AvatarFallback>404</AvatarFallback>
+                            </Avatar>
+                          ) : (
+                            <FaReddit className="text-[#FF4500] text-7.5 mr-2" />
+                          )}
+                        </Link>
                       </TableCell>
                       <TableCell className="w-full">
-                        <span>{`r/${community.id}`}</span>
+                        <Link href={`/r/${community.id}`}>  
+                          <span>{`r/${community.id}`}</span>
+                        </Link>
                       </TableCell>
+
                       <TableCell>
                         <Button
                           className={`h-5.5 text-xs ${isJoined ? "border border-blue-500" : "bg-blue-500 text-white"} rounded-md`}
@@ -95,14 +99,13 @@ const Recommendations: FC<RecommendationsProps> = () => {
                           {isJoined ? "Joined" : "Join"}
                         </Button>
                       </TableCell>
+
                     </TableRow>
-                  </Link>
                 );
               })}
             </TableBody>
           </Table>
         )}
-      {/* </CardContent> */}
     </Card>
   );
 }

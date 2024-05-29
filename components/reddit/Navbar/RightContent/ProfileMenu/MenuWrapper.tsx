@@ -1,48 +1,65 @@
-import { FC } from "react";
+"use client"
+
+import { FC, useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState"
 import { FaRedditSquare } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { VscAccount } from "react-icons/vsc";
 import { useRecoilState } from "recoil";
 
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, Flex, Icon, Menu, MenuButton, MenuList, Text } from "@chakra-ui/react";
-
-import { authModalState } from "../../@/atoms/authModalAtom";
-import { auth } from "../../../../firebase/clientApp";
+import { authModalState } from "@/atoms/authModalAtom";
 import NoUserList from "./NoUserList";
 import UserList from "./UserList";
+import { Session } from "@supabase/supabase-js";
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem
+} from "@/components/ui/context-menu";
 
 type MenuWrapperProps = {};
 
 const MenuWrapper: FC<MenuWrapperProps> = () => {
   const [authModal, setModalState] = useRecoilState(authModalState);
-  const { user, loading: authLoading, error: authError } = useAuthState();
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: authLoading, error: authError } = useAuthState(session);
+
   return (
-    <Menu>
-      <MenuButton cursor="pointer" padding="0px 6px" borderRadius="4px" _hover={{ outline: "1px solid", outlineColor: "gray.200" }}>
-        <Flex alignItems="center">
-          <Flex alignItems="center">
+    <ContextMenu>
+      <ContextMenuTrigger className="cursor-pointer p-0.5 rounded-md hover:outline hover:outline-1 hover:outline-gray-200">
+        <div className="flex items-center">
+          <div className="flex items-center">
             {user ? (
               <>
-                <Icon fontSize={24} mr={1} color="gray.300" as={FaRedditSquare} />
-                <Box display={{ base: "none", lg: "flex" }} flexDirection="column" fontSize="8pt" alignItems="flex-start" mr={8}>
-                  <Text fontWeight={700}>{user?.displayName || user?.email?.split("@")[0]}</Text>
-                  <Flex alignItems="center">
-                    <Icon as={IoSparkles} color="brand.100" mr={1} />
-                    <Text color="gray.400">1 karma</Text>
-                  </Flex>
-                </Box>
+                <FaRedditSquare className="text-gray-300 text-3xl mr-1" />
+                <div className="hidden lg:flex flex-col text-xs items-start mr-8">
+                  <span className="font-bold">{user?.id || user?.email?.split("@")[0]}</span>
+                  <div className="flex items-center">
+                    <IoSparkles className="text-brand-100 mr-1" />
+                    <span className="text-gray-400">1 karma</span>
+                  </div>
+                </div>
               </>
             ) : (
-              <Icon fontSize={24} mr={1} color="gray.400" as={VscAccount} />
+              <VscAccount className="text-gray-400 text-3xl mr-1" />
             )}
-          </Flex>
-          <ChevronDownIcon color="gray.500" />
-        </Flex>
-      </MenuButton>
-      <MenuList>{user ? <UserList /> : <NoUserList setModalState={setModalState} />}</MenuList>
-    </Menu>
+          </div>
+        </div>
+      </ContextMenuTrigger>
+      <ContextMenuContent>
+        {user ? (
+            <ContextMenuItem>
+              <UserList />
+            </ContextMenuItem>
+          ) : (
+            <ContextMenuItem>
+              <NoUserList setModalState={setModalState} />
+            </ContextMenuItem>
+          )}
+      </ContextMenuContent>
+    </ContextMenu>
   );
 };
+
 export default MenuWrapper;

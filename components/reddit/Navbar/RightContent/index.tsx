@@ -1,26 +1,27 @@
+"use client"
+
 import { FC } from "react";
-
-import { Flex } from "@chakra-ui/react";
-import { User } from "firebase/auth";
-
-import AuthModal from "../../../features/Authentication";
+import AuthModal from "@/features/Authentication";
 import AuthButtons from "./AuthButtons";
 import Icons from "./Icons";
 import MenuWrapper from "./ProfileMenu/MenuWrapper";
+import { User } from "@supabase/supabase-js";
 
-type RightContentProps = {
-  user: User;
-};
+interface RightContentProps {
+  user: User | null;
+}
 
 const RightContent: FC<RightContentProps> = ({ user }) => {
+  console.log("RightContent rendered, user:", user);
   return (
     <>
       <AuthModal />
-      <Flex justifyContent="space-between" alignItems="center">
+      <div className="flex justify-between items-center">
         {user ? <Icons /> : <AuthButtons />}
         <MenuWrapper />
-      </Flex>
+      </div>
     </>
   );
 };
+
 export default RightContent;

@@ -1,13 +1,11 @@
 import { FC, useEffect, useState } from "react";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useCreateUserWithEmailAndPassword } from "@/hooks/useCreateUserWithEmailAndPassword";
 
-import { Button, Flex, Text } from "@chakra-ui/react";
-
-import InputItem from "../../chakra/components/InputItem";
-import { auth } from "../../utils/supabase/client";
-import { FIREBASE_ERRORS } from "../../utils/supabase/errors";
-import { CreateUpdateUser } from "../../helpers/CreateUpdateUser";
-import { ModalView } from "../../types/AuthModalState";
+import InputItem from "@/components/InputItem";
+import { SUPABASE_ERRORS } from "@/utils/supabase/errors";
+import { CreateUpdateUser } from "@/helpers/CreateUpdateUser";
+import { ModalView } from "@/types/AuthModalState";
+import { Session } from "@supabase/supabase-js";
 
 type SignUpProps = {
   toggleView: (view: ModalView) => void;
@@ -20,7 +18,8 @@ const SignUp: FC<SignUpProps> = ({ toggleView }) => {
     confirmPassword: "",
   });
   const [formError, setFormError] = useState("");
-  const [createUserWithEmailAndPassword, userCred, loading, authError] = useCreateUserWithEmailAndPassword(auth);
+  const [session, setSession] = useState<Session | null>(null);
+  const { createUserWithEmailAndPassword, userCred, loading, error: authError } = useCreateUserWithEmailAndPassword(session);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,7 +45,7 @@ const SignUp: FC<SignUpProps> = ({ toggleView }) => {
 
   useEffect(() => {
     if (userCred) {
-      CreateUpdateUser(userCred.user);
+      CreateUpdateUser(userCred);
     }
   }, [userCred]);
 
@@ -55,18 +54,18 @@ const SignUp: FC<SignUpProps> = ({ toggleView }) => {
       <InputItem name="email" placeholder="email" type="text" mb={2} onChange={onChange} />
       <InputItem name="password" placeholder="password" type="password" mb={2} onChange={onChange} />
       <InputItem name="confirmPassword" placeholder="confirm password" type="password" onChange={onChange} />
-      <Text textAlign="center" mt={2} fontSize="10pt" color="red">
-        {formError || FIREBASE_ERRORS[authError?.message as keyof typeof FIREBASE_ERRORS]}
-      </Text>
-      <Button width="100%" height="36px" mb={2} mt={2} type="submit" isLoading={loading}>
+      <p className="text-center mt-2 text-sm text-red-500">
+      {formError || SUPABASE_ERRORS[authError as keyof typeof SUPABASE_ERRORS]}
+      </p>
+      <button className="w-full h-9 mb-2 mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" disabled={loading}>
         Sign Up
-      </Button>
-      <Flex fontSize="9pt" justifyContent="center">
-        <Text mr={1}>Have an account?</Text>
-        <Text color="blue.500" fontWeight={700} cursor="pointer" onClick={() => toggleView("login")}>
+      </button>
+      <div className="text-xs text-center">
+        <span className="mr-1">Have an account?</span>
+        <span className="text-blue-500 font-bold cursor-pointer" onClick={() => toggleView("login")}>
           LOG IN
-        </Text>
-      </Flex>
+        </span>
+      </div>
     </form>
   );
 };

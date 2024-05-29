@@ -13,9 +13,11 @@ import { Community } from "@/types/CommunityState";
 import { Post, PostVote } from "@/types/PostState";
 import { RecoilRoot } from 'recoil';
 import { AppProps } from 'next/app';
+import { Session } from "@supabase/supabase-js";
 
 const usePosts = (communityData?: Community) => {
-  const { user, loading: authLoading, error: authError } = useAuthState();
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: authLoading, error: authError } = useAuthState(session);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const setAuthModalState = useSetRecoilState(authModalState);
   const [loading, setLoading] = useState(false);

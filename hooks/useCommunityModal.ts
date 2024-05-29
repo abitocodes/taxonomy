@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState";
 import { useSetRecoilState } from "recoil";
 
 import { authModalState } from "@/atoms/authModalAtom";
 import { communityModalState } from "@/atoms/communityModalAtom";
-import { supabase } from "../utils/supabase/client";
+import { Session } from "@supabase/supabase-js";
 
 const useCommunityModal = () => {
-  const { user, loading: authLoading, error: authError } = useAuthState();
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: authLoading, error: authError } = useAuthState(session);
   const setAuthModalState = useSetRecoilState(authModalState);
   const setCommunityModalState = useSetRecoilState(communityModalState);
 

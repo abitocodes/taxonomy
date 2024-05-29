@@ -15,6 +15,7 @@ import { Input } from "@/components/shad/default/ui/input"
 import { Label } from "@/components/shad/default/ui/label"
 
 export default function DialogCloseButton() {
+  // console.log("hiroo i am dialogclosebutton")
   return (
     <Dialog>
       <DialogTrigger asChild>

@@ -1,26 +1,27 @@
 import { FC, useEffect, useState } from "react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import useSignInWithEmailAndPassword from "@/hooks/useSignInWithEmailAndPassword";
 
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button } from "@/components/ui/button";
 
-import InputItem from "../../chakra/components/InputItem";
-import { auth } from "../../utils/supabase/client";
-import { FIREBASE_ERRORS } from "../../utils/supabase/errors";
-import { CreateUpdateUser } from "../../helpers/CreateUpdateUser";
-import { ModalView } from "../../types/AuthModalState";
+import InputItem from "@/components/InputItem";
+import { SUPABASE_ERRORS } from "@/utils/supabase/errors";
+import { CreateUpdateUser } from "@/helpers/CreateUpdateUser";
+import { ModalView } from "@/types/AuthModalState";
 
+import { Session } from "@supabase/supabase-js";
 type LoginProps = {
   toggleView: (view: ModalView) => void;
 };
 
 const Login: FC<LoginProps> = ({ toggleView }) => {
+  
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
   const [formError, setFormError] = useState("");
-
-  const [signInWithEmailAndPassword, userCred, loading, authError] = useSignInWithEmailAndPassword(auth);
+  const [session, setSession] = useState<Session | null>(null);
+  const { signInWithEmailAndPassword, userCred, loading, authError } = useSignInWithEmailAndPassword(session);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,8 +42,7 @@ const Login: FC<LoginProps> = ({ toggleView }) => {
   };
 
   useEffect(() => {
-    // console.log(userCred);
-    if (userCred) {
+    if (userCred && 'user' in userCred) {
       CreateUpdateUser(userCred.user);
     }
   }, [userCred]);
@@ -51,26 +51,26 @@ const Login: FC<LoginProps> = ({ toggleView }) => {
     <form onSubmit={onSubmit}>
       <InputItem name="email" placeholder="email" type="text" mb={2} onChange={onChange} />
       <InputItem name="password" placeholder="password" type="password" onChange={onChange} />
-      <Text textAlign="center" mt={2} fontSize="10pt" color="red">
-        {formError || FIREBASE_ERRORS[authError?.message as keyof typeof FIREBASE_ERRORS]}
-      </Text>
-      <Button width="100%" height="36px" mb={2} mt={2} type="submit" isLoading={loading}>
-        Log In
+      <div className="text-center mt-2 text-sm text-red-500">
+      {formError || SUPABASE_ERRORS[authError as keyof typeof SUPABASE_ERRORS]}
+      </div>
+      <Button className="w-full h-9 mb-2 mt-2" type="submit" disabled={loading}>
+        {loading ? "Loading..." : "Log In"}
       </Button>
-      <Flex justifyContent="center" mb={2}>
-        <Text fontSize="9pt" mr={1}>
+      <div className="flex justify-center mb-2">
+        <div className="text-xs mr-1">
           Forgot your password?
-        </Text>
-        <Text fontSize="9pt" color="blue.500" cursor="pointer" onClick={() => toggleView("resetPassword")}>
+        </div>
+        <div className="text-xs text-blue-500 cursor-pointer" onClick={() => toggleView("resetPassword")}>
           Reset
-        </Text>
-      </Flex>
-      <Flex fontSize="9pt" justifyContent="center">
-        <Text mr={1}>New here?</Text>
-        <Text color="blue.500" fontWeight={700} cursor="pointer" onClick={() => toggleView("signup")}>
+        </div>
+      </div>
+      <div className="flex justify-center text-xs">
+        <div className="mr-1">New here?</div>
+        <div className="text-blue-500 font-bold cursor-pointer" onClick={() => toggleView("signup")}>
           SIGN UP
-        </Text>
-      </Flex>
+        </div>
+      </div>
     </form>
   );
 };
