@@ -6,17 +6,17 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 
 import { authModalState } from "@/atoms/authModalAtom";
-import { communityState } from "@/atoms/communitiesAtom";
+import { genreState } from "@/atoms/genresAtom";
 import { postState } from "@/atoms/postsAtom";
 import { supabase } from "@/utils/supabase/client";
-import { Community } from "@/types/CommunityState";
+import { Genre } from "@/types/GenreState";
 import { Post, PostVote } from "@prisma/client";
 import { RecoilRoot } from 'recoil';
 import { AppProps } from 'next/app';
 import { Session } from '@supabase/supabase-js';
 import { prisma } from "@/prisma/client";
 
-const usePosts = (communityData?: Community) => {
+const usePosts = (genreData?: Genre) => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const [postStateValue, setPostsStateValue] = useRecoilState(postState);
@@ -24,21 +24,21 @@ const usePosts = (communityData?: Community) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  const communityStateValue = useRecoilValue(communityState);
+  const genreStateValue = useRecoilValue(genreState);
 
   const onSelectPost = (post: Post, postIdx: number) => {
     setPostsStateValue((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
-    router.push(`/r/${post.communityId}/comments/${post.id}`);
+    router.push(`/r/${post.genreId}/comments/${post.id}`);
   };
 
   const onVote = async (
     event: React.MouseEvent<SVGElement, MouseEvent>,
     post: Post,
     vote: number,
-    communityId: string
+    genreId: string
   ) => {
     event.stopPropagation();
     if (!user?.id) {
@@ -50,7 +50,7 @@ const usePosts = (communityData?: Community) => {
     const existingVote = postStateValue.postVotes.find((v) => v.postId === post.id);
   
     try {
-      const response = await fetch(`/api/vote?postId=${post.id}&userId=${user.id}&voteValue=${vote}&communityId=${communityId}`, {
+      const response = await fetch(`/api/vote?postId=${post.id}&userId=${user.id}&voteValue=${vote}&genreId=${genreId}`, {
         method: 'GET'
       });
   
@@ -82,7 +82,7 @@ const usePosts = (communityData?: Community) => {
         postVotes: updatedPostVotes,
         postsCache: {
           ...postStateValue.postsCache,
-          [communityId]: updatedPosts,
+          [genreId]: updatedPosts,
         },
         selectedPost: updatedPost
       };
@@ -115,7 +115,7 @@ const usePosts = (communityData?: Community) => {
       posts: prev.posts.filter((item) => item.id !== post.id),
       postsCache: {
         ...prev.postsCache,
-        [post.communityId]: prev.postsCache[post.communityId]?.filter((item) => item.id !== post.id),
+        [post.genreId]: prev.postsCache[post.genreId]?.filter((item) => item.id !== post.id),
       },
     }));
 
@@ -126,11 +126,11 @@ const usePosts = (communityData?: Community) => {
   }
 };
 
-const getCommunityPostVotes = async (communityId: string) => {
+const getGenrePostVotes = async (genreId: string) => {
   const user = session?.user
   if (!user) return;
 
-  const response = await fetch(`/api/getCommunityPostVotes?communityId=${communityId}&userId=${user.id}`);
+  const response = await fetch(`/api/getGenrePostVotes?genreId=${genreId}&userId=${user.id}`);
   if (!response.ok) {
     console.error('Failed to fetch post votes');
     return;
@@ -143,9 +143,9 @@ const getCommunityPostVotes = async (communityId: string) => {
 };
 
 useEffect(() => {
-  if (!user?.id || !communityStateValue.currentCommunity) return;
-  getCommunityPostVotes(communityStateValue.currentCommunity.id);
-}, [user, communityStateValue.currentCommunity]);
+  if (!user?.id || !genreStateValue.currentGenre) return;
+  getGenrePostVotes(genreStateValue.currentGenre.id);
+}, [user, genreStateValue.currentGenre]);
 
 useEffect(() => {
   if (!user?.id) {

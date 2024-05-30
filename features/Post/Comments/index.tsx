@@ -17,10 +17,10 @@ import { CommentWith } from "@/features/Post/Comments/CommentItem";
 type CommentsProps = {
   user?: PublicUser | null;
   selectedPost: Post;
-  community: string;
+  genre: string;
 };
 
-const Comments: FC<CommentsProps> = ({ user, selectedPost, community }) => {
+const Comments: FC<CommentsProps> = ({ user, selectedPost, genre }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentFetchLoading, setCommentFetchLoading] = useState(false);
@@ -44,7 +44,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, community }) => {
             postId: selectedPost.id,
             creatorId: user.id,
             text: comment,
-            communityId: community,
+            genreId: genre,
             postTitle: selectedPost.title,
             createdAt: new Date().toISOString(),
           }

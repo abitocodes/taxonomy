@@ -2,7 +2,7 @@ import { prisma } from "@/prisma/client";
 
 export const getMySnippets = async (userId: string) => {
   try {
-    const snippets = await prisma.communitySnippet.findMany({
+    const snippets = await prisma.genreSnippet.findMany({
       where: {
         userId: userId
       }

@@ -1,12 +1,12 @@
 -- CreateTable
-CREATE TABLE "CommunitySnippet" (
+CREATE TABLE "GenreSnippet" (
     "id" SERIAL NOT NULL,
-    "communityId" TEXT NOT NULL,
+    "genreId" TEXT NOT NULL,
     "isModerator" BOOLEAN DEFAULT false,
     "imageURL" TEXT,
 
-    CONSTRAINT "CommunitySnippet_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "GenreSnippet_pkey" PRIMARY KEY ("id")
 );
 
 -- AddForeignKey
-ALTER TABLE "CommunitySnippet" ADD CONSTRAINT "CommunitySnippet_communityId_fkey" FOREIGN KEY ("communityId") REFERENCES "communities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "GenreSnippet" ADD CONSTRAINT "GenreSnippet_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "genres"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

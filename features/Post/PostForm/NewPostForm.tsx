@@ -10,10 +10,10 @@ import { addDoc, collection, serverTimestamp, updateDoc } from "firebase/firesto
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { useRouter } from "next/navigation";
 
-import { postState } from "../@/atoms/postsAtom";
-import { firestore, storage } from "../../../utils/supabase/client";
-import useSelectFile from "../../../hooks/useSelectFile";
-import { PostTabItem } from "../../../types/PostTabItem";
+import { postState } from "@/@/atoms/postsAtom";
+import { firestore, storage } from "@/../../utils/supabase/client";
+import useSelectFile from "@/../../hooks/useSelectFile";
+import { PostTabItem } from "@/../../types/PostTabItem";
 import ImageUpload from "./ImageUpload";
 import LinkInput from "./LinkInput";
 import TabItem from "./TabItem";
@@ -48,12 +48,12 @@ const formTabs: PostTabItem[] = [
 ];
 
 type NewPostFormProps = {
-  communityId: string;
-  communityImageURL?: string;
+  genreId: string;
+  genreImageURL?: string;
   user: User;
 };
 
-const NewPostForm: FC<NewPostFormProps> = ({ communityId, communityImageURL, user }) => {
+const NewPostForm: FC<NewPostFormProps> = ({ genreId, genreImageURL, user }) => {
   const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [titleInput, setTitleInput] = useState("");
@@ -69,8 +69,8 @@ const NewPostForm: FC<NewPostFormProps> = ({ communityId, communityImageURL, use
     setLoading(true);
     try {
       const postDocRef = await addDoc(collection(firestore, "posts"), {
-        communityId,
-        communityImageURL: communityImageURL || "",
+        genreId,
+        genreImageURL: genreImageURL || "",
         creatorId: user.uid,
         nickName: user.email!.split("@")[0],
         title: titleInput,

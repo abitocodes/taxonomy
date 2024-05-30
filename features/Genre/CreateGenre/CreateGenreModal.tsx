@@ -5,23 +5,23 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client"; // Supabase 클라이언트 가져오기
 
-import { communityState } from "@/atoms/communitiesAtom";
-import { communityModalState } from "@/atoms/communityModalAtom";
+import { genreState } from "@/atoms/genresAtom";
+import { genreModalState } from "@/atoms/genreModalAtom";
 import ModalWrapper from "@/components/reddit/Dialog/DialogWrapper";
-import useCommunityModal from "@/hooks/useCommunityModal";
+import useGenreModal from "@/hooks/useGenreModal";
 
-type CreateCommunityModalProps = {
+type CreateGenreModalProps = {
   userId: string;
 };
 
-const CreateCommunityModal: FC<CreateCommunityModalProps> = ({ userId }) => {
-  const setSnippetState = useSetRecoilState(communityState);
-  const isOpen = useRecoilValue(communityModalState).open;
-  const { closeModal } = useCommunityModal();
+const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
+  const setSnippetState = useSetRecoilState(genreState);
+  const isOpen = useRecoilValue(genreModalState).open;
+  const { closeModal } = useGenreModal();
   const [name, setName] = useState("");
   const [charsRemaining, setCharsRemaining] = useState(21);
   const [nameError, setNameError] = useState("");
-  const [communityType, setCommunityType] = useState("public");
+  const [genreType, setGenreType] = useState("public");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -29,7 +29,7 @@ const CreateCommunityModal: FC<CreateCommunityModalProps> = ({ userId }) => {
     setName("");
     setCharsRemaining(21);
     setNameError("");
-    setCommunityType("public");
+    setGenreType("public");
   };
 
   const handleModalClose = () => {
@@ -43,44 +43,44 @@ const CreateCommunityModal: FC<CreateCommunityModalProps> = ({ userId }) => {
     setCharsRemaining(21 - event.target.value.length);
   };
 
-  const handleCreateCommunity = async () => {
+  const handleCreateGenre = async () => {
     if (nameError) setNameError("");
     const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
 
     if (format.test(name) || name.length < 3) {
-      return setNameError("Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores.");
+      return setNameError("Genre names must be between 3–21 characters, and can only contain letters, numbers, or underscores.");
     }
 
     setLoading(true);
     try {
-      const { data: communityDoc, error } = await supabase
-        .from('communities')
+      const { data: genreDoc, error } = await supabase
+        .from('genres')
         .select('*')
         .eq('name', name)
         .single();
 
       if (error) throw new Error(error.message);
-      if (communityDoc) throw new Error(`Sorry, /r${name} is taken. Try another.`);
+      if (genreDoc) throw new Error(`Sorry, /r${name} is taken. Try another.`);
 
       const { error: insertError } = await supabase
-        .from('communities')
+        .from('genres')
         .insert([
           {
             name: name,
             creatorId: userId,
             createdAt: new Date(),
             numberOfMembers: 1,
-            privacyType: communityType,
+            privacyType: genreType,
           },
         ]);
 
       if (insertError) throw new Error(insertError.message);
 
       const { error: snippetError } = await supabase
-        .from('communitySnippets')
+        .from('genreSnippets')
         .insert([
           {
-            communityId: name,
+            genreId: name,
             userId: userId,
             isModerator: true,
           },
@@ -101,18 +101,18 @@ const CreateCommunityModal: FC<CreateCommunityModalProps> = ({ userId }) => {
     router.push(`/r/${name}`);
   };
 
-  const onCommunityTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onGenreTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name },
     } = event;
-    if (name === communityType) return;
-    setCommunityType(name);
+    if (name === genreType) return;
+    setGenreType(name);
   };
 
   return (
     <ModalWrapper isOpen={isOpen} onClose={handleModalClose}>
       <div className="flex flex-col p-3 text-sm">
-        Create a community
+        Create a genre
       </div>
       <div className="pr-3 pl-3">
         <hr />
@@ -122,7 +122,7 @@ const CreateCommunityModal: FC<CreateCommunityModalProps> = ({ userId }) => {
             Name
           </span>
           <span className="text-xs text-gray-500">
-            Community names including capitalization cannot be changed
+            Genre names including capitalization cannot be changed
           </span>
           <div className="flex items-center mt-1">
             <span className="text-gray-400 text-xs absolute ml-2">
@@ -138,34 +138,34 @@ const CreateCommunityModal: FC<CreateCommunityModalProps> = ({ userId }) => {
           </span>
           <div className="mt-4 mb-4">
             <span className="font-semibold text-sm">
-              Community Type
+              Genre Type
             </span>
             <div className="space-y-2 pt-1">
               <label className="flex items-center space-x-2">
-                <input type="checkbox" name="public" checked={communityType === "public"} onChange={onCommunityTypeChange} className="text-blue-500" />
+                <input type="checkbox" name="public" checked={genreType === "public"} onChange={onGenreTypeChange} className="text-blue-500" />
                 <span className="text-sm font-bold mr-1">
                   Public
                 </span>
                 <span className="text-xs text-gray-500">
-                  Anyone can view, post, and comment to this community
+                  Anyone can view, post, and comment to this genre
                 </span>
               </label>
               <label className="flex items-center space-x-2">
-                <input type="checkbox" name="restricted" checked={communityType === "restricted"} onChange={onCommunityTypeChange} className="text-blue-500" />
+                <input type="checkbox" name="restricted" checked={genreType === "restricted"} onChange={onGenreTypeChange} className="text-blue-500" />
                 <span className="text-sm font-bold mr-1">
                   Restricted
                 </span>
                 <span className="text-xs text-gray-500">
-                  Anyone can view this community, but only approved users can post
+                  Anyone can view this genre, but only approved users can post
                 </span>
               </label>
               <label className="flex items-center space-x-2">
-                <input type="checkbox" name="private" checked={communityType === "private"} onChange={onCommunityTypeChange} className="text-blue-500" />
+                <input type="checkbox" name="private" checked={genreType === "private"} onChange={onGenreTypeChange} className="text-blue-500" />
                 <span className="text-sm font-bold mr-1">
                   Private
                 </span>
                 <span className="text-xs text-gray-500">
-                  Only approved users can view and submit to this community
+                  Only approved users can view and submit to this genre
                 </span>
               </label>
             </div>
@@ -176,12 +176,12 @@ const CreateCommunityModal: FC<CreateCommunityModalProps> = ({ userId }) => {
         <button className="border border-gray-300 text-sm p-1 er border-gray-300 text-sm p-1.5" onClick={handleModalClose}>
         Cancel
       </button>
-      <button className="bg-blue-500 text-white text-sm p-1.5" onClick={handleCreateCommunity} disabled={loading}>
-        Create Community
+      <button className="bg-blue-500 text-white text-sm p-1.5" onClick={handleCreateGenre} disabled={loading}>
+        Create Genre
       </button>
     </div>
     </ModalWrapper>
   );
 };
 
-export default CreateCommunityModal;
+export default CreateGenreModal;

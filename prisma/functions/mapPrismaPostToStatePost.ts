@@ -8,7 +8,7 @@ export async function mapPrismaPostToStatePost(prismaPost: Post): Promise<Post> 
     body: prismaPost.body || 'No Content',  // 선택적 필드, 기본값 'No Content'
     createdAt: prismaPost.createdAt,
     editedAt: prismaPost.editedAt,
-    communityId: prismaPost.communityId || "defaultCommunityId",
+    genreId: prismaPost.genreId || "defaultGenreId",
     nickName: prismaPost.displayName || "defaultnickName",
     creatorId: prismaPost.creatorId,
     voteStatus: prismaPost.voteStatus,

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import useDirectory from "@/hooks/useDirectory";
-import Communities from "@/components/reddit/Navbar/Directory/Communities";
+import Communities from "@/components/reddit/Navbar/Directory/Genres";
 
 const Directory: FC = () => {
   const { directoryState, toggleMenuOpen } = useDirectory();

@@ -8,7 +8,7 @@
 ALTER TABLE "comments" DROP CONSTRAINT "comments_creatorId_fkey";
 
 -- DropForeignKey
-ALTER TABLE "communities_snippets" DROP CONSTRAINT "communities_snippets_userId_fkey";
+ALTER TABLE "genres_snippets" DROP CONSTRAINT "genres_snippets_userId_fkey";
 
 -- DropForeignKey
 ALTER TABLE "post_votes" DROP CONSTRAINT "post_votes_userId_fkey";
@@ -56,7 +56,7 @@ ALTER TABLE "posts" ADD CONSTRAINT "posts_creatorId_fkey" FOREIGN KEY ("creatorI
 ALTER TABLE "comments" ADD CONSTRAINT "comments_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "public_users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "communities_snippets" ADD CONSTRAINT "communities_snippets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public_users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "genres_snippets" ADD CONSTRAINT "genres_snippets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public_users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "post_votes" ADD CONSTRAINT "post_votes_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

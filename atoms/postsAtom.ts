@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-import { PostsState } from "../types/PostsState";
+import { PostsState } from "@/types/PostsState";
 
 export const defaultPostsState: PostsState = {
   selectedPost: null,

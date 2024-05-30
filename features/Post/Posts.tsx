@@ -4,42 +4,42 @@ import { useRouter } from "next/navigation";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
 import { supabase } from "@/utils/supabase/client";
 import usePosts from "@/hooks/usePosts";
-import { Community } from "@/types/CommunityState";
+import { Genre } from "@/types/GenreState";
 import { Post } from "@prisma/client";
 import PostItem from "./PostItem";
 import { RecoilRoot } from "recoil";
 
 type PostsProps = {
-  communityData?: Community;
+  genreData?: Genre;
   userId?: string;
   loadingUser: boolean;
 };
 
-const Posts: FC<PostsProps> = ({ communityData, userId, loadingUser }) => {
+const Posts: FC<PostsProps> = ({ genreData, userId, loadingUser }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const { postStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(communityData!);
+  const { postStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(genreData!);
 
   const onSelectPost = (post: Post, postIdx: number) => {
     setPostsStateValue((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
-    router.push(`/r/${communityData?.id!}/comments/${post.id}`);
+    router.push(`/r/${genreData?.id!}/comments/${post.id}`);
   };
 
   useEffect(() => {
-    if (postStateValue.postsCache[communityData?.id!] && !postStateValue.postUpdateRequired) {
+    if (postStateValue.postsCache[genreData?.id!] && !postStateValue.postUpdateRequired) {
       setPostsStateValue((prev) => ({
         ...prev,
-        posts: postStateValue.postsCache[communityData?.id!],
+        posts: postStateValue.postsCache[genreData?.id!],
       }));
       return;
     }
 
     getPosts();
-  }, [communityData, postStateValue.postUpdateRequired]);
+  }, [genreData, postStateValue.postUpdateRequired]);
 
   const getPosts = async () => {
     setLoading(true);
@@ -47,7 +47,7 @@ const Posts: FC<PostsProps> = ({ communityData, userId, loadingUser }) => {
       let { data: posts, error } = await supabase
         .from('posts')
         .select('*')
-        .eq('communityId', communityData?.id)
+        .eq('genreId', genreData?.id)
         .order('createdAt', { ascending: false });
 
       if (error) throw error;
@@ -57,7 +57,7 @@ const Posts: FC<PostsProps> = ({ communityData, userId, loadingUser }) => {
         posts: posts as Post[],
         postsCache: {
           ...prev.postsCache,
-          [communityData?.id!]: posts as Post[],
+          [genreData?.id!]: posts as Post[],
         },
         postUpdateRequired: false,
       }));
@@ -93,10 +93,10 @@ const Posts: FC<PostsProps> = ({ communityData, userId, loadingUser }) => {
 export default Posts;
 
 // useEffect(() => {
-//   if (postStateValue.postsCache[communityData?.id!] && !postStateValue.postUpdateRequired) {
+//   if (postStateValue.postsCache[genreData?.id!] && !postStateValue.postUpdateRequired) {
 //     setPostsStateValue((prev) => ({
 //       ...prev,
-//       posts: postStateValue.postsCache[communityData?.id!],
+//       posts: postStateValue.postsCache[genreData?.id!],
 //     }));
 //     return;
 //   }
@@ -114,7 +114,7 @@ export default Posts;
 //    */
 //   // const postsQuery = query(
 //   //   collection(firestore, "posts"),
-//   //   where("communityId", "==", communityData.id),
+//   //   where("genreId", "==", genreData.id),
 //   //   orderBy("createdAt", "desc")
 //   // );
 //   // const unsubscribe = onSnapshot(postsQuery, (querySnaption) => {
@@ -132,4 +132,4 @@ export default Posts;
 //   // // Remove real-time listener on component dismount
 //   // return () => unsubscribe();
 //   // eslint-disable-next-line react-hooks/exhaustive-deps
-// }, [communityData, postStateValue.postUpdateRequired]);
+// }, [genreData, postStateValue.postUpdateRequired]);

@@ -6,133 +6,133 @@ settings:
 
 dependencies:
   '@editorjs/code':
-    specifier: ^2.8.0
+    specifier: ^2.9.0
     version: 2.9.0
   '@editorjs/editorjs':
-    specifier: ^2.26.5
+    specifier: ^2.29.1
     version: 2.29.1
   '@editorjs/embed':
-    specifier: ^2.5.3
+    specifier: ^2.7.2
     version: 2.7.2
   '@editorjs/header':
-    specifier: ^2.7.0
+    specifier: ^2.8.1
     version: 2.8.1
   '@editorjs/inline-code':
-    specifier: ^1.4.0
+    specifier: ^1.5.0
     version: 1.5.0
   '@editorjs/link':
-    specifier: ^2.5.0
+    specifier: ^2.6.2
     version: 2.6.2
   '@editorjs/list':
-    specifier: ^1.8.0
+    specifier: ^1.9.0
     version: 1.9.0
   '@editorjs/paragraph':
-    specifier: ^2.9.0
+    specifier: ^2.11.4
     version: 2.11.4
   '@editorjs/table':
-    specifier: ^2.2.1
+    specifier: ^2.3.0
     version: 2.3.0
   '@faker-js/faker':
-    specifier: ^8.2.0
+    specifier: ^8.4.1
     version: 8.4.1
   '@hookform/resolvers':
-    specifier: ^3.1.0
+    specifier: ^3.4.2
     version: 3.4.2(react-hook-form@7.51.5)
   '@prisma/client':
     specifier: ^5.14.0
     version: 5.14.0(prisma@5.14.0)
   '@radix-ui/react-accessible-icon':
-    specifier: ^1.0.2
+    specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-accordion':
-    specifier: ^1.1.1
+    specifier: ^1.1.2
     version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-alert-dialog':
-    specifier: ^1.0.3
+    specifier: ^1.0.5
     version: 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-aspect-ratio':
-    specifier: ^1.0.2
+    specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-avatar':
-    specifier: ^1.0.2
+    specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-checkbox':
-    specifier: ^1.0.3
+    specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-collapsible':
-    specifier: ^1.0.2
+    specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-context-menu':
-    specifier: ^2.1.3
+    specifier: ^2.1.5
     version: 2.1.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-dialog':
-    specifier: ^1.0.3
+    specifier: ^1.0.5
     version: 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-dropdown-menu':
-    specifier: ^2.0.4
+    specifier: ^2.0.6
     version: 2.0.6(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-form':
     specifier: ^0.0.3
     version: 0.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-hover-card':
-    specifier: ^1.0.5
+    specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-icons':
     specifier: ^1.3.0
     version: 1.3.0(react@18.3.1)
   '@radix-ui/react-label':
-    specifier: ^2.0.1
+    specifier: ^2.0.2
     version: 2.0.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-menubar':
-    specifier: ^1.0.2
+    specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-navigation-menu':
-    specifier: ^1.1.2
+    specifier: ^1.1.4
     version: 1.1.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-popover':
-    specifier: ^1.0.5
+    specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-portal':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-progress':
-    specifier: ^1.0.2
+    specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-radio-group':
-    specifier: ^1.1.2
+    specifier: ^1.1.3
     version: 1.1.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-scroll-area':
-    specifier: ^1.0.3
+    specifier: ^1.0.5
     version: 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-select':
-    specifier: ^1.2.1
+    specifier: ^1.2.2
     version: 1.2.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-separator':
-    specifier: ^1.0.2
+    specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-slider':
-    specifier: ^1.1.1
+    specifier: ^1.1.2
     version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-slot':
-    specifier: ^1.0.1
+    specifier: ^1.0.2
     version: 1.0.2(@types/react@18.3.3)(react@18.3.1)
   '@radix-ui/react-switch':
-    specifier: ^1.0.2
+    specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-tabs':
-    specifier: ^1.0.3
+    specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-toast':
-    specifier: ^1.1.3
+    specifier: ^1.1.5
     version: 1.1.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-toggle':
-    specifier: ^1.0.2
+    specifier: ^1.0.3
     version: 1.0.3(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-toggle-group':
-    specifier: ^1.0.3
+    specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/react-tooltip':
-    specifier: ^1.0.5
+    specifier: ^1.0.7
     version: 1.0.7(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@radix-ui/themes':
     specifier: ^3.0.5
@@ -159,20 +159,20 @@ dependencies:
     specifier: ^8.17.3
     version: 8.17.3(react-dom@18.3.1)(react@18.3.1)
   '@typescript-eslint/parser':
-    specifier: ^5.59.0
+    specifier: ^5.62.0
     version: 5.62.0(eslint@8.57.0)(typescript@5.4.5)
   '@vercel/analytics':
-    specifier: ^1.0.0
+    specifier: ^1.3.1
     version: 1.3.1(next@14.2.3)(react@18.3.1)
   '@vercel/og':
     specifier: ^0.0.21
     version: 0.0.21
   '@wavesurfer/react':
-    specifier: ^1.0.5
+    specifier: ^1.0.6
     version: 1.0.6(react@18.3.1)(wavesurfer.js@7.7.15)
   '@web3modal/wagmi':
     specifier: 3.5.2
-    version: 3.5.2(@types/react@18.3.3)(@wagmi/core@2.10.4)(typescript@5.4.5)(viem@1.0.0)
+    version: 3.5.2(@types/react@18.3.3)(@wagmi/core@2.10.5)(typescript@5.4.5)(viem@1.0.0)
   class-variance-authority:
     specifier: ^0.4.0
     version: 0.4.0(typescript@5.4.5)
@@ -183,13 +183,13 @@ dependencies:
     specifier: ^0.1.22
     version: 0.1.22(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   concurrently:
-    specifier: ^8.0.1
+    specifier: ^8.2.2
     version: 8.2.2
   contentlayer:
     specifier: 0.3.4
     version: 0.3.4(esbuild@0.21.4)(markdown-wasm@1.2.0)
   date-fns:
-    specifier: ^2.29.3
+    specifier: ^2.30.0
     version: 2.30.0
   embla-carousel-autoplay:
     specifier: 8.0.0-rc15
@@ -198,16 +198,16 @@ dependencies:
     specifier: 8.0.0-rc15
     version: 8.0.0-rc15(react@18.3.1)
   framer-motion:
-    specifier: ^11.0.24
-    version: 11.2.8(react-dom@18.3.1)(react@18.3.1)
+    specifier: ^11.2.9
+    version: 11.2.9(react-dom@18.3.1)(react@18.3.1)
   geist:
-    specifier: ^1.2.2
+    specifier: ^1.3.0
     version: 1.3.0(next@14.2.3)
   input-otp:
     specifier: 1.2.2
     version: 1.2.2(react-dom@18.3.1)(react@18.3.1)
   jotai:
-    specifier: ^2.8.1
+    specifier: ^2.8.2
     version: 2.8.2(@types/react@18.3.3)(react@18.3.1)
   lodash.template:
     specifier: ^4.5.0
@@ -225,37 +225,37 @@ dependencies:
     specifier: 14.2.3
     version: 14.2.3(@babel/core@7.24.6)(@opentelemetry/api@1.8.0)(react-dom@18.3.1)(react@18.3.1)
   next-contentlayer:
-    specifier: ^0.3.1
+    specifier: ^0.3.4
     version: 0.3.4(contentlayer@0.3.4)(esbuild@0.21.4)(markdown-wasm@1.2.0)(next@14.2.3)(react-dom@18.3.1)(react@18.3.1)
   next-themes:
     specifier: ^0.2.1
     version: 0.2.1(next@14.2.3)(react-dom@18.3.1)(react@18.3.1)
   nodemailer:
-    specifier: ^6.9.1
+    specifier: ^6.9.13
     version: 6.9.13
   postmark:
-    specifier: ^3.0.15
+    specifier: ^3.11.0
     version: 3.11.0
   primereact:
-    specifier: ^10.6.5
+    specifier: ^10.6.6
     version: 10.6.6(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   prop-types:
     specifier: ^15.8.1
     version: 15.8.1
   react:
-    specifier: ^18.2.0
+    specifier: ^18.3.1
     version: 18.3.1
   react-day-picker:
-    specifier: ^8.7.1
+    specifier: ^8.10.1
     version: 8.10.1(date-fns@2.30.0)(react@18.3.1)
   react-dom:
-    specifier: ^18.2.0
+    specifier: ^18.3.1
     version: 18.3.1(react@18.3.1)
   react-editor-js:
     specifier: ^2.1.0
     version: 2.1.0(@editorjs/editorjs@2.29.1)(@editorjs/paragraph@2.11.4)(react@18.3.1)
   react-hook-form:
-    specifier: ^7.43.9
+    specifier: ^7.51.5
     version: 7.51.5(react@18.3.1)
   react-icons:
     specifier: ^5.2.1
@@ -267,7 +267,7 @@ dependencies:
     specifier: ^0.0.55
     version: 0.0.55(react-dom@18.3.1)(react@18.3.1)
   react-textarea-autosize:
-    specifier: ^8.4.1
+    specifier: ^8.5.3
     version: 8.5.3(@types/react@18.3.3)(react@18.3.1)
   react-wrap-balancer:
     specifier: ^0.4.1
@@ -300,16 +300,16 @@ dependencies:
     specifier: ^2.2.5
     version: 2.2.5(react@18.3.1)
   tailwind-merge:
-    specifier: ^1.12.0
+    specifier: ^1.14.0
     version: 1.14.0
   tailwindcss-animate:
-    specifier: ^1.0.5
+    specifier: ^1.0.7
     version: 1.0.7(tailwindcss@3.4.3)
   ts-morph:
     specifier: ^22.0.0
     version: 22.0.0
   turbo:
-    specifier: ^1.9.9
+    specifier: ^1.13.3
     version: 1.13.3
   vaul:
     specifier: 0.9.0
@@ -321,18 +321,18 @@ dependencies:
     specifier: 1.4.12
     version: 1.4.12(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)(typescript@5.4.5)(viem@1.0.0)(zod@3.23.8)
   wavesurfer.js:
-    specifier: ^7.7.13
+    specifier: ^7.7.15
     version: 7.7.15
   zod:
-    specifier: ^3.21.4
+    specifier: ^3.23.8
     version: 3.23.8
 
 devDependencies:
   '@commitlint/cli':
-    specifier: ^17.6.1
+    specifier: ^17.8.1
     version: 17.8.1
   '@commitlint/config-conventional':
-    specifier: ^17.6.1
+    specifier: ^17.8.1
     version: 17.8.1
   '@ianvs/prettier-plugin-sort-imports':
     specifier: ^3.7.2
@@ -341,34 +341,34 @@ devDependencies:
     specifier: ^0.4.4
     version: 0.4.4(tailwindcss@3.4.3)
   '@tailwindcss/typography':
-    specifier: ^0.5.9
+    specifier: ^0.5.13
     version: 0.5.13(tailwindcss@3.4.3)
   '@types/node':
     specifier: 18.14.2
     version: 18.14.2
   '@types/react':
-    specifier: ^18.2.8
+    specifier: ^18.3.3
     version: 18.3.3
   '@types/react-dom':
-    specifier: ^18.0.6
+    specifier: ^18.3.0
     version: 18.3.0
   autoprefixer:
-    specifier: ^10.4.14
+    specifier: ^10.4.19
     version: 10.4.19(postcss@8.4.38)
   eslint:
-    specifier: ^8.39.0
+    specifier: ^8.57.0
     version: 8.57.0
   eslint-config-next:
     specifier: 13.0.0
     version: 13.0.0(eslint@8.57.0)(typescript@5.4.5)
   eslint-config-prettier:
-    specifier: ^8.8.0
+    specifier: ^8.10.0
     version: 8.10.0(eslint@8.57.0)
   eslint-plugin-react:
-    specifier: ^7.32.2
+    specifier: ^7.34.2
     version: 7.34.2(eslint@8.57.0)
   eslint-plugin-tailwindcss:
-    specifier: ^3.11.0
+    specifier: ^3.17.0
     version: 3.17.0(tailwindcss@3.4.3)
   husky:
     specifier: ^8.0.3
@@ -377,7 +377,7 @@ devDependencies:
     specifier: ^6.1.1
     version: 6.1.1
   postcss:
-    specifier: ^8.4.23
+    specifier: ^8.4.38
     version: 8.4.38
   prettier:
     specifier: ^2.8.8
@@ -386,7 +386,7 @@ devDependencies:
     specifier: ^0.1.13
     version: 0.1.13(prettier@2.8.8)
   pretty-quick:
-    specifier: ^3.1.3
+    specifier: ^3.3.1
     version: 3.3.1(prettier@2.8.8)
   prisma:
     specifier: ^5.14.0
@@ -398,22 +398,22 @@ devDependencies:
     specifier: ^6.1.1
     version: 6.1.1
   rehype-pretty-code:
-    specifier: ^0.9.5
+    specifier: ^0.9.11
     version: 0.9.11(shiki@0.11.1)
   rehype-slug:
     specifier: ^5.1.0
     version: 5.1.0
   remark:
-    specifier: ^14.0.2
+    specifier: ^14.0.3
     version: 14.0.3
   remark-gfm:
     specifier: ^3.0.1
     version: 3.0.1
   tailwindcss:
-    specifier: ^3.3.1
+    specifier: ^3.4.3
     version: 3.4.3(ts-node@10.9.2)
   typescript:
-    specifier: ^5.1.3
+    specifier: ^5.4.5
     version: 5.4.5
   unist-util-visit:
     specifier: ^4.1.2
@@ -1318,6 +1318,19 @@ packages:
       eslint-visitor-keys: 3.4.3
 
   /@eslint-community/regexpp@4.10.0:
+    resolution: {integrity: sha512-Cu96Sd2By9mCNTx2iyKOmq10v22jUVQv0lQnlGNy16oE9589yE+QADPbrMGCkA51cKZSg3Pu/aTJVTGfL/qjUA==}
+    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
+
+  /@eslint-genre/eslint-utils@4.4.0(eslint@8.57.0):
+    resolution: {integrity: sha512-1/sA4dwrzBAyeUoQ6oxahHKmrZvsnLCg4RfxW3ZFGGmQkSNQPFNLV9CUEFQP1x9EYXHTo5p6xdhZM1Ne9p/AfA==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
+    dependencies:
+      eslint: 8.57.0
+      eslint-visitor-keys: 3.4.3
+
+  /@eslint-genre/regexpp@4.10.0:
     resolution: {integrity: sha512-Cu96Sd2By9mCNTx2iyKOmq10v22jUVQv0lQnlGNy16oE9589yE+QADPbrMGCkA51cKZSg3Pu/aTJVTGfL/qjUA==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
 
@@ -5194,8 +5207,8 @@ packages:
       - zod
     dev: false
 
-  /@wagmi/core@2.10.4(@types/react@18.3.3)(react@18.3.1)(typescript@5.4.5)(viem@1.0.0)(zod@3.23.8):
-    resolution: {integrity: sha512-X/PW4zckkSQ/y4LwkQ5cwLKv551I6kVorH3VsTQghxYt0Vj9K5/XhCCRQg5Q200u6fiUCJ+2WjpmhZu3XYNU9w==}
+  /@wagmi/core@2.10.5(@types/react@18.3.3)(react@18.3.1)(typescript@5.4.5)(viem@1.0.0)(zod@3.23.8):
+    resolution: {integrity: sha512-BvqFEdJTTepOKtPnacq7oE8gUZ4llzdxmPSBEYePArd1dvP/e5gwwfS5/8VBcvDvGcoX4N0lw5A4NNOJKL0Q+A==}
     peerDependencies:
       '@tanstack/query-core': '>=5.0.0'
       typescript: '>=5.0.4'
@@ -5830,8 +5843,8 @@ packages:
       dayjs: 1.11.10
     dev: false
 
-  /@web3modal/common@4.2.2:
-    resolution: {integrity: sha512-FDTSfI8geY2x0or7h9fjNCKJ+9sxzXx1wjTa6iMqLNQB2Kkot8pz+IfHE9tdyHY5946WQ4YtowecmoKTjECzFw==}
+  /@web3modal/common@4.2.3:
+    resolution: {integrity: sha512-n0lvhoRjViqxmkgpy+iEM6E3HBylUgdxUDJU4hUxGmmrbGZGEP7USBRnQOEgXLqLCtWvxKjUAO33JBV/De+Osw==}
     requiresBuild: true
     dependencies:
       bignumber.js: 9.1.2
@@ -5850,12 +5863,12 @@ packages:
       - react
     dev: false
 
-  /@web3modal/core@4.2.2(@types/react@18.3.3)(react@18.3.1):
-    resolution: {integrity: sha512-O78tam38fQxELAnUL+eUAabkG1RZGBM680cqsG7OpRz2pUwtL4+2DTvsbNj071/wXm9VX7PNY2CyGErPSBvstQ==}
+  /@web3modal/core@4.2.3(@types/react@18.3.3)(react@18.3.1):
+    resolution: {integrity: sha512-UykKZTELBpb6ey+IV6fkHWsLkjrIdILmRYzhlznyTPbm9qX5pOR9tH0Z3QGUo7YPFmUqMRH1tC9Irsr3SgIbbw==}
     requiresBuild: true
     dependencies:
-      '@web3modal/common': 4.2.2
-      '@web3modal/wallet': 4.2.2
+      '@web3modal/common': 4.2.3
+      '@web3modal/wallet': 4.2.3
       valtio: 1.11.2(@types/react@18.3.3)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
@@ -5869,8 +5882,8 @@ packages:
       buffer: 6.0.3
     dev: false
 
-  /@web3modal/polyfills@4.2.2:
-    resolution: {integrity: sha512-fNqK/ybaiQwkcg38LMnBgpz+ZHIK/8xGxZ+f7ny21jFX4ttByT8T8xLwfubUoZRfNDPo320+cji7DcMQyvaCEw==}
+  /@web3modal/polyfills@4.2.3:
+    resolution: {integrity: sha512-RiGxh2hMLSD1s2aTjoejNK/UL377CJhGf5tzmdF1m5xsYHpil+Dnulpio8Yojnm27cOqQD+QiaYUKnHOxErLjQ==}
     requiresBuild: true
     dependencies:
       buffer: 6.0.3
@@ -5901,12 +5914,12 @@ packages:
       - react
     dev: false
 
-  /@web3modal/scaffold-utils@4.2.2(@types/react@18.3.3)(react@18.3.1):
-    resolution: {integrity: sha512-gK8tzFv0KW0VEz9DB7QnMQGt5BsW3n8EzNX3YrWOk3x8jSmq087VyGFaoQCKxXNyrHWzbehvjpppLxqtsMUk3A==}
+  /@web3modal/scaffold-utils@4.2.3(@types/react@18.3.3)(react@18.3.1):
+    resolution: {integrity: sha512-z6t0ggYg1/8hpaKHUm77z2VyacjIZEZTI8IHSQYmHuRFGu5oDPJeAr1thr475JXdoGLYr08hwquZyed/ZINAvw==}
     requiresBuild: true
     dependencies:
-      '@web3modal/core': 4.2.2(@types/react@18.3.3)(react@18.3.1)
-      '@web3modal/polyfills': 4.2.2
+      '@web3modal/core': 4.2.3(@types/react@18.3.3)(react@18.3.1)
+      '@web3modal/polyfills': 4.2.3
       valtio: 1.11.2(@types/react@18.3.3)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
@@ -5938,13 +5951,13 @@ packages:
       - react
     dev: false
 
-  /@web3modal/siwe@4.2.2(@types/react@18.3.3)(react@18.3.1):
-    resolution: {integrity: sha512-9Pei6E5nG9/FeNuPh8Sj0zic9hc8K1PeMlK3wTTOOskOtlW4zCbdJ3GnsaDIwqrJDI8z5aG96JoRbC1rwInGtQ==}
+  /@web3modal/siwe@4.2.3(@types/react@18.3.3)(react@18.3.1):
+    resolution: {integrity: sha512-uPma0U/OxAy3LwnF7pCYYX8tn+ONBYNcssuVZxEGsusJD1kF4ueS8lK7eyQogyK5nXqOGdNESOjY1NImNNjMVw==}
     requiresBuild: true
     dependencies:
       '@walletconnect/utils': 2.12.0
-      '@web3modal/core': 4.2.2(@types/react@18.3.3)(react@18.3.1)
-      '@web3modal/scaffold-utils': 4.2.2(@types/react@18.3.3)(react@18.3.1)
+      '@web3modal/core': 4.2.3(@types/react@18.3.3)(react@18.3.1)
+      '@web3modal/scaffold-utils': 4.2.3(@types/react@18.3.3)(react@18.3.1)
       lit: 3.1.0
       valtio: 1.11.2(@types/react@18.3.3)(react@18.3.1)
     transitivePeerDependencies:
@@ -5974,7 +5987,7 @@ packages:
       qrcode: 1.5.3
     dev: false
 
-  /@web3modal/wagmi@3.5.2(@types/react@18.3.3)(@wagmi/core@2.10.4)(typescript@5.4.5)(viem@1.0.0):
+  /@web3modal/wagmi@3.5.2(@types/react@18.3.3)(@wagmi/core@2.10.5)(typescript@5.4.5)(viem@1.0.0):
     resolution: {integrity: sha512-max/bSPLVuJODpyU2uFVNXQJe66Nc2h9ayr7BPYmRxoAoZ3owG9ddWOtRJbd9booFMmG/DM6ihAJw9Eru1kFZA==}
     peerDependencies:
       '@wagmi/core': '>=1'
@@ -5989,7 +6002,7 @@ packages:
       vue:
         optional: true
     dependencies:
-      '@wagmi/core': 2.10.4(@types/react@18.3.3)(react@18.3.1)(typescript@5.4.5)(viem@1.0.0)(zod@3.23.8)
+      '@wagmi/core': 2.10.5(@types/react@18.3.3)(react@18.3.1)(typescript@5.4.5)(viem@1.0.0)(zod@3.23.8)
       '@web3modal/polyfills': 3.5.2
       '@web3modal/scaffold': 3.5.2(@types/react@18.3.3)(react@18.3.1)
       '@web3modal/scaffold-react': 3.5.2(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
@@ -5997,7 +6010,7 @@ packages:
       '@web3modal/scaffold-vue': 3.5.2(@types/react@18.3.3)(react@18.3.1)(vue@3.4.27)
       viem: 1.0.0(typescript@5.4.5)(zod@3.23.8)
     optionalDependencies:
-      '@web3modal/siwe': 4.2.2(@types/react@18.3.3)(react@18.3.1)
+      '@web3modal/siwe': 4.2.3(@types/react@18.3.3)(react@18.3.1)
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       vue: 3.4.27(typescript@5.4.5)
@@ -6026,11 +6039,11 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /@web3modal/wallet@4.2.2:
-    resolution: {integrity: sha512-ZkEWeXzbGWUGLFP+uPtdkG4OdiGgdVL9lLCWWVZlq7NZpZdTSc8+kmgdH71qvfNbt+yr7do1KVsQQcQfF6jXhw==}
+  /@web3modal/wallet@4.2.3:
+    resolution: {integrity: sha512-V+VpwmhQl9qeJMpzNkjpAaxercAsrr1O9oGRjrjD+c0q72NfdcbTalWSbjSQmqabI1M6N06Hw94FkAQuEfVGsg==}
     requiresBuild: true
     dependencies:
-      '@web3modal/polyfills': 4.2.2
+      '@web3modal/polyfills': 4.2.3
       zod: 3.22.4
     dev: false
     optional: true
@@ -6436,7 +6449,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001625
-      electron-to-chromium: 1.4.783
+      electron-to-chromium: 1.4.786
       node-releases: 2.0.14
       update-browserslist-db: 1.0.16(browserslist@4.23.0)
 
@@ -7222,8 +7235,8 @@ packages:
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
-  /electron-to-chromium@1.4.783:
-    resolution: {integrity: sha512-bT0jEz/Xz1fahQpbZ1D7LgmPYZ3iHVY39NcWWro1+hA2IvjiPeaXtfSqrQ+nXjApMvQRE2ASt1itSLRrebHMRQ==}
+  /electron-to-chromium@1.4.786:
+    resolution: {integrity: sha512-i/A2UB0sxYViMN0M2zIotQFRIOt1jLuVXudACHBDiJ5gGuAUzf/crZxwlBTdA0O52Hy4CNtTzS7AKRAacs/08Q==}
 
   /embla-carousel-autoplay@8.0.0-rc15(embla-carousel@8.0.0-rc15):
     resolution: {integrity: sha512-ABTbDJGNb9jzI9OV2vSpbUvxUA0ELmK0SI3yPm8Haj3ghssS+vElfahoDqp7zuFkWBRih6w3B51oMPKdF5J55A==}
@@ -7664,6 +7677,8 @@ packages:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.57.0)
       '@eslint-community/regexpp': 4.10.0
+      '@eslint-genre/eslint-utils': 4.4.0(eslint@8.57.0)
+      '@eslint-genre/regexpp': 4.10.0
       '@eslint/eslintrc': 2.1.4
       '@eslint/js': 8.57.0
       '@humanwhocodes/config-array': 0.11.14
@@ -8050,8 +8065,8 @@ packages:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
     dev: true
 
-  /framer-motion@11.2.8(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-wcxOdC9QjSCC9GY6Bk4NFlyk3+cBpasrCuFPurm00cKwyxO24Q8KEawRz1pxWfmue2STIY0lZTiXsS9ILFka5A==}
+  /framer-motion@11.2.9(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-gfxNSkp4dC3vpy2hGNQK3K9bNOKwfasqOhrqvmZzYxCPSJ9Tpv/9JlCkeCMgFdKefgPr8+JiouGjVmaDzu750w==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0

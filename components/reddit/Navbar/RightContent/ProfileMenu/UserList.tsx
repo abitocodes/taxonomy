@@ -8,7 +8,7 @@ import { Icon } from "@radix-ui/react-select";
 
 import { supabase } from "@/utils/supabase/client";
 
-import { communityState } from "@/atoms/communitiesAtom";
+import { genreState } from "@/atoms/genresAtom";
 
 import {
   DropdownMenu,
@@ -21,11 +21,11 @@ import { Session } from '@supabase/supabase-js';
 type UserListProps = {};
 
 const UserList: FC<UserListProps> = () => {
-  const resetCommunityState = useResetRecoilState(communityState);
+  const resetGenreState = useResetRecoilState(genreState);
   const [session, setSession] = useState<Session | null>(null);
 
   const logout = async () => {
-    resetCommunityState();
+    resetGenreState();
     const { error } = await supabase.auth.signOut();
     if (error) {
       console.error('Logout failed:', error.message);

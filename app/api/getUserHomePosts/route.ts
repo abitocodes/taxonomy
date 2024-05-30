@@ -3,12 +3,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log("app/api/getUserHomePosts/route.ts req.body", req.body);
-  const { userId, communityIds } = req.body;
+  const { userId, genreIds } = req.body;
   try {
     const posts = await prisma.post.findMany({
       where: {
-        communityId: {
-          in: communityIds
+        genreId: {
+          in: genreIds
         },
         creatorId: userId
       },

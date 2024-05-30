@@ -3,13 +3,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { communityState } from "@/atoms/communitiesAtom";
+import { genreState } from "@/atoms/genresAtom";
 import PageContentLayout from "@/components/reddit/Layout/PageContent";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
-import CreatePostLink from "@/features/Community/CreatePostLink";
-import PersonalHome from "@/features/Community/PersonalHome";
-import Premium from "@/features/Community/Premium";
-import Recommendations from "@/features/Community/Recommendations";
+import CreatePostLink from "@/features/Genre/CreatePostLink";
+import PersonalHome from "@/features/Genre/PersonalHome";
+import Premium from "@/features/Genre/Premium";
+import Recommendations from "@/features/Genre/Recommendations";
 import PostItem from "@/features/Post/PostItem";
 import SimplePostItem from "@/features/Post/SimplePostItem";
 import usePosts from "@/hooks/usePosts";
@@ -27,7 +27,7 @@ export default function Home(): ReactElement {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const { postStateValue, setPostsStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
-  const communityStateValue = useRecoilValue(communityState);
+  const genreStateValue = useRecoilValue(genreState);
 
   const getUserHomePosts = async () => {
     setLoading(true);
@@ -37,7 +37,7 @@ export default function Home(): ReactElement {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ userId: user?.id, communityIds: communityStateValue.mySnippets.map(snippet => snippet.communityId) })
+        body: JSON.stringify({ userId: user?.id, genreIds: genreStateValue.mySnippets.map(snippet => snippet.genreId) })
       });
       const posts = await response.json();
       setPostsStateValue((prev) => {
@@ -98,12 +98,12 @@ export default function Home(): ReactElement {
   };
 
   useEffect(() => {
-    if (!communityStateValue.initSnippetsFetched) return;
+    if (!genreStateValue.initSnippetsFetched) return;
 
     if (user) {
       getUserHomePosts();
     }
-  }, [user, communityStateValue.initSnippetsFetched]);
+  }, [user, genreStateValue.initSnippetsFetched]);
 
   useEffect(() => {
     if (!user && !authLoading) {

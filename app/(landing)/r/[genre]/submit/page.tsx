@@ -6,24 +6,24 @@ import { Box, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 
-import { communityState } from "@/atoms/communitiesAtom";
+import { genreState } from "@/atoms/genresAtom";
 import PageContentLayout from "@/components/Layout/PageContent";
-import About from "@/features/Community/About";
+import About from "@/features/Genre/About";
 import NewPostForm from "@/features/Post/PostForm/NewPostForm";
 import { auth } from "@/firebase/clientApp";
-import useCommunityData from "@/hooks/useCommunityData";
+import useGenreData from "@/hooks/useGenreData";
 
 const CreateCommmunityPostPage: NextPage = () => {
   const [user, loadingUser] = useAuthState(auth);
   const router = useRouter();
-  const communityStateValue = useRecoilValue(communityState);
-  const { loading } = useCommunityData();
+  const genreStateValue = useRecoilValue(genreState);
+  const { loading } = useGenreData();
 
   useEffect(() => {
-    if (!user && !loadingUser && communityStateValue.currentCommunity.id) {
-      router.push(`/r/${communityStateValue.currentCommunity.id}`);
+    if (!user && !loadingUser && genreStateValue.currentGenre.id) {
+      router.push(`/r/${genreStateValue.currentGenre.id}`);
     }
-  }, [user, loadingUser, communityStateValue.currentCommunity, router]);
+  }, [user, loadingUser, genreStateValue.currentGenre, router]);
 
   // console.log("HERE IS USER", user, loadingUser);
 
@@ -33,11 +33,11 @@ const CreateCommmunityPostPage: NextPage = () => {
         <Box p="14px 0px" borderBottom="1px solid" borderColor="white">
           <Text fontWeight={600}>Create a post</Text>
         </Box>
-        {user && <NewPostForm communityId={communityStateValue.currentCommunity.id} communityImageURL={communityStateValue.currentCommunity.imageURL} user={user} />}
+        {user && <NewPostForm genreId={genreStateValue.currentGenre.id} genreImageURL={genreStateValue.currentGenre.imageURL} user={user} />}
       </>
-      {communityStateValue.currentCommunity && (
+      {genreStateValue.currentGenre && (
         <>
-          <About communityData={communityStateValue.currentCommunity} pt={6} onCreatePage loading={loading} />
+          <About genreData={genreStateValue.currentGenre} pt={6} onCreatePage loading={loading} />
         </>
       )}
     </PageContentLayout>

@@ -34,12 +34,12 @@ const useCreatePost = () => {
       return;
     }
 
-    const community = searchParams?.get('community');
-    if (community) {
-      router.push(`/r/${community}/submit`);
+    const genre = searchParams?.get('genre');
+    if (genre) {
+      router.push(`/r/${genre}/submit`);
       return;
     }
-    // Open directory menu to select community to post to
+    // Open directory menu to select genre to post to
     toggleMenuOpen();
   };
 

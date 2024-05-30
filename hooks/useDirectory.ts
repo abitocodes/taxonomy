@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 
 import { useRouter } from "next/navigation";
 
-import { communityState } from "@/atoms/communitiesAtom";
+import { genreState } from "@/atoms/genresAtom";
 import { defaultMenuItem, directoryMenuState } from "@/atoms/directoryMenuAtom";
 import { DirectoryMenuItem } from "@/types/DirectoryMenuState";
 
@@ -12,7 +12,7 @@ const useDirectory = () => {
   const [directoryState, setDirectoryState] = useRecoilState(directoryMenuState);
   const router = useRouter();
 
-  const communityStateValue = useRecoilValue(communityState);
+  const genreStateValue = useRecoilValue(genreState);
 
   const onSelectMenuItem = (menuItem: DirectoryMenuItem) => {
     setDirectoryState((prev) => ({
@@ -34,17 +34,17 @@ const useDirectory = () => {
   };
 
   useEffect(() => {
-    const existingCommunity = communityStateValue.currentCommunity;
+    const existingGenre = genreStateValue.currentGenre;
 
-    if (existingCommunity.id) {
+    if (existingGenre.id) {
       setDirectoryState((prev) => ({
         ...prev,
         selectedMenuItem: {
-          displayText: `r/${existingCommunity.id}`,
-          link: `r/${existingCommunity.id}`,
+          displayText: `r/${existingGenre.id}`,
+          link: `r/${existingGenre.id}`,
           icon: FaReddit,
           iconColor: "blue.500",
-          imageURL: existingCommunity.imageURL,
+          imageURL: existingGenre.imageURL,
         },
       }));
       return;
@@ -54,7 +54,7 @@ const useDirectory = () => {
       selectedMenuItem: defaultMenuItem,
     }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [communityStateValue.currentCommunity]);
+  }, [genreStateValue.currentGenre]);
 
   return { directoryState, onSelectMenuItem, toggleMenuOpen };
 };

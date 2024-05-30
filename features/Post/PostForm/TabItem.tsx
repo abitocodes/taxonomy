@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import { Flex, Icon, Text } from "@chakra-ui/react";
 
-import { PostTabItem } from "../../../types/PostTabItem";
+import { PostTabItem } from "@/../../types/PostTabItem";
 
 type TabItemProps = {
   item: PostTabItem;

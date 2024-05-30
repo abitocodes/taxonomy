@@ -23,7 +23,7 @@ import { CardContent } from "@/components/ui/card";
 
 type PostItemContentProps = {
   post: PostWith;
-  onVote: (event: React.MouseEvent<SVGElement, MouseEvent>, post: Post, vote: number, communityId: string, postIdx?: number) => void;
+  onVote: (event: React.MouseEvent<SVGElement, MouseEvent>, post: Post, vote: number, genreId: string, postIdx?: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   userIsCreator: boolean;
   onSelectPost?: (value: Post, postIdx: number) => void;
@@ -61,12 +61,12 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
       <CardContent>
         <div className={`flex flex-col items-center bg-${singlePostView ? "transparent" : "gray-100"} p-2 w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
           <TbArrowBigUp className={`text-${userVoteValue === 1 ? "primary" : "muted"} text-xl cursor-pointer`}
-                        onClick={(event) => onVote(event, post, 1, post.communityId)} />
+                        onClick={(event) => onVote(event, post, 1, post.genreId)} />
           <span className="text-sm font-bold">
             {post.voteStatus}
           </span>
           <TbArrowBigDown className={`text-${userVoteValue === -1 ? "secondary" : "muted"} text-xl cursor-pointer`}
-                          onClick={(event) => onVote(event, post, -1, post.communityId)} />
+                          onClick={(event) => onVote(event, post, -1, post.genreId)} />
         </div>
         <div className="flex w-full flex-col gap-1">
           <div className="flex items-center">

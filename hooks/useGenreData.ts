@@ -4,24 +4,24 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { authModalState } from "@/atoms/authModalAtom";
-import { communityState, defaultCommunity } from "@/atoms/communitiesAtom";
+import { genreState, defaultGenre } from "@/atoms/genresAtom";
 import { getMySnippets } from "@/helpers/supabase";
-import { Community, CommunitySnippet } from "@/types/CommunityState";
+import { Genre, GenreSnippet } from "@/types/GenreState";
 import { prisma } from "@/prisma/client";
 import { Session } from '@supabase/supabase-js';
 
-const useCommunityData = (ssrCommunityData?: boolean) => {
+const useGenreData = (ssrGenreData?: boolean) => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [communityStateValue, setCommunityStateValue] = useRecoilState(communityState);
+  const [genreStateValue, setGenreStateValue] = useRecoilState(genreState);
   const setAuthModalState = useSetRecoilState(authModalState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!user || !!communityStateValue.mySnippets.length) return;
+    if (!user || !!genreStateValue.mySnippets.length) return;
 
     getSnippets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,9 +32,9 @@ const useCommunityData = (ssrCommunityData?: boolean) => {
     try {
       if (!user?.id) throw new Error("User ID is undefined");
       const snippets = await getMySnippets(user.id);
-      setCommunityStateValue((prev) => ({
+      setGenreStateValue((prev) => ({
         ...prev,
-        mySnippets: snippets as CommunitySnippet[],
+        mySnippets: snippets as GenreSnippet[],
         initSnippetsFetched: true,
       }));
       setLoading(false);
@@ -44,17 +44,17 @@ const useCommunityData = (ssrCommunityData?: boolean) => {
     setLoading(false);
   };
 
-  const getCommunityData = async (communityId: string) => {
+  const getGenreData = async (genreId: string) => {
     try {
-      const community = await prisma.community.findUnique({
-        where: { id: communityId },
+      const genre = await prisma.genre.findUnique({
+        where: { id: genreId },
       });
   
-      if (!community) throw new Error('Community not found');
+      if (!genre) throw new Error('Genre not found');
   
-      setCommunityStateValue((prev) => ({
+      setGenreStateValue((prev) => ({
         ...prev,
-        currentCommunity: community as Community,
+        currentGenre: genre as Genre,
       }));
     } catch (error: any) {
       setError(error.message);
@@ -62,7 +62,7 @@ const useCommunityData = (ssrCommunityData?: boolean) => {
     setLoading(false);
   };
 
-  const onJoinLeaveCommunity = (community: Community, isJoined?: boolean) => {
+  const onJoinLeaveGenre = (genre: Genre, isJoined?: boolean) => {
     if (!user) {
       setAuthModalState({ open: true, view: "login" });
       return;
@@ -70,27 +70,27 @@ const useCommunityData = (ssrCommunityData?: boolean) => {
 
     setLoading(true);
     if (isJoined) {
-      leaveCommunity(community.id);
+      leaveGenre(genre.id);
       return;
     }
-    joinCommunity(community);
+    joinGenre(genre);
   };
 
-  const joinCommunity = async (community: Community) => {
-    // console.log("JOINING COMMUNITY: ", community.id);
+  const joinGenre = async (genre: Genre) => {
+    // console.log("JOINING COMMUNITY: ", genre.id);
     try {
-      // Insert new community snippet for the user
-      const newSnippet = await prisma.communitySnippet.create({
+      // Insert new genre snippet for the user
+      const newSnippet = await prisma.genreSnippet.create({
         data: {
           userId: user?.id,  // 'uid'를 'id'로 변경
-          communityId: community.id,
-          imageURL: community.imageURL || "",
+          genreId: genre.id,
+          imageURL: genre.imageURL || "",
         }
       });
   
-      // Update the number of members in the community
-      const updatedCommunity = await prisma.community.update({
-        where: { id: community.id },
+      // Update the number of members in the genre
+      const updatedGenre = await prisma.genre.update({
+        where: { id: genre.id },
         data: {
           numberOfMembers: {
             increment: 1
@@ -98,36 +98,36 @@ const useCommunityData = (ssrCommunityData?: boolean) => {
         }
       });
   
-      // Add current community to snippet
-      setCommunityStateValue((prev) => ({
+      // Add current genre to snippet
+      setGenreStateValue((prev) => ({
         ...prev,
         mySnippets: [...prev.mySnippets, {
-          communityId: community.id,
-          imageURL: community.imageURL || "",
+          genreId: genre.id,
+          imageURL: genre.imageURL || "",
         }],
       }));
     } catch (error) {
-      // console.log("joinCommunity error", error);
+      // console.log("joinGenre error", error);
     }
     setLoading(false);
   };
 
-  const leaveCommunity = async (communityId: string) => {
+  const leaveGenre = async (genreId: string) => {
     try {  
       await prisma.$transaction(async (prisma) => {
-        await prisma.communitySnippet.deleteMany({
-          where: { communityId: communityId, userId: user?.id },
+        await prisma.genreSnippet.deleteMany({
+          where: { genreId: genreId, userId: user?.id },
         });
   
-        await prisma.community.update({
-          where: { id: communityId },
+        await prisma.genre.update({
+          where: { id: genreId },
           data: { numberOfMembers: { decrement: 1 } },
         });
       });
   
-      setCommunityStateValue((prev) => ({
+      setGenreStateValue((prev) => ({
         ...prev,
-        mySnippets: prev.mySnippets.filter((item) => item.communityId !== communityId),
+        mySnippets: prev.mySnippets.filter((item) => item.genreId !== genreId),
       }));
     } catch (error) {
       setError(error.message);
@@ -137,31 +137,31 @@ const useCommunityData = (ssrCommunityData?: boolean) => {
 
   useEffect(() => {
     if (searchParams) {
-      const communityId = searchParams.get('community');
-      if (communityId) {
-        const communityData = communityStateValue.currentCommunity;
+      const genreId = searchParams.get('genre');
+      if (genreId) {
+        const genreData = genreStateValue.currentGenre;
 
-        if (!communityData.id) {
-          getCommunityData(communityId);
+        if (!genreData.id) {
+          getGenreData(genreId);
           return;
         }
       } else {
-        setCommunityStateValue((prev) => ({
+        setGenreStateValue((prev) => ({
           ...prev,
-          currentCommunity: defaultCommunity,
+          currentGenre: defaultGenre,
         }));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, communityStateValue.currentCommunity]);
+  }, [searchParams, genreStateValue.currentGenre]);
 
   return {
-    communityStateValue,
-    onJoinLeaveCommunity,
+    genreStateValue,
+    onJoinLeaveGenre,
     loading,
     setLoading,
     error,
   };
 };
 
-export default useCommunityData;
+export default useGenreData;

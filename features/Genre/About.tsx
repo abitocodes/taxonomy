@@ -9,24 +9,24 @@ import { useSearchParams } from "next/navigation";
 import moment from "moment";
 import Link from "next/link";
 
-import { communityState } from "@/atoms/communitiesAtom";
+import { genreState } from "@/atoms/genresAtom";
 import { supabase } from "@/utils/supabase/client";
-import { Community } from "@/types/CommunityState";
+import { Genre } from "@/types/GenreState";
 import { Session } from '@supabase/supabase-js';
 
 type AboutProps = {
-  communityData: Community;
+  genreData: Genre;
   pt?: number;
   onCreatePage?: boolean;
   loading?: boolean;
 };
 
-const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => {
+const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const searchParams = useSearchParams()
   const selectFileRef = useRef<HTMLInputElement>(null);
-  const setCommunityStateValue = useSetRecoilState(communityState);
+  const setGenreStateValue = useSetRecoilState(genreState);
 
   const [selectedFile, setSelectedFile] = useState<string>();
   const [imageLoading, setImageLoading] = useState(false);
@@ -52,14 +52,14 @@ const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => 
     if (!selectedFile) return;
     setImageLoading(true);
     try {
-      const { data: uploadData, error: uploadError } = await supabase.storage.from('communities').upload(`${communityData.id}/image`, selectedFile, {
+      const { data: uploadData, error: uploadError } = await supabase.storage.from('genres').upload(`${genreData.id}/image`, selectedFile, {
         cacheControl: '3600',
         upsert: false
       });
     
       if (uploadError) throw uploadError;
     
-      const { data: urlData } = await supabase.storage.from('communities').getPublicUrl(`${communityData.id}/image`);
+      const { data: urlData } = await supabase.storage.from('genres').getPublicUrl(`${genreData.id}/image`);
 
       if (!urlData.publicUrl) {
         throw new Error("Failed to get the public URL.");
@@ -68,16 +68,16 @@ const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => 
       const publicURL = urlData.publicUrl;
     
       const { data: updateData, error: updateError } = await supabase
-        .from('communities')
+        .from('genres')
         .update({ imageURL: publicURL })
-        .match({ id: communityData.id });
+        .match({ id: genreData.id });
     
       if (updateError) throw updateError;
     
-      setCommunityStateValue((prev) => ({
+      setGenreStateValue((prev) => ({
         ...prev,
-        currentCommunity: {
-          ...prev.currentCommunity,
+        currentGenre: {
+          ...prev.currentGenre,
           imageURL: publicURL,
         },
       }));
@@ -88,13 +88,13 @@ const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => 
     setImageLoading(false);
   };
 
-  const communityQuery = searchParams?.get('community');
+  const genreQuery = searchParams?.get('genre');
 
   return (
     <div className={`pt-${pt} sticky top-14`}>
       <div className="flex justify-between items-center p-3 text-white bg-blue-400 rounded-t-md">
         <p className="text-sm font-bold">
-          About Community
+          About Genre
         </p>
         <HiOutlineDotsHorizontal className="cursor-pointer" />
       </div>
@@ -109,7 +109,7 @@ const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => 
           </div>
         ) : (
           <>
-            {user?.id === communityData?.creatorId && (
+            {user?.id === genreData?.creatorId && (
               <div className="bg-gray-100 w-full p-2 rounded border border-gray-300 cursor-pointer">
                 <p className="text-xs font-bold text-blue-500">
                   Add description
@@ -119,7 +119,7 @@ const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => 
             <div className="space-y-2">
               <div className="w-full p-2 font-bold text-sm">
                 <div className="flex flex-col grow">
-                  <p>{communityData?.numberOfMembers?.toLocaleString()}</p>
+                  <p>{genreData?.numberOfMembers?.toLocaleString()}</p>
                   <p>Members</p>
                 </div>
                 <div className="flex flex-col grow">
@@ -130,16 +130,16 @@ const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => 
               <hr />
               <div className="flex items-center w-full p-1 font-medium text-sm">
                 <RiCakeLine className="mr-2 text-xl" />
-                {communityData?.createdAt && <p>Created {moment(communityData.createdAt).format("MMM DD, YYYY")}</p>}
+                {genreData?.createdAt && <p>Created {moment(genreData.createdAt).format("MMM DD, YYYY")}</p>}
               </div>
               {!onCreatePage && (
-                <Link href={`/r/${communityQuery}/submit`}>
+                <Link href={`/r/${genreQuery}/submit`}>
                   <button className="mt-3 h-7 w-full bg-blue-500 text-white rounded">
                     Create Post
                   </button>
                 </Link>
               )}
-              {user?.id === communityData?.creatorId && (
+              {user?.id === genreData?.creatorId && (
                 <>
                   <hr />
                   <div className="text-sm space-y-1">
@@ -148,8 +148,8 @@ const About: FC<AboutProps> = ({ communityData, pt, onCreatePage, loading }) => 
                       <p className="text-blue-500 cursor-pointer hover:underline" onClick={() => selectFileRef.current?.click()}>
                         Change Image
                       </p>
-                      {communityData?.imageURL || selectedFile ? (
-                        <img className="rounded-full h-10 w-10" src={selectedFile || communityData?.imageURL} alt="Community Image" />
+                      {genreData?.imageURL || selectedFile ? (
+                        <img className="rounded-full h-10 w-10" src={selectedFile || genreData?.imageURL} alt="Genre Image" />
                       ) : (
                         <FaReddit className="text-brand-100 text-10 mr-2" />
                       )}

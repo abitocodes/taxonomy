@@ -20,7 +20,7 @@ DROP COLUMN "created_at",
 DROP COLUMN "published",
 DROP COLUMN "updated_at",
 ADD COLUMN     "body" TEXT,
-ADD COLUMN     "communityId" TEXT,
+ADD COLUMN     "genreId" TEXT,
 ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 ADD COLUMN     "creatorDisplayText" TEXT,
 ADD COLUMN     "creatorId" TEXT,
@@ -42,7 +42,7 @@ ADD COLUMN     "editedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
 CREATE TABLE "comments" (
     "id" TEXT NOT NULL,
     "creatorId" TEXT NOT NULL,
-    "communityId" TEXT NOT NULL,
+    "genreId" TEXT NOT NULL,
     "postId" TEXT NOT NULL,
     "postTitle" TEXT NOT NULL,
     "text" TEXT NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE "comments" (
 );
 
 -- CreateTable
-CREATE TABLE "communities" (
+CREATE TABLE "genres" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT,
@@ -64,7 +64,7 @@ CREATE TABLE "communities" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "imageURL" TEXT,
 
-    CONSTRAINT "communities_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "genres_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -78,7 +78,7 @@ CREATE TABLE "post_votes" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "communities_name_key" ON "communities"("name");
+CREATE UNIQUE INDEX "genres_name_key" ON "genres"("name");
 
 -- AddForeignKey
 ALTER TABLE "posts" ADD CONSTRAINT "posts_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

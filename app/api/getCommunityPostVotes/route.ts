@@ -3,20 +3,20 @@ import { prisma } from '@/prisma/client';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
-    const communityId = searchParams.get('communityId')
+    const genreId = searchParams.get('genreId')
     const userId = searchParams.get('userId')
 
-  if (!communityId || !userId) {
+  if (!genreId || !userId) {
     return Response.json({
         statusCode: 400,
-        message: 'Community ID and User ID are required'
+        message: 'Genre ID and User ID are required'
     })
   }
 
   try {
     const postVotes = await prisma.postVote.findMany({
       where: {
-        communityId: communityId as string,
+        genreId: genreId as string,
         userId: userId as string
       }
     });

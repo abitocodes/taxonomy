@@ -10,16 +10,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Box, Flex, Text } from "@radix-ui/themes";
 
-import useCommunityModal from "@/hooks/useCommunityModal";
-import { CommunitySnippet } from "@/types/CommunityState";
+import useGenreModal from "@/hooks/useGenreModal";
+import { GenreSnippet } from "@/types/GenreState";
 import MenuListItem from "./MenuListItem";
 
 type MyCommunitiesProps = {
-  snippets: CommunitySnippet[];
+  snippets: GenreSnippet[];
 };
 
 const MyCommunities: FC<MyCommunitiesProps> = ({ snippets }) => {
-  const { openModal } = useCommunityModal();
+  const { openModal } = useGenreModal();
 
   return (
     <Box className="mt-3 mb-3">
@@ -31,17 +31,17 @@ const MyCommunities: FC<MyCommunitiesProps> = ({ snippets }) => {
           <button className="w-full text-sm hover:bg-gray-100" onClick={openModal}>
             <Flex className="items-center">
               <GrAdd className="text-2xl mr-2" />
-              Create Community
+              Create Genre
             </Flex>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {snippets.map((snippet) => (
-            <DropdownMenuItem key={snippet.communityId} asChild>
+            <DropdownMenuItem key={snippet.genreId} asChild>
               <MenuListItem
                 icon={FaReddit}
-                displayText={`r/${snippet.communityId}`}
-                link={`/r/${snippet.communityId}`}
+                displayText={`r/${snippet.genreId}`}
+                link={`/r/${snippet.genreId}`}
                 iconColor="blue.500"
                 imageURL={snippet.imageURL}
               />

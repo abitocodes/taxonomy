@@ -1,7 +1,7 @@
 import { TiHome } from "react-icons/ti";
 import { atom } from "recoil";
 
-import { DirectoryMenuState } from "../types/DirectoryMenuState";
+import { DirectoryMenuState } from "@/types/DirectoryMenuState";
 
 export const defaultMenuItem = {
   displayText: "Home",

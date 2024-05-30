@@ -2,8 +2,8 @@ import { FC, useEffect, useState } from "react";
 import { FaReddit } from "react-icons/fa";
 import Link from "next/link";
 
-import useCommunityData from "@/hooks/useCommunityData";
-import { Community } from "@/types/CommunityState";
+import useGenreData from "@/hooks/useGenreData";
+import { Genre } from "@/types/GenreState";
 import { Card, CardHeader, CardContent } from "@/components/shad/new-york/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -20,27 +20,27 @@ import { Button } from "@/components/ui/button";
 type RecommendationsProps = {};
 
 const Recommendations: FC<RecommendationsProps> = () => {
-  const [communities, setCommunities] = useState<Community[]>([]);
+  const [genres, setCommunities] = useState<Genre[]>([]);
   const [loading, setLoading] = useState(true);
-  const { communityStateValue, onJoinLeaveCommunity } = useCommunityData(); 
+  const { genreStateValue, onJoinLeaveGenre } = useGenreData(); 
 
-  function getCommunityRecommendations() 
-  { return fetch('/api/getCommunityRecommendations'); }
+  function getGenreRecommendations() 
+  { return fetch('/api/getGenreRecommendations'); }
 
   useEffect(() => {
     try {
-      getCommunityRecommendations().then(res => res.json()).then(data => { 
-        const typedData = data.communities.map((community: Community) => ({
-          ...community,
-          privacyType: community.privacyType as "public" | "restricted" | "private",
-          imageURL: community.imageURL ?? undefined
+      getGenreRecommendations().then(res => res.json()).then(data => { 
+        const typedData = data.genres.map((genre: Genre) => ({
+          ...genre,
+          privacyType: genre.privacyType as "public" | "restricted" | "private",
+          imageURL: genre.imageURL ?? undefined
         }));
         setCommunities(typedData);
         setLoading(false);
       });
     }
     catch (error) {
-      console.error("Error fetching communities", error);
+      console.error("Error fetching genres", error);
     }
   }, []);
 
@@ -62,19 +62,19 @@ const Recommendations: FC<RecommendationsProps> = () => {
         ) : (
           <Table>
             <TableBody>
-              {communities.map((community, index) => {
-                const isJoined = !!communityStateValue.mySnippets.find((snippet) => snippet.communityId === community.id);
+              {genres.map((genre, index) => {
+                const isJoined = !!genreStateValue.mySnippets.find((snippet) => snippet.genreId === genre.id);
                 return (
-                    <TableRow key={community.id} className="flex items-center">
+                    <TableRow key={genre.id} className="flex items-center">
                       <TableCell className="w-1/5 flex justify-center">
                         <span>{index + 1}</span>
                       </TableCell>
 
                       <TableCell className="flex justify-center"> 
-                        <Link href={`/r/${community.id}`}>       
-                          {community.imageURL ? (
+                        <Link href={`/r/${genre.id}`}>       
+                          {genre.imageURL ? (
                             <Avatar className="hidden h-9 w-9 sm:flex">
-                            <AvatarImage src={community.imageURL} alt="community image" />
+                            <AvatarImage src={genre.imageURL} alt="genre image" />
                             <AvatarFallback>404</AvatarFallback>
                             </Avatar>
                           ) : (
@@ -83,8 +83,8 @@ const Recommendations: FC<RecommendationsProps> = () => {
                         </Link>
                       </TableCell>
                       <TableCell className="w-full">
-                        <Link href={`/r/${community.id}`}>  
-                          <span>{`r/${community.id}`}</span>
+                        <Link href={`/r/${genre.id}`}>  
+                          <span>{`r/${genre.id}`}</span>
                         </Link>
                       </TableCell>
 
@@ -93,7 +93,7 @@ const Recommendations: FC<RecommendationsProps> = () => {
                           className={`h-5.5 text-xs ${isJoined ? "border border-blue-500" : "bg-blue-500 text-white"} rounded-md`}
                           onClick={(event) => {
                             event.stopPropagation();
-                            onJoinLeaveCommunity(community, isJoined);
+                            onJoinLeaveGenre(genre, isJoined);
                           }}
                         >
                           {isJoined ? "Joined" : "Join"}

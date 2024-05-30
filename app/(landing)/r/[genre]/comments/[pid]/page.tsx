@@ -8,10 +8,10 @@ import { supabase } from "@/utils/supabase/client";
 
 import PageContentLayout from "@/components/reddit/Layout/PageContent";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
-import About from "@/features/Community/About";
+import About from "@/features/Genre/About";
 import Comments from "@/features/Post/Comments";
 import PostItem from "@/features/Post/PostItem";
-import useCommunityData from "@/hooks/useCommunityData";
+import useGenreData from "@/hooks/useGenreData";
 import usePosts from "@/hooks/usePosts";
 import { Post } from "@prisma/client";
 import { useState } from "react";
@@ -21,15 +21,15 @@ import { useUser } from "@/hooks/useUser";
 
 type PostPageProps = {};
 
-const PostPage: FC<PostPageProps> = ({ params }: { params: { community: string, pid: string } }) => {
+const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid: string } }) => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loadingUser } = useUser();
   const router = useRouter();
 
-  const { community, pid } = params
-  const { communityStateValue } = useCommunityData();
+  const { genre, pid } = params
+  const { genreStateValue } = useGenreData();
 
-  const { postStateValue, setPostsStateValue, onDeletePost, loading, setLoading, onVote } = usePosts(communityStateValue.currentCommunity);
+  const { postStateValue, setPostsStateValue, onDeletePost, loading, setLoading, onVote } = usePosts(genreStateValue.currentGenre);
 
   const fetchPost = async () => {
     setLoading(true);
@@ -75,14 +75,14 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { community: string, 
                   userIsCreator={user?.id === postStateValue.selectedPost.creatorId}
                   router={router}
                 />
-                <Comments user={user} community={community as string} selectedPost={postStateValue.selectedPost} />
+                <Comments user={user} genre={genre as string} selectedPost={postStateValue.selectedPost} />
               </>
             )}
           </>
         )}
       </>
       <>
-        <About communityData={communityStateValue.currentCommunity} loading={loading} />
+        <About genreData={genreStateValue.currentGenre} loading={loading} />
       </>
     </PageContentLayout>
   );

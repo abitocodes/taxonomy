@@ -3,7 +3,7 @@ import { prisma } from '@/prisma/client';
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
-    const communityId = parseInt(searchParams.get('communityId')!, 10)
+    const genreId = parseInt(searchParams.get('genreId')!, 10)
     const userId = parseInt(searchParams.get('userId')!, 10)
     const postId = parseInt(searchParams.get('postId')!, 10)
     const voteValue = parseInt(searchParams.get('voteValue')!, 10)
@@ -21,7 +21,7 @@ export async function GET(request: Request) {
       const newVote = await prisma.postVote.create({
         data: {
             postId: postId.toString(),
-            communityId: communityId.toString(),
+            genreId: genreId.toString(),
             voteValue: voteValue,
             userId: userId.toString()
         }

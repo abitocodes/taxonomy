@@ -3,14 +3,14 @@ import { useAuthState } from "@/hooks/useAuthState";
 import { useSetRecoilState } from "recoil";
 
 import { authModalState } from "@/atoms/authModalAtom";
-import { communityModalState } from "@/atoms/communityModalAtom";
+import { genreModalState } from "@/atoms/genreModalAtom";
 import { Session } from '@supabase/supabase-js';
 
-const useCommunityModal = () => {
+const useGenreModal = () => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const setAuthModalState = useSetRecoilState(authModalState);
-  const setCommunityModalState = useSetRecoilState(communityModalState);
+  const setGenreModalState = useSetRecoilState(genreModalState);
 
   const openModal = () => {
     // check for user to open supabase.auth modal before redirecting to submit
@@ -19,14 +19,14 @@ const useCommunityModal = () => {
       return;
     }
 
-    setCommunityModalState((prev) => ({ ...prev, open: true }));
+    setGenreModalState((prev) => ({ ...prev, open: true }));
   };
 
   const closeModal = () => {
-    setCommunityModalState((prev) => ({ ...prev, open: false }));
+    setGenreModalState((prev) => ({ ...prev, open: false }));
   };
 
   return { openModal, closeModal };
 };
 
-export default useCommunityModal;
+export default useGenreModal;

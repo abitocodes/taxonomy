@@ -17,7 +17,7 @@ const MenuListItem: FC<DirectoryItemProps> = ({ displayText, link, icon, iconCol
     <li className="w-full text-sm hover:bg-gray-100" onClick={() => onSelectMenuItem({ displayText, link, icon, iconColor, imageURL })}>
       <div className="flex items-center">
         {imageURL ? (
-          <img className="rounded-full w-4.5 h-4.5 mr-2" src={imageURL} alt="community image" />
+          <img className="rounded-full w-4.5 h-4.5 mr-2" src={imageURL} alt="genre image" />
         ) : (
           <svg className={`h-5 w-5 mr-2 text-${iconColor}`} fill="currentColor">
             {/* SVG content should be replaced with actual icon SVG path */}

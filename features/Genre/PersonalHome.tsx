@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { FaReddit } from "react-icons/fa";
 
-import useCommunityModal from "@/hooks/useCommunityModal";
+import useGenreModal from "@/hooks/useGenreModal";
 import useCreatePost from "@/hooks/useCreatePost";
 
 const PersonalHome: FC = () => {
   const { onClick } = useCreatePost();
-  const { openModal } = useCommunityModal();
+  const { openModal } = useGenreModal();
 
   return (
     <div className="flex flex-col rounded-md cursor-pointer border border-gray-300 sticky">
@@ -25,7 +25,7 @@ const PersonalHome: FC = () => {
             Create Post
           </button>
           <button className="h-7.5 text-blue-500 border border-blue-500 rounded-md" onClick={openModal}>
-            Create Community
+            Create Genre
           </button>
         </div>
       </div>

@@ -1,2 +1,2 @@
 -- AlterTable
-ALTER TABLE "posts" ADD COLUMN     "communityImageURL" TEXT;
+ALTER TABLE "posts" ADD COLUMN     "genreImageURL" TEXT;
