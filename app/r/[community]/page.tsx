@@ -1,27 +1,33 @@
-import { useEffect } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
+"use client"
+
+import { useEffect, useState } from "react";
+import { useAuthState } from "@/hooks/useAuthState";
 import { useRecoilState } from "recoil";
 
 import { doc, getDoc } from "firebase/firestore";
 import type { GetServerSidePropsContext, NextPage } from "next";
 import safeJsonStringify from "safe-json-stringify";
 
-import { communityState } from "../../../atoms/communitiesAtom";
-import PageContentLayout from "../../../components/Layout/PageContent";
-import About from "../../../features/Community/About";
-import CommunityNotFound from "../../../features/Community/CommunityNotFound";
-import CreatePostLink from "../../../features/Community/CreatePostLink";
-import Header from "../../../features/Community/Header";
-import Posts from "../../../features/Post/Posts";
-import { auth, firestore } from "../../../firebase/clientApp";
-import { Community } from "../../../types/CommunityState";
+import { communityState } from "@/atoms/communitiesAtom";
+import PageContentLayout from "@/components/reddit/Layout/PageContent";
+import About from "@/features/Community/About";
+import CommunityNotFound from "@/features/Community/CommunityNotFound";
+import CreatePostLink from "@/features/Community/CreatePostLink";
+import Header from "@/features/Community/Header";
+import Posts from "@/features/Post/Posts";
+import { auth, firestore } from "@/firebase/clientApp";
+import { Community } from "@/types/CommunityState";
+
+import { Session } from "@prisma/client";
+import { Session } from "@supabase/supabase-js";
 
 interface CommunityPageProps {
   communityData: Community;
 }
 
 const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
-  const [user, loadingUser] = useAuthState(auth);
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: loadingUser, error: authError } = useAuthState(session);
 
   const [communityStateValue, setCommunityStateValue] = useRecoilState(communityState);
 

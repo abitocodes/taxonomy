@@ -11,6 +11,7 @@ import PersonalHome from "@/features/Community/PersonalHome";
 import Premium from "@/features/Community/Premium";
 import Recommendations from "@/features/Community/Recommendations";
 import PostItem from "@/features/Post/PostItem";
+import SimplePostItem from "@/features/Post/SimplePostItem";
 import usePosts from "@/hooks/usePosts";
 import { PostVote } from "@prisma/client";
 import { useUser } from "@/hooks/useUser";
@@ -84,7 +85,7 @@ export default function Home(): ReactElement {
     try {
       const response = await fetch(`/api/getUserPostVotes?postIds=${postIds}`);
       const data = await response.json();
-      const postVotes = data.postVotes;
+      const postVotes = Array.isArray(data.postVotes) ? data.postVotes : [];
       setPostsStateValue((prev) => ({
         ...prev,
         postVotes: postVotes as PostVote[],
@@ -117,7 +118,7 @@ export default function Home(): ReactElement {
     return () => {
       setPostsStateValue((prev) => ({
         ...prev,
-        postVotes: [],
+        postVotes: [] // 배열로 초기화
       }));
     };
   }, [postStateValue?.posts, user?.id]);
@@ -125,14 +126,16 @@ export default function Home(): ReactElement {
   return (
     <PageContentLayout>
       <Container>
-        <CreatePostLink />
+        {/* <CreatePostLink /> */}
       {loading ? (
         <div>
         <PostLoader />
         </div>
       ) : (
         <div className="space-y-6">
-        {(postStateValue?.posts || []).map((post: PostWith, index: number) => (
+        {(postStateValue?.posts || []).map((post: PostWith, index: number) => { 
+          console.log("postVotes after <PostLoader/> rendered: ", postStateValue.postVotes)
+          return (
           <PostItem
             key={index}
             post={post}
@@ -144,11 +147,12 @@ export default function Home(): ReactElement {
             onSelectPost={onSelectPost}
             homePage
           />
-        ))}
+        )})}
       </div>
       )}
       </Container>
-      <Container className="sticky top-14 space-y-5">
+      {/* <Container className="sticky top-14 space-y-5"> */}
+      <Container className="space-y-5">
         <Recommendations />
         <Premium />
         <PersonalHome />
@@ -156,3 +160,5 @@ export default function Home(): ReactElement {
     </PageContentLayout>
   );
 };
+
+

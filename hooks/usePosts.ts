@@ -45,83 +45,49 @@ const usePosts = (communityData?: Community) => {
       setAuthModalState({ open: true, view: "login" });
       return;
     }
-
+  
     const { voteStatus } = post;
     const existingVote = postStateValue.postVotes.find((v) => v.postId === post.id);
-
+  
     try {
-      let voteChange = vote;
-
-      const updatedPost = { ...post };
-      const updatedPosts = [...postStateValue.posts];
-      let updatedPostVotes = [...postStateValue.postVotes];
-
-      if (!existingVote) {
-        const newVote = await prisma.postVote.create({
-          data: {
-            postId: post.id,
-            communityId,
-            voteValue: vote,
-            userId: user.id
-          }
-        });
-
-        if (error) throw error;
-
-        updatedPost.voteStatus = voteStatus + vote;
-        updatedPostVotes = [...updatedPostVotes, newVote];
-      } else {
-        if (existingVote.voteValue === vote) {
-          voteChange *= -1;
-          updatedPost.voteStatus = voteStatus - vote;
-          updatedPostVotes = updatedPostVotes.filter((v) => v.id !== existingVote.id);
-          await supabase
-            .from('postVotes')
-            .delete()
-            .match({ id: existingVote.id });
-        } else {
-          voteChange = 2 * vote;
-          updatedPost.voteStatus = voteStatus + 2 * vote;
-          const updatedVote = await prisma.postVote.update({
-            where: { id: existingVote.id },
-            data: { voteValue: vote }
-          });
-
-          if (error) throw error;
-
-          const voteIdx = updatedPostVotes.findIndex((v) => v.id === existingVote.id);
-          if (voteIdx !== -1) {
-            updatedPostVotes[voteIdx] = updatedVote;
-          }
-        }
+      const response = await fetch(`/api/vote?postId=${post.id}&userId=${user.id}&voteValue=${vote}&communityId=${communityId}`, {
+        method: 'GET'
+      });
+  
+      if (!response.ok) {
+        throw new Error('투표 처리 실패');
       }
-
-      let updatedState = { ...postStateValue, postVotes: updatedPostVotes };
-
+  
+      const voteResult = await response.json();
+      const voteChange = voteResult.voteValue - (existingVote ? existingVote.voteValue : 0);
+  
+      const updatedPost = { ...post, voteStatus: voteStatus + voteChange };
+      const updatedPosts = [...postStateValue.posts];
       const postIdx = updatedPosts.findIndex((item) => item.id === post.id);
       updatedPosts[postIdx] = updatedPost;
-      updatedState = {
-        ...updatedState,
+  
+      let updatedPostVotes = [...postStateValue.postVotes];
+      if (!existingVote) {
+        updatedPostVotes.push(voteResult);
+      } else {
+        const voteIdx = updatedPostVotes.findIndex((v) => v.id === existingVote.id);
+        if (voteIdx !== -1) {
+          updatedPostVotes[voteIdx] = voteResult;
+        }
+      }
+  
+      const updatedState = {
+        ...postStateValue,
         posts: updatedPosts,
+        postVotes: updatedPostVotes,
         postsCache: {
-          ...updatedState.postsCache,
+          ...postStateValue.postsCache,
           [communityId]: updatedPosts,
         },
+        selectedPost: updatedPost
       };
-
-      if (updatedState.selectedPost) {
-        updatedState = {
-          ...updatedState,
-          selectedPost: updatedPost,
-        };
-      }
-
+  
       setPostsStateValue(updatedState);
-
-      await prisma.post.update({
-        where: { id: post.id },
-        data: { voteStatus: voteStatus + voteChange }
-      });
     } catch (error) {
       console.error("onVote error", error);
     }
@@ -136,11 +102,13 @@ const usePosts = (communityData?: Community) => {
         .remove([`media/${post.id}`]);
     }
 
-    await prisma.post.delete({
-      where: { id: post.id }
+    const response = await fetch(`/api/deletePost?postId=${post.id}`, {
+      method: 'DELETE'
     });
 
-    if (error) throw error;
+    if (!response.ok) {
+      throw new Error('Failed to delete post');
+    }
 
     setPostsStateValue((prev) => ({
       ...prev,
@@ -159,23 +127,19 @@ const usePosts = (communityData?: Community) => {
 };
 
 const getCommunityPostVotes = async (communityId: string) => {
-  try {
-    const postVotes = await prisma.postVote.findMany({
-      where: {
-        communityId: communityId,
-        userId: user?.id
-      }
-    });
+  const user = session?.user
+  if (!user) return;
 
-    if (error) throw error;
-
-    setPostsStateValue((prev) => ({
-      ...prev,
-      postVotes: postVotes as PostVote[],
-    }));
-  } catch (error) {
-    console.error("getCommunityPostVotes error", error);
+  const response = await fetch(`/api/getCommunityPostVotes?communityId=${communityId}&userId=${user.id}`);
+  if (!response.ok) {
+    console.error('Failed to fetch post votes');
+    return;
   }
+  const postVotes: PostVote[] = await response.json();
+  setPostsStateValue((prev) => ({
+    ...prev,
+    postVotes: postVotes,
+  }));
 };
 
 useEffect(() => {

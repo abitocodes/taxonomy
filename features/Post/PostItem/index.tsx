@@ -10,7 +10,7 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow"
 import { getBadgeVariantFromLabel } from "@/utils/getBadgeVariantFromLabel";
 
 import moment from "moment";
-
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { NextRouter } from "next/router";
 import { Badge } from "@/components/ui/badge";
@@ -50,17 +50,14 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
   };
 
   return (
-
       <button
-      className={cn(
-        "flex flex-row gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
-      )}
+      className="flex flex-row gap-2"
       onClick={() => {
         console.log("clicked")
         onSelectPost && post && onSelectPost(post, postIdx!)}
       }
         >
-            <CardContent>
+      <CardContent>
         <div className={`flex flex-col items-center bg-${singlePostView ? "transparent" : "gray-100"} p-2 w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
           <TbArrowBigUp className={`text-${userVoteValue === 1 ? "primary" : "muted"} text-xl cursor-pointer`}
                         onClick={(event) => onVote(event, post, 1, post.communityId)} />
