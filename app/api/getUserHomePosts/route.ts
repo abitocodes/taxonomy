@@ -12,12 +12,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
         creatorId: userId
       },
+      orderBy: { 
+        createdAt: 'desc',
+        voteStatus: 'desc' },
       include: {
-        creator: true,
-        labels: true
-      },
-      orderBy: {
-        createdAt: 'desc'
+        labels: true,
+        publicUsers: {
+          select: {
+            nickName: true
+          }
+        }
       },
       take: 10
     });

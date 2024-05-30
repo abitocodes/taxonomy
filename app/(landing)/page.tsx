@@ -13,7 +13,7 @@ import Recommendations from "@/features/Genre/Recommendations";
 import PostItem from "@/features/Post/PostItem";
 import SimplePostItem from "@/features/Post/SimplePostItem";
 import usePosts from "@/hooks/usePosts";
-import { post_votes } from "@prisma/client";
+import { PostVote } from "@prisma/client";
 import { useUser } from "@/hooks/useUser";
 import { ReactElement } from "react";
 import { AppProps } from 'next/app';
@@ -21,7 +21,8 @@ import { Session } from '@supabase/supabase-js';
 import { useAuthState } from "@/hooks/useAuthState";
 import { Container } from "@radix-ui/themes";
 
-import { PostWith } from "@/types/Post";
+import { postsWith } from "@/types/posts";
+import { LinkedCard } from "@/components/LinkedCard";
 
 export default function Home(): ReactElement {
   const [session, setSession] = useState<Session | null>(null);
@@ -43,7 +44,7 @@ export default function Home(): ReactElement {
       setPostsStateValue((prev) => {
         const newState = {
           ...prev,
-          posts: posts as PostWith[],
+          posts: posts as postsWith[],
         };
         console.log("Updated postStateValue", newState);
         return newState;
@@ -64,7 +65,7 @@ export default function Home(): ReactElement {
       setPostsStateValue((prev) => {
         const newState = {
           ...prev,
-          posts: posts as PostWith[],
+          posts: posts as postsWith[],
         };
         return newState;
       });
@@ -112,6 +113,7 @@ export default function Home(): ReactElement {
   }, [user, authLoading]);
 
   useEffect(() => {
+    console.log("!!postStateValue", postStateValue)
     if (!user?.id || !postStateValue?.posts.length) return;
     getUserPostVotes();
   
@@ -124,7 +126,7 @@ export default function Home(): ReactElement {
   }, [postStateValue?.posts, user?.id]);
 
   return (
-    <PageContentLayout>
+    <PageContentLayout maxWidth="lg">
       <Container>
         {/* <CreatePostLink /> */}
       {loading ? (
@@ -133,10 +135,10 @@ export default function Home(): ReactElement {
         </div>
       ) : (
         <div className="space-y-6">
-        {(postStateValue?.posts || []).map((post: PostWith, index: number) => { 
+        {(postStateValue?.posts || []).map((post: postsWith, index: number) => { 
           // console.log("postVotes after <PostLoader/> rendered: ", postStateValue.postVotes)
           return (
-          <PostItem
+          <LinkedCard
             key={index}
             post={post}
             postIdx={index}

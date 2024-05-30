@@ -3,7 +3,7 @@ import { FaReddit } from "react-icons/fa";
 import Link from "next/link";
 
 import useGenreData from "@/hooks/useGenreData";
-import { Genre } from "@/types/GenreState";
+import { Genre } from "@/types/genresState";
 import { Card, CardHeader, CardContent } from "@/components/shad/new-york/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 

@@ -48,14 +48,14 @@ CREATE TABLE "labels" (
 );
 
 -- CreateTable
-CREATE TABLE "post_votes" (
+CREATE TABLE "PostVote" (
     "id" TEXT NOT NULL,
     "postId" TEXT NOT NULL,
     "voteValue" INTEGER NOT NULL,
     "userId" TEXT NOT NULL,
     "genreId" TEXT NOT NULL,
 
-    CONSTRAINT "post_votes_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "PostVote_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -71,7 +71,7 @@ CREATE TABLE "posts" (
     "mediaURL" TEXT,
     "numberOfComments" INTEGER NOT NULL DEFAULT 0,
     "postIdx" INTEGER,
-    "voteStatus" INTEGER NOT NULL,
+    "voteStatus" INTEGER,
     "communityImageURL" TEXT,
     "description" TEXT NOT NULL,
 
@@ -140,13 +140,13 @@ ALTER TABLE "genres_snippets" ADD CONSTRAINT "genres_snippets_genreId_fkey" FORE
 ALTER TABLE "genres_snippets" ADD CONSTRAINT "genres_snippets_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public_users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "post_votes" ADD CONSTRAINT "post_votes_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "genres"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "PostVote" ADD CONSTRAINT "PostVote_genreId_fkey" FOREIGN KEY ("genreId") REFERENCES "genres"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "post_votes" ADD CONSTRAINT "post_votes_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "PostVote" ADD CONSTRAINT "PostVote_postId_fkey" FOREIGN KEY ("postId") REFERENCES "posts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "post_votes" ADD CONSTRAINT "post_votes_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "PostVote" ADD CONSTRAINT "PostVote_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "posts" ADD CONSTRAINT "posts_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "public_users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

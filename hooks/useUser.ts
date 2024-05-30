@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 
 export const useUser = () => {
-  const [user, setUser] = useState<PublicUser | null>(null);
+  const [user, setUser] = useState<public_users | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {

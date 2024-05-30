@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-import { GenreModalState } from "@/types/GenreModalState";
+import { GenreModalState } from "@/types/genresModalState";
 
 const defaultModalState: GenreModalState = {
   open: false,

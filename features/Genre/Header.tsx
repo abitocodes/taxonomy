@@ -2,7 +2,7 @@ import { FC } from "react";
 import { FaReddit } from "react-icons/fa";
 
 import useGenreData from "@/hooks/useGenreData";
-import { Genre } from "@/types/GenreState";
+import { Genre } from "@/types/genresState";
 
 type HeaderProps = {
   genreData: Genre;

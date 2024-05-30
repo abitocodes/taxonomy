@@ -9,7 +9,7 @@ import { authModalState } from "@/atoms/authModalAtom";
 import { genreState } from "@/atoms/genresAtom";
 import { postState } from "@/atoms/postsAtom";
 import { supabase } from "@/utils/supabase/client";
-import { Genre } from "@/types/GenreState";
+import { Genre } from "@/types/genresState";
 import { Post, PostVote } from "@prisma/client";
 import { RecoilRoot } from 'recoil';
 import { AppProps } from 'next/app';

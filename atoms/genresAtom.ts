@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-import { Genre, GenreState } from "@/types/GenreState";
+import { Genre, GenreState } from "@/types/genresState";
 
 export const defaultGenre: Genre = {
   id: "",

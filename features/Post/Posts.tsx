@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
 import { supabase } from "@/utils/supabase/client";
 import usePosts from "@/hooks/usePosts";
-import { Genre } from "@/types/GenreState";
+import { Genre } from "@/types/genresState";
 import { Post } from "@prisma/client";
 import PostItem from "./PostItem";
 import { RecoilRoot } from "recoil";

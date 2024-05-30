@@ -14,7 +14,7 @@ import GenreNotFound from "@/features/Genre/GenreNotFound";
 import CreatePostLink from "@/features/Genre/CreatePostLink";
 import Header from "@/features/Genre/Header";
 import Posts from "@/features/Post/Posts";
-import { Genre } from "@/types/GenreState";
+import { Genre } from "@/types/genresState";
 
 import { Session } from '@supabase/supabase-js';
 import { supabase } from "@/utils/supabase/client";

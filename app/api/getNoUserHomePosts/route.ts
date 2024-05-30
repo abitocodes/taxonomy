@@ -6,8 +6,12 @@ export async function GET(req: Request, res: Response) {
     const posts = await prisma.post.findMany({
       orderBy: { voteStatus: 'desc' },
       include: {
-        creator: true,
-        labels: true
+        labels: true,
+        publicUsers: {
+          select: {
+            nickName: true
+          }
+        }
       },
       take: 10
     });

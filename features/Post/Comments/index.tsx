@@ -15,7 +15,7 @@ import CommentInput from "@/features/Post/Comments/Input";
 import { CommentWith } from "@/features/Post/Comments/CommentItem";
 
 type CommentsProps = {
-  user?: PublicUser | null;
+  user?: public_users | null;
   selectedPost: Post;
   genre: string;
 };

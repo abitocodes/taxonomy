@@ -11,7 +11,7 @@ import {
 import { Box, Flex, Text } from "@radix-ui/themes";
 
 import useGenreModal from "@/hooks/useGenreModal";
-import { GenreSnippet } from "@/types/GenreState";
+import { GenreSnippet } from "@/types/genresState";
 import MenuListItem from "./MenuListItem";
 
 type MyCommunitiesProps = {

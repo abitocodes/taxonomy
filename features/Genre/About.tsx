@@ -11,7 +11,7 @@ import Link from "next/link";
 
 import { genreState } from "@/atoms/genresAtom";
 import { supabase } from "@/utils/supabase/client";
-import { Genre } from "@/types/GenreState";
+import { Genre } from "@/types/genresState";
 import { Session } from '@supabase/supabase-js';
 
 type AboutProps = {

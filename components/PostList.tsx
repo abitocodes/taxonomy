@@ -1,14 +1,14 @@
 import React from 'react';
-import { PostWith } from "@/types/Post";
+import { postsWith } from "@/types/posts";
 import { PostVote } from "@prisma/client";
 import PostItem from "@/features/Post/PostItem";
 
 interface PostListProps {
-    posts: PostWith[];
+    posts: postsWith[];
     postVotes: PostVote[];
     onVote: (postId: string, voteValue: number) => Promise<void>;
     onDeletePost: (postId: string) => Promise<void>;
-    onSelectPost: (post: PostWith) => void;
+    onSelectPost: (post: postsWith) => void;
     userId: string | undefined;
   }
 

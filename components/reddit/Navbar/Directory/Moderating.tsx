@@ -3,7 +3,7 @@ import { FaReddit } from "react-icons/fa";
 
 import { Box, Text } from "@radix-ui/themes";
 
-import { GenreSnippet } from "@/types/GenreState";
+import { GenreSnippet } from "@/types/genresState";
 import MenuListItem from "./MenuListItem";
 
 type ModeratingProps = {

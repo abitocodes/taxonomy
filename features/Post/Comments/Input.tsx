@@ -7,7 +7,7 @@ interface CommentInputProps {
   comment: string;
   setComment: (comment: string) => void;
   loading: boolean;
-  user?: PublicUser | null; // User 타입 대신 PublicUser 타입 사용
+  user?: public_users | null; // User 타입 대신 public_users 타입 사용
   onCreateComment: (comment: string) => void;
 }
 

@@ -71,9 +71,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <RecoilRootWrapper>
-          <BgRisingStars/> 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               {children}
+              <BgRisingStars/> 
               <Analytics />
               <Toaster />
               <TailwindIndicator />

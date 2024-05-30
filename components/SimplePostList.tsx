@@ -1,11 +1,11 @@
 "use client"
 
 import React from 'react';
-import { PostWith } from "@/types/Post";
+import { postsWith } from "@/types/posts";
 import SimplePostItem from "@/features/Post/SimplePostItem";
 
 interface SimplePostListProps {
-  posts: PostWith[];
+  posts: postsWith[];
 }
 
 const SimplePostList: React.FC<SimplePostListProps> = ({ posts }) => {

@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { authModalState } from "@/atoms/authModalAtom";
 import { genreState, defaultGenre } from "@/atoms/genresAtom";
 import { getMySnippets } from "@/helpers/supabase";
-import { Genre, GenreSnippet } from "@/types/GenreState";
+import { Genre, GenreSnippet } from "@/types/genresState";
 import { prisma } from "@/prisma/client";
 import { Session } from '@supabase/supabase-js';
 
