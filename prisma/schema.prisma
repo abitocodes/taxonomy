@@ -8,92 +8,23 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model PublicUser {
-  id            String    @id @default(cuid())
-  nickName      String 
-  handler       String    @unique
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  editedAt      DateTime  @default(now())
-
-  posts    Post[]
-  comments Comment[]
-  postVotes PostVote[]
-  genreSnippets GenreSnippet[]
-
-  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
-
-  @@map(name: "public_users")
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
-  @@map(name: "verification_tokens")
-}
-
-model Label {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  color     String   // 라벨 색상을 나타내는 필드
-  createdAt DateTime @default(now())
-
-  posts     Post[]   // Post 모델과의 관계를 나타내는 필드
-
-  @@map(name: "labels")
-}
-
-model Post {
-  id                String     @id @default(cuid())
-  title             String
-  description       String
-  link              String?    
-  numberOfComments  Int        @default(0)
-  voteStatus        Int        
-  createdAt         DateTime   @default(now())
-  editedAt          DateTime   @default(now())
-  genreId       String
-  genreImageURL String?
-  creatorId         String
-  mediaType         String?
-  mediaURL          String?
-  postIdx           Int?
-  labels            Label[]
-
-  creator           PublicUser       @relation(fields: [creatorId], references: [id])
-  comments          Comment[]
-  votes             PostVote[]
-  currentUserVotes  PostVote[] @relation("currentUserVotes")
-
-  @@map(name: "posts")
-}
-
 model Comment {
-  id                String   @id @default(cuid())
-  creatorId         String
-  genreId       String
-  postId            String
-  postTitle         String   @db.Text
-  text              String
-  creatorPhotoURL   String   @db.Text
-  createdAt         DateTime @default(now())
+  id              String       @id
+  creatorId       String
+  communityId     String
+  postId          String
+  postTitle       String
+  text            String
+  creatorPhotoURL String
+  createdAt       DateTime     @default(now())
+  public_users    PublicUser @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  posts           Post        @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  post       Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  creator    PublicUser    @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-
-  @@map(name: "comments")
+  @@map("comments")
 }
 
 model Genre {
-  id              String            @id @default(cuid())
+  id              String            @id
   name            String            @unique
   description     String?
   creatorId       String
@@ -101,36 +32,91 @@ model Genre {
   privacyType     String            @default("public")
   createdAt       DateTime          @default(now())
   imageURL        String?
+  genres_snippets genres_snippets[]
+  post_votes      PostVote[]
 
-  snippets        GenreSnippet[]
-  postVotes       PostVote[]
-
-  @@map(name: "communities")
+  @@map("genres")
 }
 
-model GenreSnippet {
-  id          Int      @id @default(autoincrement())
-  genreId String
-  userId      String?  // 사용자 ID 필드 추가
-  isModerator Boolean? @default(false)
-  imageURL    String?
-  genre   Genre @relation(fields: [genreId], references: [id])
-  user        PublicUser?     @relation(fields: [userId], references: [id])
+model genres_snippets {
+  id           Int           @id @default(autoincrement())
+  genreId      String
+  userId       String?
+  isModerator  Boolean?      @default(false)
+  imageURL     String?
+  genres       Genre        @relation(fields: [genreId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  public_users PublicUser? @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
 
-  @@map(name: "communities_snippets")
+model Label {
+  id        String   @id
+  name      String   @unique
+  color     String
+  createdAt DateTime @default(now())
+
+  @@map("labels")
 }
 
 model PostVote {
-  id          String   @id @default(cuid())
-  postId      String
-  voteValue   Int
-  userId      String
-  genreId String
+  id           String       @id
+  postId       String
+  voteValue    Int
+  userId       String
+  genreId      String
+  genres       Genre       @relation(fields: [genreId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  posts        Post       @relation(fields: [postId], references: [id])
+  public_users PublicUser @relation(fields: [userId], references: [id])
 
-  post    Post    @relation(fields: [postId], references: [id])
-  user    PublicUser    @relation(fields: [userId], references: [id])
-  currentUserPost Post? @relation("currentUserVotes", fields: [postId], references: [id], map: "unique_post_votes_postId_fkey")
-  genre Genre @relation(fields: [genreId], references: [id]) 
+  @@map("post_votes")
+}
 
-  @@map(name: "post_votes")
+model Post {
+  id                String       @id
+  title             String
+  genreId           String
+  createdAt         DateTime     @default(now())
+  creatorId         String
+  editedAt          DateTime     @default(now())
+  link              String?
+  mediaType         String?
+  mediaURL          String?
+  numberOfComments  Int          @default(0)
+  postIdx           Int?
+  voteStatus        Int?
+  communityImageURL String?
+  description       String
+  comments          Comment[]
+  post_votes        PostVote[]
+  public_users      PublicUser @relation(fields: [creatorId], references: [id])
+  
+  @@map("posts")
+}
+
+model PublicUser {
+  id                        String            @id
+  nickName                  String
+  handler                   String            @unique
+  email                     String?           @unique
+  emailVerified             DateTime?
+  image                     String?
+  createdAt                 DateTime          @default(now())
+  editedAt                  DateTime          @default(now())
+  stripe_customer_id        String?           @unique
+  stripe_subscription_id    String?           @unique
+  stripe_price_id           String?
+  stripe_current_period_end DateTime?
+  comments                  Comment[]
+  genres_snippets           genres_snippets[]
+  post_votes                PostVote[]
+  posts                     Post[]
+
+  @@map("public_users")
+}
+
+model verification_tokens {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }

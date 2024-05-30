@@ -13,7 +13,7 @@ import Recommendations from "@/features/Genre/Recommendations";
 import PostItem from "@/features/Post/PostItem";
 import SimplePostItem from "@/features/Post/SimplePostItem";
 import usePosts from "@/hooks/usePosts";
-import { PostVote } from "@prisma/client";
+import { post_votes } from "@prisma/client";
 import { useUser } from "@/hooks/useUser";
 import { ReactElement } from "react";
 import { AppProps } from 'next/app';
