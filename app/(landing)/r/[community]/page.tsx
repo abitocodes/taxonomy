@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState";
 import { useRecoilState } from "recoil";
 
-import { doc, getDoc } from "firebase/firestore";
 import type { GetServerSidePropsContext, NextPage } from "next";
 import safeJsonStringify from "safe-json-stringify";
 
@@ -15,47 +14,52 @@ import CommunityNotFound from "@/features/Community/CommunityNotFound";
 import CreatePostLink from "@/features/Community/CreatePostLink";
 import Header from "@/features/Community/Header";
 import Posts from "@/features/Post/Posts";
-import { auth, firestore } from "@/firebase/clientApp";
 import { Community } from "@/types/CommunityState";
 
-import { Session } from "@prisma/client";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
+import { supabase } from "@/utils/supabase/client";
+import { prisma } from "@/prisma/client";
 
 interface CommunityPageProps {
   communityData: Community;
 }
 
-const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
+function CommunityPage ({ params }: { params: { community: string } }) {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: loadingUser, error: authError } = useAuthState(session);
-
   const [communityStateValue, setCommunityStateValue] = useRecoilState(communityState);
+  console.log("CommunityPage called, params: ", params)
 
   useEffect(() => {
-    setCommunityStateValue((prev) => ({
-      ...prev,
-      currentCommunity: communityData,
-    }));
+    async function fetchData() {
+      const result = await getCommunityData(params.community);
+      const communityData = result.props.communityData;
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        currentCommunity: communityData,
+      }));
+    }
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [communityData]);
+  }, [params.community]);
 
   // Community was not found in the database
-  if (!communityData) {
+  if (!communityStateValue.currentCommunity) {
     return <CommunityNotFound />;
   }
 
   return (
     <>
-      <Header communityData={communityData} />
+      <Header communityData={communityStateValue.currentCommunity} />
       <PageContentLayout>
         {/* Left Content */}
         <>
           <CreatePostLink />
-          <Posts communityData={communityData} userId={user?.id} loadingUser={loadingUser} />
+          <Posts communityData={communityStateValue.currentCommunity} userId={user?.id} loadingUser={loadingUser} />
         </>
         {/* Right Content */}
         <>
-          <About communityData={communityData} />
+          <About communityData={communityStateValue.currentCommunity} />
         </>
       </PageContentLayout>
     </>
@@ -64,23 +68,27 @@ const CommunityPage: NextPage<CommunityPageProps> = ({ communityData }) => {
 
 export default CommunityPage;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  // console.log("GET SERVER SIDE PROPS RUNNING");
-
+export async function getCommunityData(communityId: string) {
   try {
-    const communityDocRef = doc(firestore, "communities", context.query.community as string);
-    const communityDoc = await getDoc(communityDocRef);
+    const communityData = await prisma.community.findUnique({
+      where: {
+        id: communityId as string,
+      },
+    });
+
+    if (!communityData) throw new Error("Community not found");
+
     return {
       props: {
-        communityData: communityDoc.exists()
-          ? JSON.parse(
-              safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() }) // needed for dates
-            )
-          : "",
+        communityData: communityData ? JSON.parse(safeJsonStringify(communityData)) : null,
       },
     };
   } catch (error) {
-    // Could create error page here
-    // console.log("getServerSideProps error - [community]", error);
+    console.error('getServerSideProps error - [community]', error);
+    return {
+      props: {
+        communityData: null,
+      },
+    };
   }
 }

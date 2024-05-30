@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Session, User } from '@supabase/supabase-js';
+import { User, Session } from '@supabase/supabase-js';
+
 import { supabase } from '@/utils/supabase/client';
 
 type AuthStateHook = {
@@ -13,7 +14,7 @@ type AuthStateOptions = {
 };
 
 export function useAuthState(session: Session | null, options?: AuthStateOptions): AuthStateHook {
-  const [user, setUser] = useState<User | null>(session?.user ?? null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(!session);
   const [error, setError] = useState<Error | null>(null);
 

@@ -8,7 +8,7 @@ import Image from "next/image";
 import { Spinner } from "@radix-ui/themes";
 
 type OAuthButtonsProps = {};
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 import { Button } from "@/components/ui/button";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { CgGoogle } from "react-icons/cg";

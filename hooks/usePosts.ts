@@ -13,7 +13,7 @@ import { Community } from "@/types/CommunityState";
 import { Post, PostVote } from "@prisma/client";
 import { RecoilRoot } from 'recoil';
 import { AppProps } from 'next/app';
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 import { prisma } from "@/prisma/client";
 
 const usePosts = (communityData?: Community) => {

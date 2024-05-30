@@ -10,7 +10,7 @@ import { useRecoilState } from "recoil";
 import { authModalState } from "@/atoms/authModalAtom";
 import NoUserList from "./NoUserList";
 import UserList from "./UserList";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 
 import { Button } from "@/components/ui/button"
 import {
@@ -31,7 +31,7 @@ import {
 type MenuWrapperProps = {};
 
 const MenuWrapper: FC<MenuWrapperProps> = () => {
-  console.log("MenuWrapper rendered")
+  // console.log("MenuWrapper rendered")
   const [authModal, setModalState] = useRecoilState(authModalState);
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);

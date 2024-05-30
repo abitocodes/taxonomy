@@ -1,16 +1,16 @@
 import { FC } from "react";
-
-import { Button, Flex } from "@chakra-ui/react";
 import Link from "next/link";
 
 const CommunityNotFound: FC = () => {
   return (
-    <Flex direction="column" justifyContent="center" alignItems="center" minHeight="60vh">
+    <div className="flex flex-col items-center justify-center min-h-[60vh]">
       Sorry, that community does not exist or has been banned
-      <Link href="/">
-        <Button mt={4}>GO HOME</Button>
+      <Link className="mt-4" href="/">
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            GO HOME
+          </button>
       </Link>
-    </Flex>
+    </div>
   );
 };
 export default CommunityNotFound;

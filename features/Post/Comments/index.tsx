@@ -1,20 +1,21 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
-import { Box, Flex, SkeletonCircle, SkeletonText, Stack, Text } from "@chakra-ui/react";
-import { User } from "firebase/auth";
-import { collection, doc, getDocs, increment, orderBy, query, serverTimestamp, where, writeBatch } from "firebase/firestore";
+import { authModalState } from "@/atoms/authModalAtom";
+import { postState } from "@/atoms/postsAtom";
+import { prisma } from "@/prisma/client";
 
-import { authModalState } from "../@/atoms/authModalAtom";
-import { postState } from "../@/atoms/postsAtom";
-import { firestore } from "../../../utils/supabase/client";
-import { Comment } from "../../../types/Comment";
-import { Post } from "../../../types/PostsState";
-import CommentItem from "./CommentItem";
-import CommentInput from "./Input";
+import { supabase } from "@/utils/supabase/client";
+import { Comment } from "@prisma/client";
+import { Post } from "@prisma/client";
+import { PublicUser } from "@prisma/client";
+import CommentItem from "@/features/Post/Comments/CommentItem";
+import CommentInput from "@/features/Post/Comments/Input";
+
+import { CommentWith } from "@/features/Post/Comments/CommentItem";
 
 type CommentsProps = {
-  user?: User | null;
+  user?: PublicUser | null;
   selectedPost: Post;
   community: string;
 };
@@ -36,90 +37,77 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, community }) => {
 
     setCommentCreateLoading(true);
     try {
-      const batch = writeBatch(firestore);
+      const { data: commentData, error } = await supabase
+        .from('comments')
+        .insert([
+          {
+            postId: selectedPost.id,
+            creatorId: user.id,
+            text: comment,
+            communityId: community,
+            postTitle: selectedPost.title,
+            createdAt: new Date().toISOString(),
+          }
+        ]);
 
-      // Create comment document
-      const commentDocRef = doc(collection(firestore, "comments"));
-      batch.set(commentDocRef, {
-        postId: selectedPost.id,
-        creatorId: user.uid,
-        creatorDisplayText: user.email!.split("@")[0],
-        creatorPhotoURL: user.photoURL,
-        communityId: community,
-        text: comment,
-        postTitle: selectedPost.title,
-        createdAt: serverTimestamp(),
-      } as Comment);
+      if (error) throw error;
 
-      // Update post numberOfComments
-      batch.update(doc(firestore, "posts", selectedPost.id), {
-        numberOfComments: increment(1),
-      });
-      await batch.commit();
+      if (commentData) {
+        setComments((prev) => [
+          commentData[0],
+          ...prev,
+        ]);
+      } else {
+        console.error("No comment data returned from the insert operation.");
+      }
 
-      setComment("");
-      const { id: postId, title } = selectedPost;
-      setComments((prev) => [
-        {
-          id: commentDocRef.id,
-          creatorId: user.uid,
-          creatorDisplayText: user.email!.split("@")[0],
-          creatorPhotoURL: user.photoURL,
-          communityId: community,
-          postId,
-          postTitle: title,
-          text: comment,
-          createdAt: {
-            seconds: Date.now() / 1000,
-          },
-        } as Comment,
-        ...prev,
-      ]);
+      await supabase
+        .from('posts')
+        .update({ numberOfComments: selectedPost.numberOfComments + 1 })
+        .match({ id: selectedPost.id });
 
-      // Fetch posts again to update number of comments
       setPostsState((prev) => ({
         ...prev,
         selectedPost: {
           ...prev.selectedPost,
-          numberOfComments: prev.selectedPost?.numberOfComments! + 1,
+          numberOfComments: prev.selectedPost.numberOfComments + 1,
         } as Post,
         postUpdateRequired: true,
       }));
-    } catch (error: any) {
-      // console.log("onCreateComment error", error.message);
+    } catch (error) {
+      console.error("onCreateComment error", error.message);
     }
     setCommentCreateLoading(false);
   };
 
   const onDeleteComment = useCallback(
     async (comment: Comment) => {
-      setDeleteLoading(comment.id as string);
+      setDeleteLoading(comment.id);
       try {
-        if (!comment.id) throw "Comment has no ID";
-        const batch = writeBatch(firestore);
-        const commentDocRef = doc(firestore, "comments", comment.id);
-        batch.delete(commentDocRef);
+        const { error } = await supabase
+          .from('comments')
+          .delete()
+          .match({ id: comment.id });
 
-        batch.update(doc(firestore, "posts", comment.postId), {
-          numberOfComments: increment(-1),
-        });
+        if (error) throw error;
 
-        await batch.commit();
+        await supabase
+          .from('posts')
+          .update({ numberOfComments: selectedPost.numberOfComments - 1 })
+          .match({ id: selectedPost.id });
 
         setPostsState((prev) => ({
           ...prev,
           selectedPost: {
             ...prev.selectedPost,
-            numberOfComments: prev.selectedPost?.numberOfComments! - 1,
+            numberOfComments: prev.selectedPost.numberOfComments - 1,
           } as Post,
           postUpdateRequired: true,
         }));
 
         setComments((prev) => prev.filter((item) => item.id !== comment.id));
-        // return true;
-      } catch (error: any) {
-        // console.log("Error deletig comment", error.message);
-        // return false;
+      } catch (error) {
+        console.error("Error deleting comment", error.message);
       }
       setDeleteLoading("");
     },
@@ -127,61 +115,68 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, community }) => {
   );
 
   const getPostComments = async () => {
+    setCommentFetchLoading(true);
     try {
-      const commentsQuery = query(collection(firestore, "comments"), where("postId", "==", selectedPost.id), orderBy("createdAt", "desc"));
-      const commentDocs = await getDocs(commentsQuery);
-      const comments = commentDocs.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setComments(comments as Comment[]);
-    } catch (error: any) {
-      // console.log("getPostComments error", error.message);
+      const data = await prisma.comment.findMany({
+        where: {
+          postId: selectedPost.id,
+        },
+        include: {
+          creator: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+  
+      setComments(data);
+    } catch (error) {
+      console.error("getPostComments error", error.message);
     }
     setCommentFetchLoading(false);
   };
 
   useEffect(() => {
-    // console.log("HERE IS SELECTED POST", selectedPost.id);
-
     getPostComments();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedPost.id]);
 
   return (
-    <Box bg="white" p={2} borderRadius="0px 0px 4px 4px">
-      <Flex direction="column" pl={10} pr={4} mb={6} fontSize="10pt" width="100%">
+    <div className="bg-white p-2 rounded-b-lg">
+      <div className="flex flex-col pl-10 pr-4 mb-6 text-sm w-full">
         <CommentInput comment={comment} setComment={setComment} loading={commentCreateLoading} user={user} onCreateComment={onCreateComment} />
-      </Flex>
-      <Stack spacing={6} p={2}>
+      </div>
+      <div className="space-y-6 p-2">
         {commentFetchLoading ? (
           <>
             {[0, 1, 2].map((item) => (
-              <Box key={item} padding="6" bg="white">
-                <SkeletonCircle size="10" />
-                <SkeletonText mt="4" noOfLines={2} spacing="4" />
-              </Box>
+              <div key={item} className="p-6 bg-white">
+                <div className="w-10 h-10 rounded-full animate-pulse bg-gray-300"></div>
+                <div className="mt-4 space-y-4">
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                  <div className="h-4 bg-gray-300 rounded"></div>
+                </div>
+              </div>
             ))}
           </>
         ) : (
           <>
             {!!comments.length ? (
               <>
-                {comments.map((item: Comment) => (
+                {comments.map((item: CommentWith) => (
                   <CommentItem key={item.id} comment={item} onDeleteComment={onDeleteComment} isLoading={deleteLoading === (item.id as string)} userId={user?.id} />
                 ))}
               </>
             ) : (
-              <Flex direction="column" justify="center" align="center" borderTop="1px solid" borderColor="gray.100" p={20}>
-                <Text fontWeight={700} opacity={0.3}>
+              <div className="flex flex-col justify-center items-center border-t border-gray-200 p-20">
+                <p className="font-bold text-opacity-30">
                   No Comments Yet
-                </Text>
-              </Flex>
+                </p>
+              </div>
             )}
           </>
         )}
-      </Stack>
-    </Box>
+      </div>
+    </div>
   );
 };
 export default Comments;

@@ -3,7 +3,7 @@ import { useSendPasswordResetEmail } from "@/hooks/useSendPasswordResetEmail";
 import { BsDot, BsReddit } from "react-icons/bs";
 
 import { ModalView } from "@/types/AuthModalState";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 
 type ResetPasswordProps = {
   toggleView: (view: ModalView) => void;

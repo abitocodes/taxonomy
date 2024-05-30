@@ -10,12 +10,13 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow"
 import { getBadgeVariantFromLabel } from "@/utils/getBadgeVariantFromLabel";
 
 import moment from "moment";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { NextRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+
 import { Badge } from "@/components/ui/badge";
 
-import { Post, Label, User } from "@prisma/client";
+import { Post, Label, PublicUser } from "@prisma/client";
 import { PostWith } from "@/types/Post";
 import { Container } from "@radix-ui/themes";
 import { CardContent } from "@/components/ui/card";
@@ -26,7 +27,7 @@ type PostItemContentProps = {
   onDeletePost: (post: Post) => Promise<boolean>;
   userIsCreator: boolean;
   onSelectPost?: (value: Post, postIdx: number) => void;
-  router?: NextRouter;
+  router?: AppRouterInstance;
   postIdx?: number;
   userVoteValue?: number;
   homePage?: boolean;

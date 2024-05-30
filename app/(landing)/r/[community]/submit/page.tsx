@@ -6,12 +6,12 @@ import { Box, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 
-import { communityState } from "../../../atoms/communitiesAtom";
-import PageContentLayout from "../../../components/Layout/PageContent";
-import About from "../../../features/Community/About";
-import NewPostForm from "../../../features/Post/PostForm/NewPostForm";
-import { auth } from "../../../firebase/clientApp";
-import useCommunityData from "../../../hooks/useCommunityData";
+import { communityState } from "@/atoms/communitiesAtom";
+import PageContentLayout from "@/components/Layout/PageContent";
+import About from "@/features/Community/About";
+import NewPostForm from "@/features/Post/PostForm/NewPostForm";
+import { auth } from "@/firebase/clientApp";
+import useCommunityData from "@/hooks/useCommunityData";
 
 const CreateCommmunityPostPage: NextPage = () => {
   const [user, loadingUser] = useAuthState(auth);

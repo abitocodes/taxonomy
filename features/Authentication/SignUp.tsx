@@ -5,7 +5,7 @@ import InputItem from "@/components/InputItem";
 import { SUPABASE_ERRORS } from "@/utils/supabase/errors";
 import { CreateUpdateUser } from "@/helpers/CreateUpdateUser";
 import { ModalView } from "@/types/AuthModalState";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 
 type SignUpProps = {
   toggleView: (view: ModalView) => void;

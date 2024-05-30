@@ -10,7 +10,7 @@ import { ModalView } from "@/types/AuthModalState";
 
 import { User } from "@supabase/supabase-js";
 
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 type LoginProps = {
   toggleView: (view: ModalView) => void;
 };

@@ -7,7 +7,7 @@ import useDirectory from "@/hooks/useDirectory";
 import Directory from "@/components/reddit/Navbar/Directory";
 import RightContent from "@/components/reddit/Navbar/RightContent";
 
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 import { CommandMenu } from "@/components/command-menu";
 
 const Navbar: FC = () => {

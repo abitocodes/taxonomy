@@ -1,9 +1,9 @@
-import type { Post, Label, User } from "@prisma/client";
+import type { Post, Label, PublicUser } from "@prisma/client";
 import { PostVote } from "@prisma/client";
 
 export type PostWith = Post & {
   labels: Label[];
-  creator: User;
+  creator: PublicUser;
 };
 
 export type PostsState = {

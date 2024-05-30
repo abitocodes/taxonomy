@@ -12,7 +12,7 @@ import Link from "next/link";
 import { communityState } from "@/atoms/communitiesAtom";
 import { supabase } from "@/utils/supabase/client";
 import { Community } from "@/types/CommunityState";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 
 type AboutProps = {
   communityData: Community;

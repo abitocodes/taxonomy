@@ -17,7 +17,7 @@ import { PostVote } from "@prisma/client";
 import { useUser } from "@/hooks/useUser";
 import { ReactElement } from "react";
 import { AppProps } from 'next/app';
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 import { useAuthState } from "@/hooks/useAuthState";
 import { Container } from "@radix-ui/themes";
 
@@ -76,7 +76,7 @@ export default function Home(): ReactElement {
   };
 
   const getUserPostVotes = async () => {
-    console.log("getUserPostVotes called");
+    // console.log("getUserPostVotes called");
     if (!postStateValue) {
       console.log("postStateValue is undefined");
       return;
@@ -93,7 +93,7 @@ export default function Home(): ReactElement {
     } catch (error: any) {
       console.error("Error fetching user post votes:", error.message);
     } finally {
-      console.log("getUserPostVotes finished");
+      // console.log("getUserPostVotes finished");
     }
   };
 
@@ -134,7 +134,7 @@ export default function Home(): ReactElement {
       ) : (
         <div className="space-y-6">
         {(postStateValue?.posts || []).map((post: PostWith, index: number) => { 
-          console.log("postVotes after <PostLoader/> rendered: ", postStateValue.postVotes)
+          // console.log("postVotes after <PostLoader/> rendered: ", postStateValue.postVotes)
           return (
           <PostItem
             key={index}

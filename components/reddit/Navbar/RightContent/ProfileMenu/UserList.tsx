@@ -16,7 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 
 type UserListProps = {};
 

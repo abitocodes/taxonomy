@@ -4,7 +4,7 @@ import { useSetRecoilState } from "recoil";
 
 import { authModalState } from "@/atoms/authModalAtom";
 import { communityModalState } from "@/atoms/communityModalAtom";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 
 const useCommunityModal = () => {
   const [session, setSession] = useState<Session | null>(null);

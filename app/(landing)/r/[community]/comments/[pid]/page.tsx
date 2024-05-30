@@ -1,7 +1,9 @@
+"use client"
+
 import { FC, useEffect } from "react";
 import { useAuthState } from "@/hooks/useAuthState";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
 
 import PageContentLayout from "@/components/reddit/Layout/PageContent";
@@ -13,15 +15,18 @@ import useCommunityData from "@/hooks/useCommunityData";
 import usePosts from "@/hooks/usePosts";
 import { Post } from "@prisma/client";
 import { useState } from "react";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
+import { PublicUser } from "@prisma/client";
+import { useUser } from "@/hooks/useUser";
 
 type PostPageProps = {};
 
-const PostPage: FC<PostPageProps> = () => {
+const PostPage: FC<PostPageProps> = ({ params }: { params: { community: string, pid: string } }) => {
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { user, loadingUser } = useUser();
   const router = useRouter();
-  const { community, pid } = router.query;
+
+  const { community, pid } = params
   const { communityStateValue } = useCommunityData();
 
   const { postStateValue, setPostsStateValue, onDeletePost, loading, setLoading, onVote } = usePosts(communityStateValue.currentCommunity);
@@ -48,12 +53,10 @@ const PostPage: FC<PostPageProps> = () => {
   };
 
   useEffect(() => {
-    const { pid } = router.query;
-
     if (pid && !postStateValue.selectedPost) {
       fetchPost();
     }
-  }, [router.query, postStateValue.selectedPost]);
+  }, [params, postStateValue.selectedPost]);
 
   return (
     <PageContentLayout>

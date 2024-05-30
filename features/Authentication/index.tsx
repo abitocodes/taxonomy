@@ -11,7 +11,7 @@ import { supabase } from "@/utils/supabase/client";
 import AuthInputs from "./Inputs";
 import OAuthButtons from "./OAuthButtons";
 import ResetPassword from "./ResetPassword";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 import { ModalView } from "@/types/AuthModalState";
 
 type AuthModalProps = {};

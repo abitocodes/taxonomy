@@ -8,7 +8,7 @@ import { communityState } from "@/atoms/communitiesAtom";
 import CreateCommunityModal from "@/features/Community/CreateCommunity/CreateCommunityModal";
 import Moderating from "./Moderating";
 import MyCommunities from "./MyCommunities";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 
 const Communities: FC = () => {
   const [session, setSession] = useState<Session | null>(null);

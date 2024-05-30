@@ -8,7 +8,7 @@ import { communityState, defaultCommunity } from "@/atoms/communitiesAtom";
 import { getMySnippets } from "@/helpers/supabase";
 import { Community, CommunitySnippet } from "@/types/CommunityState";
 import { prisma } from "@/prisma/client";
-import { Session } from "@supabase/supabase-js";
+import { Session } from '@supabase/supabase-js';
 
 const useCommunityData = (ssrCommunityData?: boolean) => {
   const [session, setSession] = useState<Session | null>(null);

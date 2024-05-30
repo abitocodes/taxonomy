@@ -1,10 +1,8 @@
 import { FC } from "react";
 import { FaReddit } from "react-icons/fa";
 
-import { Box, Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
-
-import useCommunityData from "../../hooks/useCommunityData";
-import { Community } from "../../types/CommunityState";
+import useCommunityData from "@/hooks/useCommunityData";
+import { Community } from "@/types/CommunityState";
 
 type HeaderProps = {
   communityData: Community;
@@ -15,42 +13,42 @@ const Header: FC<HeaderProps> = ({ communityData }) => {
   const isJoined = !!communityStateValue.mySnippets.find((item) => item.communityId === communityData.id);
 
   return (
-    <Flex direction="column" width="100%" height="146px">
-      <Box height="50%" bg="blue.400" />
-      <Flex justifyContent="center" bg="white" height="50%">
-        <Flex width="95%" maxWidth="860px">
+    <div className="flex flex-col w-full h-36">
+      <div className="h-1/2 bg-blue-400" />
+      <div className="flex justify-center bg-white h-1/2">
+        <div className="flex w-95% max-w-5xl">
           {communityStateValue.currentCommunity.imageURL ? (
-            <Image
-              borderRadius="full"
-              boxSize="72px"
+            <img
+              className="rounded-full h-18 w-18 relative top-[-0.75rem] border-4 border-white"
               src={communityStateValue.currentCommunity.imageURL}
-              alt="Dan Abramov"
-              position="relative"
-              top={-3}
-              color="blue.500"
-              border="4px solid white"
+              alt="Community Image"
             />
           ) : (
-            <Icon as={FaReddit} fontSize={72} position="relative" top={-3} color="blue.500" border="4px solid white" borderRadius="50%" />
+            <FaReddit className="text-9xl relative top-[-0.75rem] text-blue-500 border-4 border-white rounded-full" />
           )}
-          <Flex padding="10px 16px">
-            <Flex direction="column" mr={6}>
-              <Text fontWeight={800} fontSize="16pt">
+          <div className="flex p-2.5">
+            <div className="flex flex-col mr-6">
+              <span className="font-bold text-2xl">
                 {communityData.id}
-              </Text>
-              <Text fontWeight={600} fontSize="10pt" color="gray.400">
+              </span>
+              <span className="font-semibold text-sm text-gray-400">
                 r/{communityData.id}
-              </Text>
-            </Flex>
-            <Flex>
-              <Button variant={isJoined ? "outline" : "solid"} height="30px" pr={6} pl={6} onClick={() => onJoinLeaveCommunity(communityData, isJoined)} isLoading={loading}>
+              </span>
+            </div>
+            <div>
+              <button
+                className={`h-7 px-6 ${isJoined ? "border" : "bg-blue-500 text-white"} flex items-center justify-center`}
+                onClick={() => onJoinLeaveCommunity(communityData, isJoined)}
+                disabled={loading}
+              >
                 {isJoined ? "Joined" : "Join"}
-              </Button>
-            </Flex>
-          </Flex>
-        </Flex>
-      </Flex>
-    </Flex>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
+
 export default Header;
