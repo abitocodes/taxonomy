@@ -3,18 +3,25 @@
     src: url('/fonts/cpmono.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
-  }
-  
-  @font-face {
-    font-family: 'CP Mono';
-    src: url('/fonts/cpmono_bold.otf') format('opentype');
-    font-weight: bold;
-    font-style: normal;
-  }
-  
-  @font-face {
-    font-family: 'NeoDunggeunmoPro';
-    src: url('/fonts/NeoDunggeunmoPro-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-style: normal;
+}
+
+@font-face {
+  font-family: 'CP Mono';
+  src: url('/fonts/cpmono_bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'NeoDunggeunmoPro';
+  src: url('/fonts/NeoDunggeunmoPro-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SC Dream';
+  src: url('/fonts/score/SCDream5.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
 }

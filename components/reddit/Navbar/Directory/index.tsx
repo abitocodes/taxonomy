@@ -1,8 +1,8 @@
 import { FC } from "react";
-import useDirectory from "@/hooks/useDirectory";
+import { useDirectory } from "@/hooks/useDirectory";
 import Communities from "@/components/reddit/Navbar/Directory/Genres";
 
-const Directory: FC = () => {
+export const Directory: FC = () => {
   const { directoryState, toggleMenuOpen } = useDirectory();
 
   return (
@@ -35,5 +35,3 @@ const Directory: FC = () => {
     </div>
   );
 };
-
-export default Directory;

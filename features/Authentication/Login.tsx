@@ -15,6 +15,9 @@ type LoginProps = {
   toggleView: (view: ModalView) => void;
 };
 
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+
 const Login: FC<LoginProps> = ({ toggleView }) => {
   
   const [form, setForm] = useState({
@@ -50,29 +53,19 @@ const Login: FC<LoginProps> = ({ toggleView }) => {
   }, [userCred]);
 
   return (
-    <form onSubmit={onSubmit}>
-      <InputItem name="email" placeholder="email" type="text" mb={2} onChange={onChange} />
-      <InputItem name="password" placeholder="password" type="password" onChange={onChange} />
-      <div className="text-center mt-2 text-sm text-red-500">
-      {formError || SUPABASE_ERRORS[authError as keyof typeof SUPABASE_ERRORS]}
-      </div>
-      <Button className="w-full h-9 mb-2 mt-2" type="submit" disabled={loading}>
-        {loading ? "Loading..." : "Log In"}
-      </Button>
-      <div className="flex justify-center mb-2">
-        <div className="text-xs mr-1">
-          Forgot your password?
+    <form className="w-full" onSubmit={onSubmit}>
+      <div className="grid gap-4 py-4">
+          <div className="w-full">
+            {/* <Input className="w-full text-center" id="email" type="text" value="enter your e-mail"/> */}
+            <Input className="w-full text-center" id="email" type="text" value="그냥 넣어본 입력 상자, 아래를 눌러 로그인!"/>
+          </div>
+          <Button className="w-full h-9 mt-2" type="submit" disabled={loading}>
+            {loading ? ".. 기달려봐 .." : "로그인"}
+          </Button>
+          {/* <div className="text-center text-sm text-red-500">
+            {formError || SUPABASE_ERRORS[authError as keyof typeof SUPABASE_ERRORS]}
+          </div> */}
         </div>
-        <div className="text-xs text-blue-500 cursor-pointer" onClick={() => toggleView("resetPassword")}>
-          Reset
-        </div>
-      </div>
-      <div className="flex justify-center text-xs">
-        <div className="mr-1">New here?</div>
-        <div className="text-blue-500 font-bold cursor-pointer" onClick={() => toggleView("signup")}>
-          SIGN UP
-        </div>
-      </div>
     </form>
   );
 };

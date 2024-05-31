@@ -1,13 +1,12 @@
 import { CommandMenu } from "@/components/command-menu"
 import { MainNav } from "@/components/main-nav"
 import { MobileNav } from "@/components/mobile-nav"
-import ModeToggle from "@/components/mode-toggle"
+// import { ModeToggle } from "@/components/mode-toggle"
 import { FC, useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState"
-import useDirectory from "@/hooks/useDirectory";
-import Directory from "@/components/reddit/Navbar/Directory";
-import RightContent from "@/components/reddit/Navbar/RightContent";
-
+import { useDirectory } from "@/hooks/useDirectory";
+import { Directory } from "@/components/reddit/Navbar/Directory";
+import { RightContent } from "@/components/reddit/Navbar/RightContent";
 import { Session } from '@supabase/supabase-js';
 
 export function SiteHeader() {
@@ -19,7 +18,6 @@ export function SiteHeader() {
     <header className="sticky top-0 left-0 z-50 h-24 w-full bg-dither mb-12">
       <div className="container flex h-full max-w-screen-2xl items-center">
         <MainNav />
-        <MobileNav />
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <Directory />
 

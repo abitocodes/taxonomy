@@ -8,12 +8,18 @@ import { TbArrowBigDown, TbArrowBigDownFilled, TbArrowBigUp, TbArrowBigUpFilled 
 import formatDistanceToNow from "date-fns/formatDistanceToNow"
 import { getBadgeVariantFromLabel } from "@/utils/getBadgeVariantFromLabel";
 import { Badge } from "@/components/ui/badge";
-
+import { IoMdHeart, IoIosHeartEmpty } from "react-icons/io";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/shad/new-york/ui/avatar"
+import { Button } from './ui/button';
 
 interface LinkedCardProps {
   post: postsWith;
   postIdx?: number;
-  onVote: (event: React.MouseEvent<SVGElement, MouseEvent>, post: Post, vote: number, genreId: string, postIdx?: number) => void;
+  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, vote: number, genreId: string, postIdx?: number) => void;
   onSelectPost?: (value: Post, postIdx: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   router?: AppRouterInstance;
@@ -40,8 +46,7 @@ export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, 
   };
   return (
     <div
-      className=
-        "flex w-1/2 flex-col items-center rounded-xl border bg-card text-card-foreground shadow transition-colors hover:bg-muted/50 sm:p-4">
+      className="flex w-full flex-col items-center border-b bg-card text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8">
       <button
       className="w-full h-full flex flex-row gap-2"
       onClick={() => {
@@ -49,34 +54,26 @@ export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, 
         onSelectPost && post && onSelectPost(post, postIdx!)}
       }
         >
-
-        <div className={`flex flex-col space-y-4 items-center bg-${singlePostView ? "transparent" : "gray-100"} p-2 w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
-          <TbArrowBigUp className={`text-${userVoteValue === 1 ? "primary" : "muted"} text-xl cursor-pointer`}
-                        onClick={(event) => onVote(event, post, 1, post.genreId)} />
-          <span className="text-sm font-bold">
-            {post.voteStatus}
-          </span>
-          <TbArrowBigDown className={`text-${userVoteValue === -1 ? "secondary" : "muted"} text-xl cursor-pointer`}
-                          onClick={(event) => onVote(event, post, -1, post.genreId)} />
-        </div>
-        <div className="flex w-full flex-col gap-1">
-          <div className="flex items-center">
-            <div className="flex items-center gap-2">
-            <div className="font-semibold text-left">[ {post.numberOfComments} ] {post.title} </div>
-            </div>
-            <div
-              className="ml-auto text-xs text-foreground"
+        <div className="flex w-full flex-col gap-2">
+          <div
+              className="flex items-center gap-2 text-ctext-xs text-foreground"
             >
-              {formatDistanceToNow(new Date(post.createdAt), {
+            <Avatar className="w-6 h-6">
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          <div className="flex item-center h-1/2 text-xs text-center">
+            @{post.publicUsers.nickName} posted {formatDistanceToNow(new Date(post.createdAt), {
                 addSuffix: true,
               })}
-            </div>
           </div>
-          <div className="text-xs text-left font-medium">{post.publicUsers.nickName}</div>
-          <div className="line-clamp-2 text-left text-xs text-muted-foreground">
-          {post.description.substring(0, 300)}
-        </div>
-        {post.labels.length ? (
+          </div>
+          <div className="flex items-center">
+            <div className="flex items-center gap-2">
+            <div className="font-semibold text-left text-2xl">[{post.numberOfComments}] {post.title} </div>
+          </div>
+          </div>
+          {post.labels.length ? (
           <div className="flex items-center gap-2">
             {post.labels.map((label) => (
               <Badge key={label.id} variant={getBadgeVariantFromLabel(label.name)}>
@@ -85,8 +82,32 @@ export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, 
             ))}
           </div>
         ) : null}
+
+          <div className="line-clamp-2 text-left text-xs text-muted-foreground">
+          {post.description.substring(0, 300)}
         </div>
 
+        </div>
+        <div className={`flex flex-col space-y-4 items-center bg-${singlePostView ? "transparent" : "gray-100"} w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
+        {userVoteValue === 1 ? (
+          <Button 
+            variant="ghost"
+            size="icon"
+            onClick={(event) => onVote(event, post, 1, post.genreId)}>
+          <IoIosHeartEmpty className="h-4 w-4"/>
+          </Button>
+        ) : (
+          <Button 
+            variant="ghost"
+            size="icon"
+            onClick={(event) => onVote(event, post, -1, post.genreId)}>
+          <IoMdHeart className="h-4 w-4"/>
+         </Button>
+        )}
+          <span className="text-sm font-bold">
+            {post.voteStatus}
+          </span>
+        </div>
       </button>
     </div>
   );

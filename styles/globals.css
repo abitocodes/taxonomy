@@ -5,57 +5,68 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 72.22% 50.59%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5% 64.9%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-  }
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
 
-  ::selection {
-    background-color: #00e100;
-    color: #000000;
-  }
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
 
-  .gap-x-gutter {
-    -moz-column-gap: 30px;
-    column-gap: 30px
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
   }
 }
 
@@ -63,40 +74,392 @@
   * {
     @apply border-border;
   }
-  html {
-    @apply scroll-smooth;
-  }
   body {
     @apply bg-background text-foreground;
-    /* font-feature-settings: "rlig" 1, "calt" 1; */
-    font-synthesis-weight: none;
-    text-rendering: optimizeLegibility;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-@layer utilities {
-  .step {
-    counter-increment: step;
-  }
-
-  .step:before {
-    @apply absolute w-9 h-9 bg-muted rounded-full font-mono font-medium text-center text-base inline-flex items-center justify-center -indent-px border-4 border-background;
-    @apply ml-[-50px] mt-[-4px];
-    content: counter(step);
-  }
-
-  .chunk-container {
-    @apply shadow-none;
-  }
-
-  .chunk-container::after {
-    content: "";
-    @apply absolute -inset-4 shadow-xl rounded-xl border;
-  }
+/* 이걸로는 구 크기 조정 못함 */
+#container {
+  position: absolute; /* 절대 위치 지정 */
+  z-index: 1; /* 배경 애니메이션을 위한 z-index 설정 */
+  background: transparent !important; /* 배경을 투명하게 설정 */
 }
 
-@media (max-width: 640px) {
-  .container {
-    @apply px-4;
-  }
+.content {
+  position: relative;
+  z-index: 2; /* 애니메이션 위에 표시되어야 하는 컨텐츠 */
+  padding: 20px;
 }
+
+.hidden-content {
+  display: none;
+}
+
+::selection {
+  background-color: #00e100; /* 배경 색상을 분홍색으로 지정 */
+  color: #000000; /* 텍스트 색상을 검은색으로 지정 */
+}
+
+
+/**/
+*,:after,:before {
+  box-sizing: border-box;
+  border: 0 solid
+}
+
+:after,:before {
+  --tw-content: ""
+}
+
+.-ml-px {
+  margin-left: -1
+}
+
+.h-nav {
+  height: 40px
+}
+
+.pr-lg {
+  padding-right: 40px
+}
+
+.tick:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  border-left-width: 1px;
+  content: var(--tw-content);
+  transition-property: height;
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  transition-duration: .15s
+}
+
+input::-webkit-inner-spin-button,input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0
+}
+
+.before\:h-\[12px\]:before {
+  content: var(--tw-content);
+  height: 12px
+}
+
+.first\:mt-0:first-child {
+  margin-top: 0
+}
+
+.last\:border-b-0:last-child {
+  border-bottom-width: 0
+}
+
+.last-of-type\:pr-0:last-of-type,.last\:pr-0:last-child {
+  padding-right: 0
+}
+
+.hover\:scale-105:hover {
+  --tw-scale-x: 1.05;
+  --tw-scale-y: 1.05;
+  transform: translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+
+.hover\:text-white\/90:hover {
+  color: hsla(0,0%,90%,.9)
+}
+
+.hover\:before\:h-\[12px\]:hover:before {
+  content: var(--tw-content);
+  height: 12px
+}
+
+.focus\:border-white\/50:focus {
+  border-color: hsla(0,0%,90%,.5)
+}
+
+.focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px
+}
+
+.group:hover .group-hover\:flex {
+  display: flex
+}
+
+
+.h-header {
+  height: 96px
+}
+
+.pointer-events-none {
+  pointer-events: none
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(.4,0,.2,1);
+  transition-duration: .15s
+}
+
+.duration-1000 {
+  transition-duration: 1s
+}
+
+.backdrop-blur {
+  --tw-backdrop-blur: blur(72px);
+  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
+  backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)
+}
+
+
+*,:after,:before {
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246/0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia:
+}
+
+.wrapper {
+  padding-left: 24px;
+  padding-right: 24px
+}
+
+.mt-md {
+  margin-top: 24px
+}
+
+.laptop\:mt-xxl {
+  margin-top: 104px
+}
+
+.laptop\:block {
+  display: block
+}
+
+.gap-x-gutter {
+  -moz-column-gap: 30px;
+  column-gap: 30px
+}
+
+#__layout,#__next {
+  display: flex;
+  flex-direction: column
+}
+
+.pr-sm {
+  padding-right: 16px
+}
+
+.block {
+  display: block
+}
+
+
+/* 
+
+@media (min-width: 640px) {
+    .tablet\:col-span-4 {
+        grid-column:span 4/span 4
+    }
+
+    .tablet\:col-span-8 {
+        grid-column: span 8/span 8
+    }
+
+    .tablet\:block {
+        display: block
+    }
+
+    .tablet\:grid {
+        display: grid
+    }
+
+    .tablet\:w-1\/3 {
+        width: 33.333333%
+    }
+
+    .tablet\:grid-cols-2 {
+        grid-template-columns: repeat(2,minmax(0,1fr))
+    }
+
+    .tablet\:grid-cols-12 {
+        grid-template-columns: repeat(12,minmax(0,1fr))
+    }
+
+    .tablet\:flex-row {
+        flex-direction: row
+    }
+
+    .tablet\:text-2xl {
+        font-size: 28px;
+        line-height: 1.26;
+        letter-spacing: -.01em
+    }
+
+    .tablet\:text-xl {
+        font-size: 24px;
+        line-height: 1.26;
+        letter-spacing: -.04em
+    }
+
+    .tablet\:text-3xl {
+        font-size: 38px;
+        line-height: 1.26;
+        letter-spacing: -.01em
+    }
+}
+
+*/
+@media (min-width: 960px) {
+    .laptop\:col-span-1 {
+        grid-column:span 1/span 1
+    }
+
+    .laptop\:mt-xl {
+        margin-top: 64px
+    }
+
+    .laptop\:mt-xxl {
+        margin-top: 104px
+    }
+
+    .laptop\:-mt-\[1px\] {
+        margin-top: -1px
+    }
+
+    .laptop\:mb-0 {
+        margin-bottom: 0
+    }
+
+    .laptop\:block {
+        display: block
+    }
+
+    .laptop\:w-\[76px\] {
+        width: 76px
+    }
+
+    .laptop\:flex-\[0_0_25\%\] {
+        flex: 0 0 25%
+    }
+
+    .laptop\:flex-1 {
+        flex: 1 1 0%
+    }
+
+    .laptop\:grid-cols-3 {
+        grid-template-columns: repeat(3,minmax(0,1fr))
+    }
+
+    .laptop\:flex-row {
+        flex-direction: row
+    }
+
+    .laptop\:pt-xl {
+        padding-top: 64px
+    }
+
+    .laptop\:text-right {
+        text-align: right
+    }
+
+    .laptop\:text-2xl {
+        font-size: 28px;
+        line-height: 1.26;
+        letter-spacing: -.01em
+    }
+
+    .laptop\:wrapper {
+        padding-left: 24px;
+        padding-right: 24px
+    }
+
+    @media (min-width: 960px) {
+        .laptop\:wrapper {
+            padding-left:30px;
+            padding-right: 30px
+        }
+    }
+
+    @media (min-width: 1240px) {
+        .laptop\:wrapper {
+            width:100%;
+            margin-right: auto;
+            margin-left: auto
+        }
+    }
+
+    @media (min-width: 1240px) {
+        @media (min-width:640px) {
+            .laptop\:wrapper {
+                max-width:640px
+            }
+        }
+    }
+
+    @media (min-width: 1240px) {
+        @media (min-width:960px) {
+            .laptop\:wrapper {
+                max-width:960px
+            }
+        }
+    }
+
+    @media (min-width: 1240px) {
+        @media (min-width:1240px) {
+            .laptop\:wrapper {
+                max-width:1240px
+            }
+        }
+    }
+}
+/*
+
+@media (min-width: 1240px) {
+    .desktop\:col-span-3 {
+        grid-column:span 3/span 3
+    }
+
+    .desktop\:col-span-9 {
+        grid-column: span 9/span 9
+    }
+*/

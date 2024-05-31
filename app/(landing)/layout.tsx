@@ -1,22 +1,41 @@
 "use client"
 
-import Navbar from "@/components/reddit/Navbar"
+import { useState } from "react"
+import { useDirectory } from "@/hooks/useDirectory"
+import { useAuthState } from "@/hooks/useAuthState"
+import { Session } from "@supabase/supabase-js"
+import { CommandMenu } from "@/components/command-menu"
+import { MainNav } from "@/components/main-nav"
+import { MobileNav } from "@/components/mobile-nav"
+import { Directory } from "@/components/reddit/Navbar/Directory";
+import { RightContent } from "@/components/reddit/Navbar/RightContent";
 import { SiteFooter } from "@/components/site-footer"
-import { SiteHeader } from "@/components/site-header"
 
 interface AppLayoutProps {
   children: React.ReactNode
 }
 
-  export default function LandingLayout({ children }: AppLayoutProps) {
+export default function LandingLayout({ children }: AppLayoutProps) {
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { onSelectMenuItem } = useDirectory();
+
   return (
-    <>
-      <SiteHeader />
-      {/* <Navbar/> */}
-      <main className="flex-1">
-        {children}
-      </main>
-      <SiteFooter />
-    </>
+    <div className="flex min-h-screen flex-col">
+      <header className="sticky top-0 left-0 z-50 h-24 w-full bg-dither">
+        <div className="container flex h-full max-w-screen-2xl items-center">
+          <MainNav />
+          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+            <Directory />
+            {/* <div className="w-full flex-1 md:w-auto md:flex-none">
+              <CommandMenu/>
+            </div> */}
+            <RightContent user={user} />
+          </div>
+        </div>
+      </header>
+      <div className="container flex-1">{children}</div>
+        <SiteFooter/>
+    </div>
   )
 }

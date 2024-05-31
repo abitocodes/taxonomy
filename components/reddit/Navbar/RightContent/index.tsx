@@ -11,16 +11,13 @@ interface RightContentProps {
   user: User | null;
 }
 
-const RightContent: FC<RightContentProps> = ({ user }) => {
+export const RightContent: FC<RightContentProps> = ({ user }) => {
   return (
     <>
       <AuthModal />
       <div className="flex justify-between items-center">
         {user ? <><Icons /><MenuWrapper /></> : <AuthButtons />}
-        
       </div>
     </>
   );
 };
-
-export default RightContent;

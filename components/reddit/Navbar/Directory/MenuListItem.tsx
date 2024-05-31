@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { IconType } from "react-icons";
 
-import useDirectory from "@/hooks/useDirectory";
+import { useDirectory } from "@/hooks/useDirectory";
 
 type DirectoryItemProps = {
   displayText: string;

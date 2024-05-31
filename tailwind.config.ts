@@ -21,6 +21,7 @@ const config = {
     extend: {
       fontFamily: {
         dots: ['"NeoDunggeunmoPro"', ...fontFamily.mono],
+        scor: ['"SCDream"', ...fontFamily.mono],
         
       },
       backgroundImage: {

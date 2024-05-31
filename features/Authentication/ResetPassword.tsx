@@ -53,7 +53,7 @@ const ResetPassword: FC<ResetPasswordProps> = ({ toggleView }) => {
         </>
       )}
       <div className="flex items-center text-sm text-blue-500 font-bold cursor-pointer">
-        <p onClick={() => toggleView("login")}>LOGIN</p>
+        <p onClick={() => toggleView("login")}>로그인</p>
         <BsDot />
         <p onClick={() => toggleView("signup")}>SIGN UP</p>
       </div>

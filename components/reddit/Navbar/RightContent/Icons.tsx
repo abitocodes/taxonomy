@@ -3,7 +3,7 @@ import { BsArrowUpRightCircle, BsChatDots } from "react-icons/bs";
 import { GrAdd } from "react-icons/gr";
 import { IoFilterCircleOutline, IoNotificationsOutline, IoVideocamOutline } from "react-icons/io5";
 
-import useDirectory from "@/hooks/useDirectory";
+import { useDirectory } from "@/hooks/useDirectory";
 
 type ActionIconsProps = {};
 

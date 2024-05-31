@@ -8,7 +8,7 @@ import { genreState } from "@/atoms/genresAtom";
 import { defaultMenuItem, directoryMenuState } from "@/atoms/directoryMenuAtom";
 import { DirectoryMenuItem } from "@/types/DirectoryMenuState";
 
-const useDirectory = () => {
+export const useDirectory = () => {
   const [directoryState, setDirectoryState] = useRecoilState(directoryMenuState);
   const router = useRouter();
 
@@ -35,8 +35,9 @@ const useDirectory = () => {
 
   useEffect(() => {
     const existingGenre = genreStateValue.currentGenre;
+    console.log("!!genreStateValue", genreStateValue);
 
-    if (existingGenre.id) {
+    if (!existingGenre.id) {
       setDirectoryState((prev) => ({
         ...prev,
         selectedMenuItem: {
@@ -58,5 +59,3 @@ const useDirectory = () => {
 
   return { directoryState, onSelectMenuItem, toggleMenuOpen };
 };
-
-export default useDirectory;

@@ -52,7 +52,7 @@ export function MainNav({ items, children }: MainNavProps) {
         onClick={() => setShowMobileMenu(!showMobileMenu)}
       > 
         {showMobileMenu ? <Icons.cancel /> : <Icons.logo />}
-        <span className="font-bold">Menu</span>
+        {/* <span className="font-bold">Menu</span> */}
       </button>
       {showMobileMenu && items && (
         <MobileNav items={items}>{children}</MobileNav>

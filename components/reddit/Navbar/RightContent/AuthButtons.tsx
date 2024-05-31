@@ -14,16 +14,15 @@ const AuthButtons: FC<AuthButtonsProps> = () => {
     <>
       {/* <div className="flex items-center space-x-4"> */}
       <Button
-        variant="ghost"
         onClick={() => setAuthModalState({ open: true, view: "login" })}
       >
-        Log In
+        로그인
       </Button>
-      <Button
+      {/* <Button
         onClick={() => setAuthModalState({ open: true, view: "signup" })}
       >
         Sign Up
-      </Button>
+      </Button> */}
       {/* </div> */}
     </>
   );

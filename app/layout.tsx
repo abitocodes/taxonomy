@@ -67,13 +67,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body
         className={cn(
-          "min-h-screen bg-background font-dots antialiased",
+          "min-h-screen bg-background font-scor antialiased",
         )}
       >
         <RecoilRootWrapper>
+          <BgRisingStars/> 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               {children}
-              <BgRisingStars/> 
               <Analytics />
               <Toaster />
               <TailwindIndicator />

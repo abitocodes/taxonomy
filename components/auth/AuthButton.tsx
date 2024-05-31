@@ -32,7 +32,7 @@ export default async function AuthButton() {
     <div>
 
     <Link href="/login">
-      <Button>LOGIN</Button>
+      <Button>로그인</Button>
     </Link>
     </div>
   );
