@@ -128,8 +128,8 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
               </>
             ) : (
               <div className="flex flex-col justify-center items-center border-t border-gray-200 p-20">
-                <p className="font-bold text-opacity-30">
-                  No Comments Yet
+                <p className="font-bold text-opacity-30 mt-4">
+                  아직 코멘트가 없습니다
                 </p>
               </div>
             )}
