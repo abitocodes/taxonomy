@@ -3,78 +3,54 @@ import { useSetRecoilState } from "recoil";
 
 import { authModalState } from "@/atoms/authModalAtom";
 import { postState } from "@/atoms/postsAtom";
-import { prisma } from "@/prisma/client";
 
-import { supabase } from "@/utils/supabase/client";
 import { Comment } from "@prisma/client";
-import { Post } from "@prisma/client";
+import { PostWith } from "@/types/posts";
 import { PublicUser } from "@prisma/client";
 import CommentItem from "@/features/Post/Comments/CommentItem";
 import CommentInput from "@/features/Post/Comments/CommentInput";
 
 import { CommentWith } from "@/features/Post/Comments/CommentItem";
-import { GiConsoleController } from "react-icons/gi";
 
-type CommentsProps = {
-  user?: PublicUser | null;
-  selectedPost: Post;
+interface CommentsProps {
+  user: PublicUser | null;
   genre: string;
-};
+  selectedPost: PostWith; // 이 부분을 추가하세요
+}
 
-const Comments: FC<CommentsProps> = ({ user, selectedPost, genre }) => {
+const Comments: FC<CommentsProps> = ({ user, selectedPost: post, genre }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentFetchLoading, setCommentFetchLoading] = useState(false);
   const [commentCreateLoading, setCommentCreateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState("");
   const setAuthModalState = useSetRecoilState(authModalState);
-  const setPostsState = useSetRecoilState(postState);
+  const setPostState = useSetRecoilState(postState);
 
   const onCreateComment = async (comment: string) => {
     if (!user) {
       setAuthModalState({ open: true, view: "login" });
       return;
     }
-
+  
     setCommentCreateLoading(true);
+    const queryParams = new URLSearchParams({
+      postId: post.id,
+      creatorId: user.id,
+      text: comment,
+      genreId: genre,
+    });
+  
     try {
-      const { data: commentData, error } = await supabase
-        .from('comments')
-        .insert([
-          {
-            postId: selectedPost.id,
-            creatorId: user.id,
-            text: comment,
-            genreId: genre,
-            postTitle: selectedPost.title,
-            createdAt: new Date().toISOString(),
-          }
-        ]);
-
-      if (error) throw error;
-
-      if (commentData) {
-        setComments((prev) => [
-          commentData[0],
-          ...prev,
-        ]);
-      } else {
-        console.error("No comment data returned from the insert operation.");
-      }
-
-      await supabase
-        .from('posts')
-        .update({ numberOfComments: selectedPost.numberOfComments + 1 })
-        .match({ id: selectedPost.id });
-
-      setPostsState((prev) => ({
-        ...prev,
-        selectedPost: {
-          ...prev.selectedPost,
-          numberOfComments: prev.selectedPost.numberOfComments + 1,
-        } as Post,
-        postUpdateRequired: true,
-      }));
+      const response = await fetch(`/api/createComment?${queryParams.toString()}`)
+      const data = await response.json();
+      const createdComment = data.comment;
+  
+      setComments((prev) => [
+        createdComment,
+        ...(Array.isArray(prev) ? prev : []),
+      ]);
+  
     } catch (error) {
       console.error("onCreateComment error", error.message);
     }
@@ -85,56 +61,32 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, genre }) => {
     async (comment: Comment) => {
       setDeleteLoading(comment.id);
       try {
-        const { error } = await supabase
-          .from('comments')
-          .delete()
-          .match({ id: comment.id });
-
-        if (error) throw error;
-
-        await supabase
-          .from('posts')
-          .update({ numberOfComments: selectedPost.numberOfComments - 1 })
-          .match({ id: selectedPost.id });
-
-        setPostsState((prev) => ({
-          ...prev,
-          selectedPost: {
-            ...prev.selectedPost,
-            numberOfComments: prev.selectedPost.numberOfComments - 1,
-          } as Post,
-          postUpdateRequired: true,
-        }));
-
+        const queryParams = new URLSearchParams({
+          commentId: comment.id,
+          postId: post.id
+        });
+  
+        const response = await fetch(`/api/deleteComment?${queryParams.toString()}`)
+  
+        const data = await response.json();
+        const updatedNumberOfComments = data.numberOfComments;
+  
         setComments((prev) => prev.filter((item) => item.id !== comment.id));
       } catch (error) {
         console.error("Error deleting comment", error.message);
       }
       setDeleteLoading("");
     },
-    [setComments, setPostsState]
+    [setComments, setPostState]
   );
 
   const getPostComments = async () => {
     setCommentFetchLoading(true);
     try {
-      const data = await prisma.comment.findMany({
-        where: {
-          postId: selectedPost.id,
-        },
-        include: {
-          publicUsers: {
-            select: {
-              nickName: true
-            }
-          }
-        },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      });
-  
-      setComments(data);
+      const response = await fetch(`/api/getPostComments?postId=${post.id}`);
+      const data = await response.json();
+      const comments = data.comments
+      setComments(comments);
     } catch (error) {
       console.error("getPostComments error", error.message);
     }
@@ -143,7 +95,8 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, genre }) => {
 
   useEffect(() => {
     getPostComments();
-  }, [selectedPost.id]);
+    
+  }, [post.id]);
 
   return (
     <div className="p-2 rounded-b-lg">

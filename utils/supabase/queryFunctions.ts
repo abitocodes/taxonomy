@@ -70,16 +70,3 @@ function where(column, operator, value) {
     }
   };
 }
-
-// 사용 예시
-async function exampleUsage() {
-    try {
-        let postsQuery = query('posts', orderBy('createdAt', 'desc'), where('genreId', 'in', [1, 2, 3]));
-        postsQuery = limit(postsQuery, 10);
-        const posts = await getDocs(postsQuery);
-        console.log(posts);
-      }
-    catch (error) {
-    console.error('Error fetching posts:', error.message);
-  }
-}

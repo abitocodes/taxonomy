@@ -19,7 +19,7 @@ import { AppProps } from 'next/app';
 import { Session } from '@supabase/supabase-js';
 import { useAuthState } from "@/hooks/useAuthState";
 import { Container } from "@radix-ui/themes";
-import { postsWith } from "@/types/posts";
+import { PostWith } from "@/types/posts";
 import { LinkedCard } from "@/components/LinkedCard";
 import { DocsSidebarNav } from "@/components/sidebar-nav";
 import { docsConfig } from "@/config/docs";
@@ -27,12 +27,10 @@ import { docsConfig } from "@/config/docs";
 export default function Home(): ReactElement {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
-  console.log("home user", user)
   const { postStateValue, setPostsStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
   const genreStateValue = useRecoilValue(genreState);
 
   const getUserHomePosts = async () => {
-    console.log("getUserHomePosts called, userId: ", user?.id)
     setLoading(true);
     try {
       const response = await fetch(`/api/getUserHomePosts?userId=${user?.id}`);
@@ -41,7 +39,7 @@ export default function Home(): ReactElement {
       setPostsStateValue((prev) => {
         const newState = {
           ...prev,
-          posts: posts as postsWith[],
+          posts: posts as PostWith[],
         };
         return newState;
       });
@@ -61,7 +59,7 @@ export default function Home(): ReactElement {
       setPostsStateValue((prev) => {
         const newState = {
           ...prev,
-          posts: posts as postsWith[],
+          posts: posts as PostWith[],
         };
         return newState;
       });
@@ -90,11 +88,9 @@ export default function Home(): ReactElement {
   };
 
   useEffect(() => {
-    console.log("useEffect called, getUserHomePosts, user: ", user)
     if (!genreStateValue.initSnippetsFetched) return;
 
     if (user) {
-      console.log("here?")
       getUserHomePosts();
     }
   }, [user, genreStateValue.initSnippetsFetched]);
@@ -132,7 +128,7 @@ export default function Home(): ReactElement {
               </div>
             ) : (
               <div className="space-y-6">
-                {(postStateValue?.posts || []).map((post: postsWith, index: number) => {
+                {(postStateValue?.posts || []).map((post: PostWith, index: number) => {
                   return (
                     <LinkedCard
                       key={index}

@@ -11,12 +11,13 @@ import { postState } from "@/atoms/postsAtom";
 import { supabase } from "@/utils/supabase/client";
 import { Genre } from "@/types/genresState";
 import { Post, PostVote } from "@prisma/client";
+import { PostWith } from "@/types/posts";
 import { RecoilRoot } from 'recoil';
 import { AppProps } from 'next/app';
 import { Session } from '@supabase/supabase-js';
 import { prisma } from "@/prisma/client";
 
-const usePosts = (genreData?: Genre) => {
+export default function usePosts (genreData?: Genre) {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const [postStateValue, setPostsStateValue] = useRecoilState(postState);
@@ -26,7 +27,7 @@ const usePosts = (genreData?: Genre) => {
   const router = useRouter();
   const genreStateValue = useRecoilValue(genreState);
 
-  const onSelectPost = (post: Post, postIdx: number) => {
+  const onSelectPost = (post: PostWith, postIdx: number) => {
     setPostsStateValue((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
@@ -36,7 +37,7 @@ const usePosts = (genreData?: Genre) => {
 
   const onVote = async (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    post: Post,
+    post: PostWith,
     vote: number,
     genreId: string
   ) => {
@@ -167,6 +168,4 @@ return {
   error,
 };
 };
-
-export default usePosts;
          

@@ -15,7 +15,6 @@ const useGenreData = () => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const pathname = usePathname();
-  console.log("useGenreData called", pathname)
   const [genreStateValue, setGenreStateValue] = useRecoilState(genreState);
   const setAuthModalState = useSetRecoilState(authModalState);
   const [loading, setLoading] = useState(false);
@@ -26,7 +25,6 @@ const useGenreData = () => {
     if (pathSegments) {
       const genreIndex = pathSegments.indexOf('genre');
       const genreId = genreIndex !== -1 ? pathSegments[genreIndex + 1] : null;
-      console.log("use !: ", genreId)
       if (genreId) {
         getGenreData(genreId);
       } else {
@@ -93,7 +91,6 @@ const useGenreData = () => {
   };
 
   const joinGenre = async (genre: Genre) => {
-    // console.log("JOINING COMMUNITY: ", genre.id);
     try {
       // Insert new genre snippet for the user
       const newSnippet = await prisma.genreSnippet.create({
@@ -123,7 +120,6 @@ const useGenreData = () => {
         }],
       }));
     } catch (error) {
-      // console.log("joinGenre error", error);
     }
     setLoading(false);
   };

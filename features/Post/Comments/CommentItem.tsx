@@ -6,7 +6,7 @@ import moment from "moment";
 import { Comment, PublicUser } from "@prisma/client";
 
 export type CommentWith = Comment & {
-  creator: PublicUser;
+  publicUsers: PublicUser;
 };
 
 type CommentItemProps = {
@@ -25,7 +25,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDeleteComment, isLoading
       <div className="space-y-1">
         <div className="flex items-center space-x-2 text-xs">
           <span className="font-bold hover:underline hover:cursor-pointer">
-            {comment.creator.nickName}
+            {comment.publicUsers.nickName }
           </span>
           {comment.createdAt && (
             <span className="text-gray-600">
@@ -53,4 +53,5 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDeleteComment, isLoading
     </div>
   );
 };
+
 export default CommentItem;

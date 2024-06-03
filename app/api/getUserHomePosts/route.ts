@@ -4,7 +4,6 @@ export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     const userId = url.searchParams.get('id');
-    console.log("getUserHomePosts, Param userId: ", userId)
 
     const userGenres = await prisma.genreSnippet.findMany({
       where: { userId: userId },
@@ -16,8 +15,6 @@ export async function GET(request: Request) {
         }
       }
     });
-
-    console.log("getUserHomePosts, userGenres of userId: ", userGenres)
 
     if (!userGenres) {
       return Response.json({

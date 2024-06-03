@@ -7,7 +7,6 @@ export type Comment = {
   creatorPhotoURL: string;
   genreId: string;
   postId: string;
-  postTitle: string;
   text: string;
   createdAt?: Timestamp;
 };

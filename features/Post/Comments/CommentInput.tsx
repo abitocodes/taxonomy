@@ -2,6 +2,7 @@ import { FC } from "react";
 import { PublicUser } from "@prisma/client";
 
 import AuthButtons from "@/components/reddit/Navbar/RightContent/AuthButtons";
+import { Button } from "@/components/ui/button";
 
 interface CommentInputProps {
   comment: string;
@@ -12,27 +13,31 @@ interface CommentInputProps {
 }
 
 const CommentInput: FC<CommentInputProps> = ({ comment, setComment, loading, user, onCreateComment }) => {
+  const handleCreateComment = async () => {
+    await onCreateComment(comment);
+    setComment(''); // 코멘트 등록 후 입력 필드 초기화
+  };
   return (
     <div className="flex flex-col relative">
       {user ? (
         <>
-          <p className="mb-1">
-            Comment as <span className="text-blue-500">{user?.email?.split("@")[0]}</span>
+          <p className="mb-2">
+            Comment as <span className="text-blue-500">{user?.nickName}</span>
           </p>
           <textarea
             className="w-full p-2.5 text-sm border rounded-md min-h-[160px] pb-10 placeholder-gray-500 focus:outline-none focus:focus:border-black"
             value={comment}
             onChange={(event) => setComment(event.target.value)}
-            placeholder="What are your thoughts?"
+            placeholder="남기고 싶은 말이 있어?"
           />
-          <div className="absolute left-0.5 right-0.5 bottom-0.5 flex justify-end bg-gray-100 p-1.5 rounded-b-md">
-            <button
-              className={`h-6 px-3 ${!comment.trim().length ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-500 hover:text-white'} transition duration-300 ease-in-out`}
+          <div className="left-0.5 right-0.5 bottom-0.5 flex justify-end bg-gray-100 p-1.5 rounded-b-md">
+            <Button
+              className={`h-6 px-3 ${!comment.trim().length ? 'opacity-50 cursor-not-allowed' : ''} transition duration-300 ease-in-out`}
               disabled={!comment.trim().length}
-              onClick={() => onCreateComment(comment)}
+              onClick={handleCreateComment}
             >
-              {loading ? "Loading..." : "Comment"}
-            </button>
+              {loading ? ".. 남기는 중 .." : "코멘트 남기기"}
+            </Button>
           </div>
         </>
       ) : (

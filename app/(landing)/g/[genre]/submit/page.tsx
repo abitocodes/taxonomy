@@ -13,7 +13,7 @@ import NewPostForm from "@/features/Post/PostForm/NewPostForm";
 import useGenreData from "@/hooks/useGenreData";
 import { useUser } from "@/hooks/useUser";
 
-export default function CreateCommmunityPostPage() {
+export default function CreateCommmunityPostPage ({ params }: { params: { genre: string, pid: string } }) {
   const { user, loadingUser } = useUser()
   const router = useRouter();
   const genreStateValue = useRecoilValue(genreState);

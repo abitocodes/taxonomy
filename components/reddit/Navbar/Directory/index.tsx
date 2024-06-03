@@ -21,10 +21,7 @@ import {
 } from "@/components/ui/popover"
 
 export const Directory: FC = () => {
-  console.log("Directory Component Rendered.");
   const { directoryState, toggleMenuOpen } = useDirectory();
-
-  console.log("Directory state in Directory component:", directoryState);
 
   return (
     <Popover open={directoryState.isOpen} onOpenChange={toggleMenuOpen}>

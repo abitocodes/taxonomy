@@ -105,7 +105,6 @@ const verifyOTP = async (form, setFormError, setOtpInputLoading, setSession) => 
     token: otp.join(''),
     type: 'email'
   });
-  console.log("supabase.auth.verifyOtp() data", data);
   if (error) {
     setFormError(error.message);
     setOtpInputLoading(false);

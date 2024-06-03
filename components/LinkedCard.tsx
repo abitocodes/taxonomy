@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import { Post } from "@prisma/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { postsWith } from "@/types/posts";
+import { PostWith } from "@/types/posts";
 import { TbArrowBigDown, TbArrowBigDownFilled, TbArrowBigUp, TbArrowBigUpFilled } from "react-icons/tb";
 import formatDistanceToNow from "date-fns/formatDistanceToNow"
 import { getBadgeVariantFromLabel } from "@/utils/getBadgeVariantFromLabel";
@@ -17,7 +17,7 @@ import {
 import { Button } from './ui/button';
 
 interface LinkedCardProps {
-  post: postsWith;
+  post: PostWith;
   postIdx?: number;
   onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, vote: number, genreId: string, postIdx?: number) => void;
   onSelectPost?: (value: Post, postIdx: number) => void;
@@ -44,13 +44,13 @@ export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, 
       setLoadingDelete(false);
     }
   };
+  
   return (
     <div
       className="flex w-full flex-col items-center border-b bg-card text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8 cursor-pointer">
       <div
       className="w-full h-full flex flex-row gap-2"
       onClick={() => {
-        console.log("clicked")
         onSelectPost && post && onSelectPost(post, postIdx!)}
       }
         >

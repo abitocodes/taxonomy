@@ -1,10 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/prisma/client';
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
-    const genreId = pathname.searchParams.get('genreId')
-    const userId = pathname.searchParams.get('userId')
+    const genreId = url.searchParams.get('genreId')
+    const userId = url.searchParams.get('userId')
 
   if (!genreId || !userId) {
     return Response.json({
@@ -24,7 +23,8 @@ export async function GET(request: Request) {
         statusCode: 200,
         message: '200 OK',
         postVotes: postVotes,
-  }); }
+  }); 
+}
   catch (error) {
     return Response.json({
       statusCode: 500,

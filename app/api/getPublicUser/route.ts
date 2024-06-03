@@ -2,9 +2,8 @@ import { prisma } from "@/prisma/client";
 
 export async function GET(request: Request) {
     try {
-        // URL에서 userId 추출
         const url = new URL(request.url);
-        const userId = url.searchParams.get('id');
+        const userId = url.searchParams.get('userId');
 
         if (!userId) {
             return Response.json({

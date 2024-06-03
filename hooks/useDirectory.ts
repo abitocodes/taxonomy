@@ -10,13 +10,11 @@ import { DirectoryMenuItem } from "@/types/DirectoryMenuState";
 
 export const useDirectory = () => {
   const [directoryState, setDirectoryState] = useRecoilState(directoryMenuState);
-  console.log("useDirectory Called, directoryState:", directoryState);
   const router = useRouter();
 
   const genreStateValue = useRecoilValue(genreState);
 
   const onSelectMenuItem = (menuItem: DirectoryMenuItem) => {
-    console.log("onSelectMenuItem called with:", menuItem);
     setDirectoryState((prev) => ({
       ...prev,
       selectedMenuItem: menuItem,
@@ -29,7 +27,6 @@ export const useDirectory = () => {
   };
 
   const toggleMenuOpen = () => {
-    console.log("toggleMenuOpen called, current state:", directoryState.isOpen);
     setDirectoryState((prev) => ({
       ...prev,
       isOpen: !directoryState.isOpen,
@@ -37,12 +34,9 @@ export const useDirectory = () => {
   };
 
   useEffect(() => {
-    console.log("useEffect in useDirectory, genreStateValue:", genreStateValue);
     const existingGenre = genreStateValue.currentGenre;
-    console.log("existingGenre:", existingGenre);
   
-    if (existingGenre.id) { // 조건을 true일 때로 변경
-      console.log("Setting directory state based on existingGenre:", existingGenre);
+    if (existingGenre.id) {
       setDirectoryState((prev) => ({
         ...prev,
         selectedMenuItem: {
@@ -53,8 +47,7 @@ export const useDirectory = () => {
           imageURL: existingGenre.imageURL,
         },
       }));
-    } else { // false일 때의 로직
-      console.log("Setting directory state to defaultMenuItem");
+    } else {
       setDirectoryState((prev) => ({
         ...prev,
         selectedMenuItem: defaultMenuItem,

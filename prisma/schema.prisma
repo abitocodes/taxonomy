@@ -13,7 +13,6 @@ model Comment {
   creatorId       String
   genreId         String
   postId          String
-  postTitle       String
   text            String
   createdAt       DateTime     @default(now())
   publicUsers     PublicUser   @relation(fields: [creatorId], references: [id], onDelete: Cascade)

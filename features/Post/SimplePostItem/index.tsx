@@ -1,11 +1,11 @@
 "use client"
 
 import { FC } from "react";
-import { postsWith } from "@/types/posts";
+import { PostWith } from "@/types/posts";
 
 type SimplePostItemProps = {
   key: number;
-  post: postsWith;
+  post: PostWith;
   postIdx: number;
 };
 

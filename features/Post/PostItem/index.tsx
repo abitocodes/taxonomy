@@ -1,10 +1,5 @@
 import { FC, useState } from "react";
 
-import { cn } from "@/lib/utils";
-import { AiOutlineDelete } from "react-icons/ai";
-import { BsChat, BsDot } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
-import { IoArrowRedoOutline, IoBookmarkOutline } from "react-icons/io5";
 import { TbArrowBigDown, TbArrowBigDownFilled, TbArrowBigUp, TbArrowBigUpFilled } from "react-icons/tb";
 import formatDistanceToNow from "date-fns/formatDistanceToNow"
 import { getBadgeVariantFromLabel } from "@/utils/getBadgeVariantFromLabel";
@@ -16,12 +11,12 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 import { Badge } from "@/components/ui/badge";
 
 import { Post, Label, PublicUser } from "@prisma/client";
-import { postsWith } from "@/types/posts";
+import { PostWith } from "@/types/posts";
 import { Container } from "@radix-ui/themes";
 import { CardContent } from "@/components/ui/card";
 
 type PostItemContentProps = {
-  post: postsWith;
+  post: PostWith;
   onVote: (event: React.MouseEvent<SVGElement, MouseEvent>, post: Post, vote: number, genreId: string, postIdx?: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   userIsCreator: boolean;
@@ -54,7 +49,6 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
       <button
       className="w-full h-full flex flex-row gap-2"
       onClick={() => {
-        console.log("clicked")
         onSelectPost && post && onSelectPost(post, postIdx!)}
       }
         >
@@ -81,7 +75,7 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
               })}
             </div>
           </div>
-          <div className="text-xs text-left font-medium">{post.publicUsers.nickName}</div>
+          <div className="text-xs text-left font-medium">{post.creator.nickName}</div>
           <div className="line-clamp-2 text-left text-xs text-muted-foreground">
           {post.description.substring(0, 300)}
         </div>

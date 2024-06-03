@@ -12,9 +12,7 @@ type ImageProps = {
 };
 
 export async function GET(req: Request, res: Response) {
-  console.log("req", req)
   const directoryPath = path.join(process.cwd(), 'public', 'gallery');
-  console.log("directoryPath", directoryPath)
   try {
     const files = fs.readdirSync(directoryPath);
     const images: ImageProps[] = files.map((file, index) => {

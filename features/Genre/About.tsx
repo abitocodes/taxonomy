@@ -23,7 +23,6 @@ type AboutProps = {
 };
 
 const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
-  console.log("About called genreData", genreData)
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const searchParam = useSearchParams()

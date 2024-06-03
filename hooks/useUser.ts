@@ -9,17 +9,15 @@ export const useUser = () => {
   useEffect(() => {
     const fetchSession = async () => {
       const { data, error } = await supabase.auth.getSession();
-      console.log("useUser fetchSession data: ", data)
 
       const userId = data.session?.user?.id;
 
       if (userId) {
         const response = await fetch(`/api/getPublicUser?userId=${userId}`);
-        console.log("getPublicUser response: ", response)
-        const publicUser = await response.json();
+        const data = await response.json();
+        const publicUser = data.publicUserData;
         setUser(publicUser);
       } 
-
       setLoadingUser(false);
     };
 
@@ -31,7 +29,6 @@ export const useUser = () => {
           const userId = session?.user?.id;
           if (userId) {
             const response = await fetch(`/api/getPublicUser?userId=${userId}`);
-            console.log("getPublicUser response: ", response)
             const publicUser = await response.json();
             setUser(publicUser);
           } 

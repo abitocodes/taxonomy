@@ -8,6 +8,7 @@ import { Genre } from "@/types/genresState";
 import { Post } from "@prisma/client";
 import PostItem from "./PostItem";
 import { RecoilRoot } from "recoil";
+import { PostWith } from "@/types/posts";
 
 type PostsProps = {
   genreData?: Genre;
@@ -21,7 +22,7 @@ const Posts: FC<PostsProps> = ({ genreData, userId, loadingUser }) => {
 
   const { postStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(genreData!);
 
-  const onSelectPost = (post: Post, postIdx: number) => {
+  const onSelectPost = (post: PostWith, postIdx: number) => {
     setPostsStateValue((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
@@ -46,18 +47,22 @@ const Posts: FC<PostsProps> = ({ genreData, userId, loadingUser }) => {
     try {
       let { data: posts, error } = await supabase
         .from('posts')
-        .select('*')
+        .select(`
+          *,
+          labels:labels(*),
+          creator:users(*)
+        `)
         .eq('genreId', genreData?.id)
         .order('createdAt', { ascending: false });
-
+  
       if (error) throw error;
-
+  
       setPostsStateValue((prev) => ({
         ...prev,
-        posts: posts as Post[],
+        posts: posts as PostWith[], // 여기서 posts는 labels와 creator를 포함해야 합니다.
         postsCache: {
           ...prev.postsCache,
-          [genreData?.id!]: posts as Post[],
+          [genreData?.id!]: posts as PostWith[],
         },
         postUpdateRequired: false,
       }));
@@ -73,7 +78,7 @@ const Posts: FC<PostsProps> = ({ genreData, userId, loadingUser }) => {
         <PostLoader />
       ) : (
         <div className="flex flex-col">
-          {postStateValue.posts.map((post: Post, index) => (
+          {postStateValue.posts.map((post: PostWith, index) => (
             <PostItem
               key={post.id}
               post={post}
@@ -91,45 +96,3 @@ const Posts: FC<PostsProps> = ({ genreData, userId, loadingUser }) => {
 };
 
 export default Posts;
-
-// useEffect(() => {
-//   if (postStateValue.postsCache[genreData?.id!] && !postStateValue.postUpdateRequired) {
-//     setPostsStateValue((prev) => ({
-//       ...prev,
-//       posts: postStateValue.postsCache[genreData?.id!],
-//     }));
-//     return;
-//   }
-
-//   getPosts();
-//   /**
-//    * REAL-TIME POST LISTENER
-//    * IMPLEMENT AT FIRST THEN CHANGE TO POSTS CACHE
-//    *
-//    * UPDATE - MIGHT KEEP THIS AS CACHE IS TOO COMPLICATED
-//    *
-//    * LATEST UPDATE - FOUND SOLUTION THAT MEETS IN THE MIDDLE
-//    * CACHE POST DATA, BUT REMOVE POSTVOTES CACHE AND HAVE
-//    * REAL-TIME LISTENER ON POSTVOTES
-//    */
-//   // const postsQuery = query(
-//   //   collection(firestore, "posts"),
-//   //   where("genreId", "==", genreData.id),
-//   //   orderBy("createdAt", "desc")
-//   // );
-//   // const unsubscribe = onSnapshot(postsQuery, (querySnaption) => {
-//   //   const posts = querySnaption.docs.map((post) => ({
-//   //     id: post.id,
-//   //     ...post.data(),
-//   //   }));
-//   //   setPostItems((prev) => ({
-//   //     ...prev,
-//   //     posts: posts as [],
-//   //   }));
-//   //   setLoading(false);
-//   // });
-
-//   // // Remove real-time listener on component dismount
-//   // return () => unsubscribe();
-//   // eslint-disable-next-line react-hooks/exhaustive-deps
-// }, [genreData, postStateValue.postUpdateRequired]);

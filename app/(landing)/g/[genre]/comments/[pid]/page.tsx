@@ -19,20 +19,20 @@ import { Session } from '@supabase/supabase-js';
 import { PublicUser } from "@prisma/client";
 import { useUser } from "@/hooks/useUser";
 import { LinkedCard } from "@/components/LinkedCard";
-import { postsWith } from "@/types/posts";
+import { PostWith } from "@/types/posts";
 
 type PostPageProps = {};
 
 const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid: string } }) => {
-  console.log("PostPage called params", params)
+
   const [session, setSession] = useState<Session | null>(null);
   const { user, loadingUser } = useUser();
   const { genre, pid } = params
   const { genreStateValue } = useGenreData();
-  console.log("PostPage called genreStateValue", genreStateValue.currentGenre)
   const { postStateValue, setPostsStateValue, onSelectPost, onDeletePost, loading, setLoading, onVote } = usePosts(genreStateValue.currentGenre);
 
   const fetchPost = async () => {
+    
     setLoading(true);
     try {
       const response = await fetch(`/api/getPost?postId=${pid}`);
@@ -41,7 +41,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid:
 
       setPostsStateValue((prev) => ({
         ...prev,
-        selectedPost: { id: postData.id, ...postData } as Post,
+        selectedPost: { id: postData.id, ...postData } as PostWith,
       }));
     } catch (error: any) {
       console.error("fetchPost error", error.message);
@@ -53,9 +53,8 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid:
     const fetchSessionAndPost = async () => {
       const { data, error } = await supabase.auth.getSession();
       setSession(data.session);
-  
       if (data.session) {
-        if (pid && !postStateValue.selectedPost) {
+        if (pid) {
           fetchPost();
         }
       } else {
@@ -64,7 +63,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid:
     };
   
     fetchSessionAndPost();
-  }, [params, postStateValue.selectedPost]);
+  }, [params, postStateValue.posts]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -84,7 +83,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid:
                         onVote={onVote}
                         onDeletePost={onDeletePost}
                         userVoteValue={postStateValue.postVotes.find((item) => item.postId === postStateValue.selectedPost!.id)?.voteValue}
-                        userIsCreator={user?.id === postStateValue.selectedPost.creatorId}
+                        userIsCreator={user?.id === postStateValue.selectedPost?.creatorId}
                         onSelectPost={onSelectPost}
                         homePage
                         />
@@ -107,28 +106,3 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid:
   );
 };
 export default PostPage;
-
-// <>
-//   {loading ? (
-//     <PostLoader skeletonCount={1} />
-//   ) : (
-//     <>
-//       {postStateValue.selectedPost && (
-//         <>
-//           <PostItem
-//             post={postStateValue.selectedPost}
-//             onVote={onVote}
-//             onDeletePost={onDeletePost}
-//             userVoteValue={postStateValue.postVotes.find((item) => item.postId === postStateValue.selectedPost!.id)?.voteValue}
-//             userIsCreator={user?.id === postStateValue.selectedPost.creatorId}
-//             router={router}
-//           />
-//           <Comments user={user} genre={genre as string} selectedPost={postStateValue.selectedPost} />
-//         </>
-//       )}
-//     </>
-//   )}
-// </>
-// <>
-//   <About genreData={genreStateValue.currentGenre} loading={loading} />
-// </>
