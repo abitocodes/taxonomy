@@ -17,6 +17,8 @@ type CommentItemProps = {
 };
 
 const CommentItem: FC<CommentItemProps> = ({ comment, onDeleteComment, isLoading, userId }) => {
+  console.log("userId", userId)
+  console.log("comment", comment)
   return (
     <div className="flex">
       <div className="mr-2">

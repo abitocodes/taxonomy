@@ -15,7 +15,7 @@ interface CommentInputProps {
 const CommentInput: FC<CommentInputProps> = ({ comment, setComment, loading, user, onCreateComment }) => {
   const handleCreateComment = async () => {
     await onCreateComment(comment);
-    setComment(''); // 코멘트 등록 후 입력 필드 초기화
+    setComment('');
   };
   return (
     <div className="flex flex-col relative">

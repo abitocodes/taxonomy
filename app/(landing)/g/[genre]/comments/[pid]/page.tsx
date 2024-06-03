@@ -18,7 +18,7 @@ import { useState } from "react";
 import { Session } from '@supabase/supabase-js';
 import { PublicUser } from "@prisma/client";
 import { useUser } from "@/hooks/useUser";
-import { LinkedCard } from "@/components/LinkedCard";
+import { LinkableCard } from "@/components/LinkableCard";
 import { PostWith } from "@/types/posts";
 
 type PostPageProps = {};
@@ -78,7 +78,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid:
             <>
               {postStateValue.selectedPost && (
                 <>
-                      <LinkedCard
+                      <LinkableCard
                         post={postStateValue.selectedPost}
                         onVote={onVote}
                         onDeletePost={onDeletePost}
@@ -86,6 +86,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid:
                         userIsCreator={user?.id === postStateValue.selectedPost?.creatorId}
                         onSelectPost={onSelectPost}
                         homePage
+                        cursorPointer={false}
                         />
                         <Comments user={user} genre={genre as string} selectedPost={postStateValue.selectedPost} />
                       </>

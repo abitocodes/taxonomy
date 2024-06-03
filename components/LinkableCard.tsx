@@ -16,7 +16,7 @@ import {
 } from "@/components/shad/new-york/ui/avatar"
 import { Button } from './ui/button';
 
-interface LinkedCardProps {
+interface LinkableCardProps {
   post: PostWith;
   postIdx?: number;
   onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, vote: number, genreId: string, postIdx?: number) => void;
@@ -26,9 +26,22 @@ interface LinkedCardProps {
   userVoteValue?: number;
   userIsCreator?: boolean;
   homePage?: boolean;
+  cursorPointer?: boolean; // 추가된 prop
 }
 
-export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, router, userVoteValue, userIsCreator, homePage, ...props }: LinkedCardProps) {
+export function LinkableCard({
+  post,
+  postIdx,
+  onVote,
+  onSelectPost,
+  onDeletePost,
+  router,
+  userVoteValue,
+  userIsCreator,
+  homePage,
+  cursorPointer = true, // 기본값은 true로 설정
+  ...props
+}: LinkableCardProps) {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const singlePostView = !onSelectPost;
@@ -44,14 +57,17 @@ export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, 
       setLoadingDelete(false);
     }
   };
-  
+
+  const containerClasses = `flex w-full flex-col items-center border-b bg-card text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8 ${cursorPointer ? 'cursor-pointer' : ''}`;
+
   return (
-    <div
-      className="flex w-full flex-col items-center border-b bg-card text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8 cursor-pointer">
+    <div className={containerClasses}>
       <div
       className="w-full h-full flex flex-row gap-2"
       onClick={() => {
-        onSelectPost && post && onSelectPost(post, postIdx!)}
+        if(cursorPointer) {
+          onSelectPost && post && onSelectPost(post, postIdx!)}
+        }
       }
         >
         <div className="flex w-full flex-col gap-2">

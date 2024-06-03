@@ -20,7 +20,7 @@ import { Session } from '@supabase/supabase-js';
 import { useAuthState } from "@/hooks/useAuthState";
 import { Container } from "@radix-ui/themes";
 import { PostWith } from "@/types/posts";
-import { LinkedCard } from "@/components/LinkedCard";
+import { LinkableCard } from "@/components/LinkableCard";
 import { DocsSidebarNav } from "@/components/sidebar-nav";
 import { docsConfig } from "@/config/docs";
 
@@ -130,7 +130,7 @@ export default function Home(): ReactElement {
               <div className="space-y-6">
                 {(postStateValue?.posts || []).map((post: PostWith, index: number) => {
                   return (
-                    <LinkedCard
+                    <LinkableCard
                       key={index}
                       post={post}
                       postIdx={index}

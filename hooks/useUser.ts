@@ -16,7 +16,7 @@ export const useUser = () => {
         const response = await fetch(`/api/getPublicUser?userId=${userId}`);
         const data = await response.json();
         const publicUser = data.publicUserData;
-        setUser(publicUser);
+        setUser(prev => ({ ...prev, ...publicUser }));
       } 
       setLoadingUser(false);
     };
@@ -29,8 +29,9 @@ export const useUser = () => {
           const userId = session?.user?.id;
           if (userId) {
             const response = await fetch(`/api/getPublicUser?userId=${userId}`);
-            const publicUser = await response.json();
-            setUser(publicUser);
+            const data = await response.json();
+            const publicUser = data.publicUserData;
+            setUser(prev => ({ ...prev, ...publicUser }));
           } 
         } else if (event === 'SIGNED_OUT') {
           setUser(null);
