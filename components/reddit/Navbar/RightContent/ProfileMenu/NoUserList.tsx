@@ -16,6 +16,12 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { AuthModalState } from "@/types/AuthModalState";
 
 type NoUserListProps = {
@@ -25,14 +31,12 @@ type NoUserListProps = {
 const NoUserList: FC<NoUserListProps> = ({ setModalState }) => {
   return (
     <>
-      <DropdownMenuContent>
-        <DropdownMenuItem className="menuItem" onClick={() => setModalState({ open: true, view: "login" })}>
+        <div className="menuItem" onClick={() => setModalState({ open: true, view: "login" })}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <MdOutlineLogin style={{ fontSize: '20px', marginRight: '8px' }} />
             Log In / Sign Up
           </div>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
+        </div>
     </>
   );
 };

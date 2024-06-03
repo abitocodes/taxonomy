@@ -96,6 +96,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 type MenuWrapperProps = {};
 
 const MenuWrapper: FC<MenuWrapperProps> = () => {
@@ -103,8 +109,9 @@ const MenuWrapper: FC<MenuWrapperProps> = () => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   return (
-      <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+
+    <Popover>
+      <PopoverTrigger asChild>
       <Button
         variant="outline"
         className="flex justify-center w-full"
@@ -133,13 +140,13 @@ const MenuWrapper: FC<MenuWrapperProps> = () => {
             )}
         </div>
       </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      </PopoverTrigger>
+      <PopoverContent>
       <div className="absolute shadow-lg mt-1 rounded-md">
         {user ? <UserList /> : <NoUserList setModalState={setModalState} />}
       </div>
-      </DropdownMenuContent>
-      </DropdownMenu>
+      </PopoverContent>
+      </Popover>
   );
 };
 export default MenuWrapper;

@@ -11,11 +11,11 @@ import { supabase } from "@/utils/supabase/client";
 import { channelState } from "@/atoms/channelsAtom";
 
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
 import { Session } from '@supabase/supabase-js';
 
 type UserListProps = {};
@@ -33,22 +33,22 @@ const UserList: FC<UserListProps> = () => {
   };
 
   return (
-      <DropdownMenuContent>
-        <DropdownMenuItem onSelect={() => {}}>
+      <div>
+        <div onSelect={() => {}}>
           <div className="flex items-center">
               <CgProfile style={{ fontSize: '20px', marginRight: '8px' }} />
               Profile
           </div>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={logout}>
+        </div>
+        <div />
+        <div onSelect={logout}>
           
           <div className="flex items-center">
           <MdOutlineLogin style={{ fontSize: '20px', marginRight: '8px' }} />
             Log Out
           </div>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
+        </div>
+      </div>
   );
 };
 export default UserList;
