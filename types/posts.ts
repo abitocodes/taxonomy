@@ -2,7 +2,7 @@ import type { Post, Label, PublicUser } from "@prisma/client";
 import { PostVote } from "@prisma/client";
 
 export type PostWith = Post & {
-  genre: {
+  channel: {
     name: string;
   };
   labels: Label[];

@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import { useDirectory } from "@/hooks/useDirectory";
-import Genres from "@/components/reddit/Navbar/Directory/Genres";
+import Channels from "@/components/reddit/Navbar/Directory/Channels";
 import * as React from "react"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { cn } from "@/lib/utils"
@@ -27,7 +27,7 @@ export const Directory: FC = () => {
     <Popover open={directoryState.isOpen} onOpenChange={toggleMenuOpen}>
       <PopoverTrigger asChild>
       <Button
-        variant="secondary"
+        variant="default"
         role="combobox"
         aria-expanded={directoryState.isOpen}
         className="w-full justify-between"
@@ -40,20 +40,17 @@ export const Directory: FC = () => {
             </div>
           </div>
           <svg className="h-5 w-5 text-gray-500" fill="currentColor">
-            {/* Chevron down icon SVG path */}
           </svg>
         </div>
         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
-        <Genres />
+        <Channels />
       </PopoverContent>
     </Popover>
   );
 };
-
-
 
 const frameworks = [
   {

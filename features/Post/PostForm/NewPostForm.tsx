@@ -44,12 +44,12 @@ const formTabs: PostTabItem[] = [
 ];
 
 type NewPostFormProps = {
-  genreId: string;
-  genreImageURL?: string;
+  channelId: string;
+  channelImageURL?: string;
   user: PublicUser;
 };
 
-const NewPostForm: FC<NewPostFormProps> = ({ genreId, genreImageURL, user }) => {
+const NewPostForm: FC<NewPostFormProps> = ({ channelId, channelImageURL, user }) => {
   const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
   const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
   const [titleInput, setTitleInput] = useState("");
@@ -67,8 +67,8 @@ const NewPostForm: FC<NewPostFormProps> = ({ genreId, genreImageURL, user }) => 
       const { data: postDocRef, error: insertError } = await supabase
       .from('posts')
       .insert([{
-        genreId,
-        genreImageURL: genreImageURL || "",
+        channelId,
+        channelImageURL: channelImageURL || "",
         creatorId: user.id,
         nickName: user.nickName,
         title: titleInput,

@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 
 import { useRouter } from "next/navigation";
 
-import { genreState } from "@/atoms/genresAtom";
+import { channelState } from "@/atoms/channelsAtom";
 import { defaultMenuItem, directoryMenuState } from "@/atoms/directoryMenuAtom";
 import { DirectoryMenuItem } from "@/types/DirectoryMenuState";
 
@@ -12,7 +12,7 @@ export const useDirectory = () => {
   const [directoryState, setDirectoryState] = useRecoilState(directoryMenuState);
   const router = useRouter();
 
-  const genreStateValue = useRecoilValue(genreState);
+  const channelStateValue = useRecoilValue(channelState);
 
   const onSelectMenuItem = (menuItem: DirectoryMenuItem) => {
     setDirectoryState((prev) => ({
@@ -34,17 +34,17 @@ export const useDirectory = () => {
   };
 
   useEffect(() => {
-    const existingGenre = genreStateValue.currentGenre;
+    const existingChannel = channelStateValue.currentChannel;
   
-    if (existingGenre.id) {
+    if (existingChannel.id) {
       setDirectoryState((prev) => ({
         ...prev,
         selectedMenuItem: {
-          displayText: `r/${existingGenre.id}`,
-          link: `r/${existingGenre.id}`,
+          displayText: `r/${existingChannel.id}`,
+          link: `r/${existingChannel.id}`,
           icon: FaReddit,
           iconColor: "blue.500",
-          imageURL: existingGenre.imageURL,
+          imageURL: existingChannel.imageURL,
         },
       }));
     } else {
@@ -53,7 +53,7 @@ export const useDirectory = () => {
         selectedMenuItem: defaultMenuItem,
       }));
     }
-  }, [genreStateValue.currentGenre]);
+  }, [channelStateValue.currentChannel]);
   
   return { directoryState, onSelectMenuItem, toggleMenuOpen };
   };

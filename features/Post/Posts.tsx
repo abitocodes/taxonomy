@@ -4,43 +4,43 @@ import { useRouter } from "next/navigation";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
 import { supabase } from "@/utils/supabase/client";
 import usePosts from "@/hooks/usePosts";
-import { Genre } from "@/types/genresState";
+import { Channel } from "@/types/channelsState";
 import { Post } from "@prisma/client";
 import PostItem from "./PostItem";
 import { RecoilRoot } from "recoil";
 import { PostWith } from "@/types/posts";
 
 type PostsProps = {
-  genreData?: Genre;
+  channelData?: Channel;
   userId?: string;
   loadingUser: boolean;
 };
 
-const Posts: FC<PostsProps> = ({ genreData, userId, loadingUser }) => {
+const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const { postStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(genreData!);
+  const { postStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(channelData!);
 
   const onSelectPost = (post: PostWith, postIdx: number) => {
     setPostsStateValue((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
-    router.push(`/g/${genreData?.id!}/comments/${post.id}`);
+    router.push(`/ch/${channelData?.id!}/comments/${post.id}`);
   };
 
   useEffect(() => {
-    if (postStateValue.postsCache[genreData?.id!] && !postStateValue.postUpdateRequired) {
+    if (postStateValue.postsCache[channelData?.id!] && !postStateValue.postUpdateRequired) {
       setPostsStateValue((prev) => ({
         ...prev,
-        posts: postStateValue.postsCache[genreData?.id!],
+        posts: postStateValue.postsCache[channelData?.id!],
       }));
       return;
     }
 
     getPosts();
-  }, [genreData, postStateValue.postUpdateRequired]);
+  }, [channelData, postStateValue.postUpdateRequired]);
 
   const getPosts = async () => {
     setLoading(true);
@@ -52,7 +52,7 @@ const Posts: FC<PostsProps> = ({ genreData, userId, loadingUser }) => {
           labels:labels(*),
           creator:users(*)
         `)
-        .eq('genreId', genreData?.id)
+        .eq('channelId', channelData?.id)
         .order('createdAt', { ascending: false });
   
       if (error) throw error;
@@ -62,7 +62,7 @@ const Posts: FC<PostsProps> = ({ genreData, userId, loadingUser }) => {
         posts: posts as PostWith[], // 여기서 posts는 labels와 creator를 포함해야 합니다.
         postsCache: {
           ...prev.postsCache,
-          [genreData?.id!]: posts as PostWith[],
+          [channelData?.id!]: posts as PostWith[],
         },
         postUpdateRequired: false,
       }));

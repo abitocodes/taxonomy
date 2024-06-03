@@ -3,11 +3,11 @@ import { FaReddit } from "react-icons/fa";
 
 import { Box, Text } from "@radix-ui/themes";
 
-import { GenreSnippet } from "@/types/genresState";
+import { ChannelSnippet } from "@/types/channelsState";
 import MenuListItem from "./MenuListItem";
 
 type ModeratingProps = {
-  snippets: GenreSnippet[];
+  snippets: ChannelSnippet[];
 };
 
 const Moderating: FC<ModeratingProps> = ({ snippets }) => {
@@ -17,7 +17,7 @@ const Moderating: FC<ModeratingProps> = ({ snippets }) => {
         MODERATING
       </Text>
       {snippets.map((snippet) => (
-        <MenuListItem key={snippet.genreId} displayText={`r/${snippet.genreId}`} link={`/g/${snippet.genreId}`} icon={FaReddit} iconColor="brand.100" />
+        <MenuListItem key={snippet.channelId} displayText={`r/${snippet.channelId}`} link={`/ch/${snippet.channelId}`} icon={FaReddit} iconColor="brand.100" />
       ))}
     </Box>
   );

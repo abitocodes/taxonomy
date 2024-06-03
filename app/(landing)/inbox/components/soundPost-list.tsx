@@ -89,11 +89,11 @@ export function SoundPostList({ items }: MailListProps) {
             <div className="line-clamp-2 h-16 text-xs text-muted-foreground">
               {item.description.substring(0, 300)}
             </div>
-            {item.genres.length ? (
+            {item.channels.length ? (
               <div className="mt-2 flex items-center gap-2">
-                {item.genres.map((genre) => (
-                  <Badge key={genre} variant={getBadgeVariantFromLabel(genre)}>
-                    {genre}
+                {item.channels.map((channel) => (
+                  <Badge key={channel} variant={getBadgeVariantFromLabel(channel)}>
+                    {channel}
                   </Badge>
                 ))}
               </div>

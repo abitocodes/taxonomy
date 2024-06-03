@@ -6,10 +6,10 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 
 import { authModalState } from "@/atoms/authModalAtom";
-import { genreState } from "@/atoms/genresAtom";
+import { channelState } from "@/atoms/channelsAtom";
 import { postState } from "@/atoms/postsAtom";
 import { supabase } from "@/utils/supabase/client";
-import { Genre } from "@/types/genresState";
+import { Channel } from "@/types/channelsState";
 import { Post, PostVote } from "@prisma/client";
 import { PostWith } from "@/types/posts";
 import { RecoilRoot } from 'recoil';
@@ -17,7 +17,7 @@ import { AppProps } from 'next/app';
 import { Session } from '@supabase/supabase-js';
 import { prisma } from "@/prisma/client";
 
-export default function usePosts (genreData?: Genre) {
+export default function usePosts (channelData?: Channel) {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const [postStateValue, setPostsStateValue] = useRecoilState(postState);
@@ -25,21 +25,21 @@ export default function usePosts (genreData?: Genre) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  const genreStateValue = useRecoilValue(genreState);
+  const channelStateValue = useRecoilValue(channelState);
 
   const onSelectPost = (post: PostWith, postIdx: number) => {
     setPostsStateValue((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
-    router.push(`/g/${post.genreId}/comments/${post.id}`);
+    router.push(`/ch/${post.channelId}/comments/${post.id}`);
   };
 
   const onVote = async (
     event: React.MouseEvent<SVGElement, MouseEvent>,
     post: PostWith,
     vote: number,
-    genreId: string
+    channelId: string
   ) => {
     event.stopPropagation();
     if (!user?.id) {
@@ -51,7 +51,7 @@ export default function usePosts (genreData?: Genre) {
     const existingVote = postStateValue.postVotes.find((v) => v.postId === post.id);
   
     try {
-      const response = await fetch(`/api/vote?postId=${post.id}&userId=${user.id}&voteValue=${vote}&genreId=${genreId}`, {
+      const response = await fetch(`/api/vote?postId=${post.id}&userId=${user.id}&voteValue=${vote}&channelId=${channelId}`, {
         method: 'GET'
       });
   
@@ -83,7 +83,7 @@ export default function usePosts (genreData?: Genre) {
         postVotes: updatedPostVotes,
         postsCache: {
           ...postStateValue.postsCache,
-          [genreId]: updatedPosts,
+          [channelId]: updatedPosts,
         },
         selectedPost: updatedPost
       };
@@ -116,7 +116,7 @@ export default function usePosts (genreData?: Genre) {
       posts: prev.posts.filter((item) => item.id !== post.id),
       postsCache: {
         ...prev.postsCache,
-        [post.genreId]: prev.postsCache[post.genreId]?.filter((item) => item.id !== post.id),
+        [post.channelId]: prev.postsCache[post.channelId]?.filter((item) => item.id !== post.id),
       },
     }));
 
@@ -127,11 +127,11 @@ export default function usePosts (genreData?: Genre) {
   }
 };
 
-const getGenrePostVotes = async (genreId: string) => {
+const getChannelPostVotes = async (channelId: string) => {
   const user = session?.user
   if (!user) return;
 
-  const response = await fetch(`/api/getGenrePostVotes?genreId=${genreId}&userId=${user.id}`);
+  const response = await fetch(`/api/getChannelPostVotes?channelId=${channelId}&userId=${user.id}`);
   if (!response.ok) {
     console.error('Failed to fetch post votes');
     return;
@@ -144,9 +144,9 @@ const getGenrePostVotes = async (genreId: string) => {
 };
 
 useEffect(() => {
-  if (!user?.id || !genreStateValue.currentGenre) return;
-  getGenrePostVotes(genreStateValue.currentGenre.id);
-}, [user, genreStateValue.currentGenre]);
+  if (!user?.id || !channelStateValue.currentChannel) return;
+  getChannelPostVotes(channelStateValue.currentChannel.id);
+}, [user, channelStateValue.currentChannel]);
 
 useEffect(() => {
   if (!user?.id) {

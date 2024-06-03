@@ -3,7 +3,7 @@ import { generateHashId } from "@/utils/generateHashId";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const genreId = url.searchParams.get('genreId');
+  const channelId = url.searchParams.get('channelId');
   const postId = url.searchParams.get('postId');
   const creatorId = url.searchParams.get('creatorId');
   const text = url.searchParams.get('text');
@@ -15,7 +15,7 @@ export async function GET(request: Request) {
         postId: postId || "",
         creatorId: creatorId || "",
         text: text || "",
-        genreId: genreId || "",
+        channelId: channelId || "",
         createdAt: new Date(),
       },
       include: {

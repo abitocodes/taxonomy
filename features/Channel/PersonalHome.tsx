@@ -1,13 +1,13 @@
 import { FC } from "react";
 import { FaReddit } from "react-icons/fa";
 
-import useGenreModal from "@/hooks/useGenreModal";
+import useChannelModal from "@/hooks/useChannelModal";
 import useCreatePost from "@/hooks/useCreatePost";
 import { Button } from "@/components/ui/button";
 
 const PersonalHome: FC = () => {
   const { onClick } = useCreatePost();
-  const { openModal } = useGenreModal();
+  const { openModal } = useChannelModal();
 
   return (
     <div className="flex flex-col rounded-md cursor-pointer border border-gray-300 sticky">

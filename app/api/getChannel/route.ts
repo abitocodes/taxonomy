@@ -2,26 +2,26 @@ import { prisma } from "@/prisma/client";
 
 export async function GET(request: Request) {
     const url = new URL(request.url);
-    const genreId = url.searchParams.get('genreId');
+    const channelId = url.searchParams.get('channelId');
 
     try {
-        const genreData = await prisma.genre.findUnique({
+        const channelData = await prisma.channel.findUnique({
             where: {
-                id: genreId as string,
+                id: channelId as string,
             },
         });
 
-        if (!genreData) {
+        if (!channelData) {
             return Response.json({
                 statusCode: 404,
-                message: '"Genre not found"',
+                message: '"Channel not found"',
             });
         }
 
         return Response.json({
             statusCode: 200,
             message: '200 OK',
-            genre: genreData
+            channel: channelData
         });
 
     } catch (error) {

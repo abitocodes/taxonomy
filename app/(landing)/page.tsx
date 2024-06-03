@@ -2,13 +2,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { genreState } from "@/atoms/genresAtom";
+import { channelState } from "@/atoms/channelsAtom";
 import PageContentLayout from "@/components/reddit/Layout/PageContent";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
-import CreatePostLink from "@/features/Genre/CreatePostLink";
-import PersonalHome from "@/features/Genre/PersonalHome";
-import Premium from "@/features/Genre/Premium";
-import Recommendations from "@/features/Genre/Recommendations";
+import CreatePostLink from "@/features/Channel/CreatePostLink";
+import PersonalHome from "@/features/Channel/PersonalHome";
+import Premium from "@/features/Channel/Premium";
+import Recommendations from "@/features/Channel/Recommendations";
 import PostItem from "@/features/Post/PostItem";
 import SimplePostItem from "@/features/Post/SimplePostItem";
 import usePosts from "@/hooks/usePosts";
@@ -28,7 +28,7 @@ export default function Home(): ReactElement {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const { postStateValue, setPostsStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
-  const genreStateValue = useRecoilValue(genreState);
+  const channelStateValue = useRecoilValue(channelState);
 
   const getUserHomePosts = async () => {
     setLoading(true);
@@ -88,12 +88,12 @@ export default function Home(): ReactElement {
   };
 
   useEffect(() => {
-    if (!genreStateValue.initSnippetsFetched) return;
+    if (!channelStateValue.initSnippetsFetched) return;
 
     if (user) {
       getUserHomePosts();
     }
-  }, [user, genreStateValue.initSnippetsFetched]);
+  }, [user, channelStateValue.initSnippetsFetched]);
 
   useEffect(() => {
     if (!user && !authLoading) {

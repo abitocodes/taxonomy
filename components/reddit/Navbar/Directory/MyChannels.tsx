@@ -10,16 +10,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Box, Flex, Text } from "@radix-ui/themes";
 
-import useGenreModal from "@/hooks/useGenreModal";
-import { GenreSnippet } from "@/types/genresState";
+import useChannelModal from "@/hooks/useChannelModal";
+import { ChannelSnippet } from "@/types/channelsState";
 import MenuListItem from "./MenuListItem";
 
-type MyGenresProps = {
-  snippets: GenreSnippet[];
+type MyChannelsProps = {
+  snippets: ChannelSnippet[];
 };
 
-const MyGenres: FC<MyGenresProps> = ({ snippets }) => {
-  const { openModal } = useGenreModal();
+const MyChannels: FC<MyChannelsProps> = ({ snippets }) => {
+  const { openModal } = useChannelModal();
 
   return (
     <Box className="mt-3 mb-3">
@@ -31,17 +31,17 @@ const MyGenres: FC<MyGenresProps> = ({ snippets }) => {
           <button className="w-full text-sm hover:bg-gray-100" onClick={openModal}>
             <Flex className="items-center">
               <GrAdd className="text-2xl mr-2" />
-              Create Genre
+              Create Channel
             </Flex>
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {snippets.map((snippet) => (
-            <DropdownMenuItem key={snippet.genreId} asChild>
+            <DropdownMenuItem key={snippet.channelId} asChild>
               <MenuListItem
                 icon={FaReddit}
-                displayText={`r/${snippet.genreId}`}
-                link={`/g/${snippet.genreId}`}
+                displayText={`r/${snippet.channelId}`}
+                link={`/ch/${snippet.channelId}`}
                 iconColor="blue.500"
                 imageURL={snippet.imageURL}
               />
@@ -52,4 +52,4 @@ const MyGenres: FC<MyGenresProps> = ({ snippets }) => {
     </Box>
   );
 };
-export default MyGenres;
+export default MyChannels;

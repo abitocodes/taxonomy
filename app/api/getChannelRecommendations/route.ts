@@ -1,11 +1,11 @@
-// app/api/getGenreRecommendations/route.ts
+// app/api/getChannelRecommendations/route.ts
 import { prisma } from "@/prisma/client";
 
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest, res: Response) {
   try {
-    const genres = await prisma.genre.findMany({
+    const channels = await prisma.channel.findMany({
       orderBy: {
         numberOfMembers: 'desc'
       },
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest, res: Response) {
     return Response.json({
         statusCode: 200,
         message: '200 OK',
-        genres: genres,
+        channels: channels,
       });
   } catch (error) {
     return Response.json({

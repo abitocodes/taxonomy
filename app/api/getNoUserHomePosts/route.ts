@@ -5,7 +5,7 @@ export async function GET(req: Request, res: Response) {
     const posts = await prisma.post.findMany({
       orderBy: { voteStatus: 'desc' },
       include: {
-        genre: true,
+        channel: true,
         labels: true,
         publicUsers: {
           select: {

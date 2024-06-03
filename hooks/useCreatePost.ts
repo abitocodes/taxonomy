@@ -34,12 +34,12 @@ const useCreatePost = () => {
       return;
     }
 
-    const genre = pathname?.get('genre');
-    if (genre) {
-      router.push(`/g/${genre}/submit`);
+    const channel = pathname?.get('channel');
+    if (channel) {
+      router.push(`/ch/${channel}/submit`);
       return;
     }
-    // Open directory menu to select genre to post to
+    // Open directory menu to select channel to post to
     toggleMenuOpen();
   };
 

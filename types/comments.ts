@@ -5,7 +5,7 @@ export type Comment = {
   creatorId: string;
   creatorDisplayText: string;
   creatorPhotoURL: string;
-  genreId: string;
+  channelId: string;
   postId: string;
   text: string;
   createdAt?: Timestamp;

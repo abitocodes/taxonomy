@@ -11,7 +11,7 @@ datasource db {
 model Comment {
   id              String       @id
   creatorId       String
-  genreId         String
+  channelId         String
   postId          String
   text            String
   createdAt       DateTime     @default(now())
@@ -21,7 +21,7 @@ model Comment {
   @@map(name: "comments")
 }
 
-model Genre {
+model Channel {
   id              String            @id
   name            String            @unique
   description     String?
@@ -30,23 +30,23 @@ model Genre {
   privacyType     String            @default("public")
   createdAt       DateTime          @default(now())
   imageURL        String?
-  genresSnippets  GenreSnippet[]
+  channelsSnippets  ChannelSnippet[]
   PostVote        PostVote[]
   posts           Post[]
 
-  @@map(name: "genres")
+  @@map(name: "channels")
 }
 
-model GenreSnippet {
+model ChannelSnippet {
   id           Int             @id @default(autoincrement())
-  genreId      String 
+  channelId      String 
   userId       String?
   isModerator  Boolean?        @default(false)
   imageURL     String?
-  genres       Genre           @relation(fields: [genreId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  channels       Channel           @relation(fields: [channelId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   publicUsers  PublicUser?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@map(name: "genres_snippets")
+  @@map(name: "channels_snippets")
 }
 
 model Label {
@@ -67,8 +67,8 @@ model PostVote {
   postId       String
   voteValue    Int
   userId       String
-  genreId      String
-  genres       Genre        @relation(fields: [genreId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  channelId      String
+  channels       Channel        @relation(fields: [channelId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   posts        Post         @relation(fields: [postId], references: [id])
   publicUsers  PublicUser   @relation(fields: [userId], references: [id])
 
@@ -78,7 +78,7 @@ model PostVote {
 model Post {
   id                String       @id
   title             String
-  genreId           String
+  channelId           String
   createdAt         DateTime     @default(now())
   creatorId         String
   editedAt          DateTime     @default(now())
@@ -90,7 +90,7 @@ model Post {
   voteStatus        Int?
   coverImageUrl     String?
   description       String
-  genre             Genre        @relation(fields: [genreId], references: [id])
+  channel             Channel        @relation(fields: [channelId], references: [id])
   comments          Comment[]
   postVotes         PostVote[]
   publicUsers       PublicUser   @relation(fields: [creatorId], references: [id])
@@ -113,7 +113,7 @@ model PublicUser {
   stripePriceId             String?
   stripeCurrentPeriodEnd    DateTime?
   comments                  Comment[]
-  genresSnippets            GenreSnippet[]
+  channelsSnippets            ChannelSnippet[]
   postVotes                 PostVote[]
   posts                     Post[]
 

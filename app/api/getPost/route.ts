@@ -11,7 +11,7 @@ export async function GET(request: Request) {
                 id: pid as string,
             },
             include: {
-                genre: true,
+                channel: true,
                 labels: true,
                 publicUsers: {
                   select: {

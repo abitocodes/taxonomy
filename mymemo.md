@@ -5,9 +5,9 @@ src/app
 ├── api
 │   └── hello.ts  // API 라우트는 동일하게 유지
 └── r
-    ├── [genre]
-    │   ├── page.tsx  // r/[genre]/index.tsx의 내용을 이 파일로 이동
+    ├── [channel]
+    │   ├── page.tsx  // r/[channel]/index.tsx의 내용을 이 파일로 이동
     │   ├── comments
     │   │   └── [pid].tsx  // 내용 변경 없음
     │   └── submit
-    │       └── page.tsx  // r/[genre]/submit.tsx의 내용을 이 파일로 이동
+    │       └── page.tsx  // r/[channel]/submit.tsx의 내용을 이 파일로 이동

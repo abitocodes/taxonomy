@@ -4,18 +4,18 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { useRouter, usePathname } from "next/navigation";
 import { authModalState } from "@/atoms/authModalAtom";
-import { genreState, defaultGenre } from "@/atoms/genresAtom";
+import { channelState, defaultChannel } from "@/atoms/channelsAtom";
 import { getMySnippets } from "@/helpers/supabase";
-import { Genre, GenreSnippet } from "@/types/genresState";
+import { Channel, ChannelSnippet } from "@/types/channelsState";
 import { prisma } from "@/prisma/client";
 import { Session } from '@supabase/supabase-js';
 
-// const useGenreData = (ssrGenreData?: boolean) => {
-const useGenreData = () => {
+// const useChannelData = (ssrChannelData?: boolean) => {
+const useChannelData = () => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const pathname = usePathname();
-  const [genreStateValue, setGenreStateValue] = useRecoilState(genreState);
+  const [channelStateValue, setChannelStateValue] = useRecoilState(channelState);
   const setAuthModalState = useSetRecoilState(authModalState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,21 +23,21 @@ const useGenreData = () => {
   useEffect(() => {
     const pathSegments = pathname?.split('/');
     if (pathSegments) {
-      const genreIndex = pathSegments.indexOf('genre');
-      const genreId = genreIndex !== -1 ? pathSegments[genreIndex + 1] : null;
-      if (genreId) {
-        getGenreData(genreId);
+      const channelIndex = pathSegments.indexOf('channel');
+      const channelId = channelIndex !== -1 ? pathSegments[channelIndex + 1] : null;
+      if (channelId) {
+        getChannelData(channelId);
       } else {
-        setGenreStateValue((prev) => ({
+        setChannelStateValue((prev) => ({
           ...prev,
-          currentGenre: defaultGenre,
+          currentChannel: defaultChannel,
         }));
       }
     }
   }, [pathname]);
 
   useEffect(() => {
-    if (!user || !!genreStateValue.mySnippets.length) return;
+    if (!user || !!channelStateValue.mySnippets.length) return;
     getSnippets();
   }, [user]);
 
@@ -46,9 +46,9 @@ const useGenreData = () => {
     try {
       if (!user?.id) throw new Error("User ID is undefined");
       const snippets = await getMySnippets(user.id);
-      setGenreStateValue((prev) => ({
+      setChannelStateValue((prev) => ({
         ...prev,
-        mySnippets: snippets as GenreSnippet[],
+        mySnippets: snippets as ChannelSnippet[],
         initSnippetsFetched: true,
       }));
       setLoading(false);
@@ -58,17 +58,17 @@ const useGenreData = () => {
     setLoading(false);
   };
 
-  const getGenreData = async (genreId: string) => {
+  const getChannelData = async (channelId: string) => {
     try {
-      const genre = await prisma.genre.findUnique({
-        where: { id: genreId },
+      const channel = await prisma.channel.findUnique({
+        where: { id: channelId },
       });
   
-      if (!genre) throw new Error('Genre not found');
+      if (!channel) throw new Error('Channel not found');
   
-      setGenreStateValue((prev) => ({
+      setChannelStateValue((prev) => ({
         ...prev,
-        currentGenre: genre as Genre,
+        currentChannel: channel as Channel,
       }));
     } catch (error: any) {
       setError(error.message);
@@ -76,7 +76,7 @@ const useGenreData = () => {
     setLoading(false);
   };
 
-  const onJoinLeaveGenre = (genre: Genre, isJoined?: boolean) => {
+  const onJoinLeaveChannel = (channel: Channel, isJoined?: boolean) => {
     if (!user) {
       setAuthModalState({ open: true, view: "login" });
       return;
@@ -84,26 +84,26 @@ const useGenreData = () => {
 
     setLoading(true);
     if (isJoined) {
-      leaveGenre(genre.id);
+      leaveChannel(channel.id);
       return;
     }
-    joinGenre(genre);
+    joinChannel(channel);
   };
 
-  const joinGenre = async (genre: Genre) => {
+  const joinChannel = async (channel: Channel) => {
     try {
-      // Insert new genre snippet for the user
-      const newSnippet = await prisma.genreSnippet.create({
+      // Insert new channel snippet for the user
+      const newSnippet = await prisma.channelSnippet.create({
         data: {
           userId: user?.id,  // 'uid'를 'id'로 변경
-          genreId: genre.id,
-          imageURL: genre.imageURL || "",
+          channelId: channel.id,
+          imageURL: channel.imageURL || "",
         }
       });
   
-      // Update the number of members in the genre
-      const updatedGenre = await prisma.genre.update({
-        where: { id: genre.id },
+      // Update the number of members in the channel
+      const updatedChannel = await prisma.channel.update({
+        where: { id: channel.id },
         data: {
           numberOfMembers: {
             increment: 1
@@ -111,12 +111,12 @@ const useGenreData = () => {
         }
       });
   
-      // Add current genre to snippet
-      setGenreStateValue((prev) => ({
+      // Add current channel to snippet
+      setChannelStateValue((prev) => ({
         ...prev,
         mySnippets: [...prev.mySnippets, {
-          genreId: genre.id,
-          imageURL: genre.imageURL || "",
+          channelId: channel.id,
+          imageURL: channel.imageURL || "",
         }],
       }));
     } catch (error) {
@@ -124,22 +124,22 @@ const useGenreData = () => {
     setLoading(false);
   };
 
-  const leaveGenre = async (genreId: string) => {
+  const leaveChannel = async (channelId: string) => {
     try {  
       await prisma.$transaction(async (prisma) => {
-        await prisma.genreSnippet.deleteMany({
-          where: { genreId: genreId, userId: user?.id },
+        await prisma.channelSnippet.deleteMany({
+          where: { channelId: channelId, userId: user?.id },
         });
   
-        await prisma.genre.update({
-          where: { id: genreId },
+        await prisma.channel.update({
+          where: { id: channelId },
           data: { numberOfMembers: { decrement: 1 } },
         });
       });
   
-      setGenreStateValue((prev) => ({
+      setChannelStateValue((prev) => ({
         ...prev,
-        mySnippets: prev.mySnippets.filter((item) => item.genreId !== genreId),
+        mySnippets: prev.mySnippets.filter((item) => item.channelId !== channelId),
       }));
     } catch (error) {
       setError(error.message);
@@ -150,33 +150,33 @@ const useGenreData = () => {
   useEffect(() => {
     const pathSegments = pathname?.split('/');
     if (pathSegments) {
-      const genreIndex = pathSegments.indexOf('genre');
-      const genreId = genreIndex !== -1 ? pathSegments[genreIndex + 1] : null;
+      const channelIndex = pathSegments.indexOf('channel');
+      const channelId = channelIndex !== -1 ? pathSegments[channelIndex + 1] : null;
     
-      if (genreId) {
-        const genreData = genreStateValue.currentGenre;
+      if (channelId) {
+        const channelData = channelStateValue.currentChannel;
 
-        if (!genreData.id) {
-          getGenreData(genreId);
+        if (!channelData.id) {
+          getChannelData(channelId);
           return;
         }
       } else {
-        setGenreStateValue((prev) => ({
+        setChannelStateValue((prev) => ({
           ...prev,
-          currentGenre: defaultGenre,
+          currentChannel: defaultChannel,
         }));
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, genreStateValue.currentGenre]);
+  }, [pathname, channelStateValue.currentChannel]);
 
   return {
-    genreStateValue,
-    onJoinLeaveGenre,
+    channelStateValue,
+    onJoinLeaveChannel,
     loading,
     setLoading,
     error,
   };
 };
 
-export default useGenreData;
+export default useChannelData;

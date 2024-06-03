@@ -5,10 +5,10 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     const userId = url.searchParams.get('id');
 
-    const userGenres = await prisma.genreSnippet.findMany({
+    const userChannels = await prisma.channelSnippet.findMany({
       where: { userId: userId },
       select: {
-        genres: {
+        channels: {
           select: {
             id: true
           }
@@ -16,25 +16,25 @@ export async function GET(request: Request) {
       }
     });
 
-    if (!userGenres) {
+    if (!userChannels) {
       return Response.json({
           statusCode: 400,
-          message: 'User or genres not found.'
+          message: 'User or channels not found.'
       });
   }
 
-    const genreIds = userGenres.flatMap(userGenre => 
-      Array.isArray(userGenre.genres) ? userGenre.genres.map(genre => genre.id) : [userGenre.genres.id]
+    const channelIds = userChannels.flatMap(userChannel => 
+      Array.isArray(userChannel.channels) ? userChannel.channels.map(channel => channel.id) : [userChannel.channels.id]
     );
 
     // 해당 장르에 속하는 게시물 검색
     const posts = await prisma.post.findMany({
       where: {
-        genreId: { in: genreIds },
+        channelId: { in: channelIds },
       },
       orderBy: { voteStatus: 'desc' },
       include: {
-        genre: true,
+        channel: true,
         labels: true,
         publicUsers: {
           select: {

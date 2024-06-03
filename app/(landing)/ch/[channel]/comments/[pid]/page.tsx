@@ -8,10 +8,10 @@ import { supabase } from "@/utils/supabase/client";
 
 import PageContentLayout from "@/components/reddit/Layout/PageContent";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
-import About from "@/features/Genre/About";
+import About from "@/features/Channel/About";
 import Comments from "@/features/Post/Comments";
 import PostItem from "@/features/Post/PostItem";
-import useGenreData from "@/hooks/useGenreData";
+import useChannelData from "@/hooks/useChannelData";
 import usePosts from "@/hooks/usePosts";
 import { Post } from "@prisma/client";
 import { useState } from "react";
@@ -23,13 +23,13 @@ import { PostWith } from "@/types/posts";
 
 type PostPageProps = {};
 
-const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid: string } }) => {
+const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pid: string } }) => {
 
   const [session, setSession] = useState<Session | null>(null);
   const { user, loadingUser } = useUser();
-  const { genre, pid } = params
-  const { genreStateValue } = useGenreData();
-  const { postStateValue, setPostsStateValue, onSelectPost, onDeletePost, loading, setLoading, onVote } = usePosts(genreStateValue.currentGenre);
+  const { channel, pid } = params
+  const { channelStateValue } = useChannelData();
+  const { postStateValue, setPostsStateValue, onSelectPost, onDeletePost, loading, setLoading, onVote } = usePosts(channelStateValue.currentChannel);
 
   const fetchPost = async () => {
     
@@ -88,7 +88,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid:
                         homePage
                         cursorPointer={false}
                         />
-                        <Comments user={user} genre={genre as string} selectedPost={postStateValue.selectedPost} />
+                        <Comments user={user} channel={channel as string} selectedPost={postStateValue.selectedPost} />
                       </>
                     )}
                   </>
@@ -98,7 +98,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { genre: string, pid:
         <div className="hidden text-sm xl:block">
           <div className="sticky top-16 -mt-10 max-h-[calc(var(--vh)-4rem)] overflow-y-auto pt-10">
             <div className="container mx-auto space-y-4">
-              <About genreData={genreStateValue.currentGenre} loading={loading} />
+              <About channelData={channelStateValue.currentChannel} loading={loading} />
             </div>
           </div>
         </div>

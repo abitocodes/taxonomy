@@ -7,7 +7,7 @@ export const soundposts = [
       duration: "3:45",
       date: "2023-05-20T00:00:00",
       listened: true,
-      genres: ["Ambient", "Chillwave"],
+      channels: ["Ambient", "Chillwave"],
       deployed: false,
     },
     {
@@ -18,7 +18,7 @@ export const soundposts = [
       duration: "4:12",
       date: "2023-06-15T00:00:00",
       listened: false,
-      genres: ["Synthwave", "Electronica"],
+      channels: ["Synthwave", "Electronica"],
       deployed: true,
     },
     {
@@ -29,7 +29,7 @@ export const soundposts = [
       duration: "5:08",
       date: "2023-07-22T00:00:00",
       listened: false,
-      genres: ["Progressive Rock", "Space Rock"],
+      channels: ["Progressive Rock", "Space Rock"],
       deployed: true,
     },
     {
@@ -40,7 +40,7 @@ export const soundposts = [
       duration: "4:33",
       date: "2023-08-30T00:00:00",
       listened: true,
-      genres: ["Indie Pop", "Electropop"],
+      channels: ["Indie Pop", "Electropop"],
       deployed: false,
     },
     {
@@ -51,7 +51,7 @@ export const soundposts = [
       duration: "3:58",
       date: "2023-09-14T00:00:00",
       listened: true,
-      genres: ["New Age", "Ambient"],
+      channels: ["New Age", "Ambient"],
       deployed: false,
     },
   ];

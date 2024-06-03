@@ -5,23 +5,23 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client"; // Supabase 클라이언트 가져오기
 
-import { genreState } from "@/atoms/genresAtom";
-import { genreModalState } from "@/atoms/genreModalAtom";
+import { channelState } from "@/atoms/channelsAtom";
+import { channelModalState } from "@/atoms/channelModalAtom";
 import ModalWrapper from "@/components/reddit/Dialog/DialogWrapper";
-import useGenreModal from "@/hooks/useGenreModal";
+import useChannelModal from "@/hooks/useChannelModal";
 
-type CreateGenreModalProps = {
+type CreateChannelModalProps = {
   userId: string;
 };
 
-const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
-  const setSnippetState = useSetRecoilState(genreState);
-  const isOpen = useRecoilValue(genreModalState).open;
-  const { closeModal } = useGenreModal();
+const CreateChannelModal: FC<CreateChannelModalProps> = ({ userId }) => {
+  const setSnippetState = useSetRecoilState(channelState);
+  const isOpen = useRecoilValue(channelModalState).open;
+  const { closeModal } = useChannelModal();
   const [name, setName] = useState("");
   const [charsRemaining, setCharsRemaining] = useState(21);
   const [nameError, setNameError] = useState("");
-  const [genreType, setGenreType] = useState("public");
+  const [channelType, setChannelType] = useState("public");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -29,7 +29,7 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
     setName("");
     setCharsRemaining(21);
     setNameError("");
-    setGenreType("public");
+    setChannelType("public");
   };
 
   const handleModalClose = () => {
@@ -43,44 +43,44 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
     setCharsRemaining(21 - event.target.value.length);
   };
 
-  const handleCreateGenre = async () => {
+  const handleCreateChannel = async () => {
     if (nameError) setNameError("");
     const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
 
     if (format.test(name) || name.length < 3) {
-      return setNameError("Genre names must be between 3–21 characters, and can only contain letters, numbers, or underscores.");
+      return setNameError("Channel names must be between 3–21 characters, and can only contain letters, numbers, or underscores.");
     }
 
     setLoading(true);
     try {
-      const { data: genreDoc, error } = await supabase
-        .from('genres')
+      const { data: channelDoc, error } = await supabase
+        .from('channels')
         .select('*')
         .eq('name', name)
         .single();
 
       if (error) throw new Error(error.message);
-      if (genreDoc) throw new Error(`Sorry, /g${name} is taken. Try another.`);
+      if (channelDoc) throw new Error(`Sorry, /g${name} is taken. Try another.`);
 
       const { error: insertError } = await supabase
-        .from('genres')
+        .from('channels')
         .insert([
           {
             name: name,
             creatorId: userId,
             createdAt: new Date(),
             numberOfMembers: 1,
-            privacyType: genreType,
+            privacyType: channelType,
           },
         ]);
 
       if (insertError) throw new Error(insertError.message);
 
       const { error: snippetError } = await supabase
-        .from('genreSnippets')
+        .from('channelSnippets')
         .insert([
           {
-            genreId: name,
+            channelId: name,
             userId: userId,
             isModerator: true,
           },
@@ -98,21 +98,21 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
       mySnippets: [],
     }));
     handleModalClose();
-    router.push(`/g/${name}`);
+    router.push(`/ch/${name}`);
   };
 
-  const onGenreTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChannelTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {
       target: { name },
     } = event;
-    if (name === genreType) return;
-    setGenreType(name);
+    if (name === channelType) return;
+    setChannelType(name);
   };
 
   return (
     <ModalWrapper isOpen={isOpen} onClose={handleModalClose}>
       <div className="flex flex-col p-3 text-sm">
-        Create a genre
+        Create a channel
       </div>
       <div className="pr-3 pl-3">
         <hr />
@@ -122,7 +122,7 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
             Name
           </span>
           <span className="text-xs text-gray-500">
-            Genre names including capitalization cannot be changed
+            Channel names including capitalization cannot be changed
           </span>
           <div className="flex items-center mt-1">
             <span className="text-gray-400 text-xs absolute ml-2">
@@ -138,34 +138,34 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
           </span>
           <div className="mt-4 mb-4">
             <span className="font-semibold text-sm">
-              Genre Type
+              Channel Type
             </span>
             <div className="space-y-2 pt-1">
               <label className="flex items-center space-x-2">
-                <input type="checkbox" name="public" checked={genreType === "public"} onChange={onGenreTypeChange} className="text-blue-500" />
+                <input type="checkbox" name="public" checked={channelType === "public"} onChange={onChannelTypeChange} className="text-blue-500" />
                 <span className="text-sm font-bold mr-1">
                   Public
                 </span>
                 <span className="text-xs text-gray-500">
-                  Anyone can view, post, and comment to this genre
+                  Anyone can view, post, and comment to this channel
                 </span>
               </label>
               <label className="flex items-center space-x-2">
-                <input type="checkbox" name="restricted" checked={genreType === "restricted"} onChange={onGenreTypeChange} className="text-blue-500" />
+                <input type="checkbox" name="restricted" checked={channelType === "restricted"} onChange={onChannelTypeChange} className="text-blue-500" />
                 <span className="text-sm font-bold mr-1">
                   Restricted
                 </span>
                 <span className="text-xs text-gray-500">
-                  Anyone can view this genre, but only approved users can post
+                  Anyone can view this channel, but only approved users can post
                 </span>
               </label>
               <label className="flex items-center space-x-2">
-                <input type="checkbox" name="private" checked={genreType === "private"} onChange={onGenreTypeChange} className="text-blue-500" />
+                <input type="checkbox" name="private" checked={channelType === "private"} onChange={onChannelTypeChange} className="text-blue-500" />
                 <span className="text-sm font-bold mr-1">
                   Private
                 </span>
                 <span className="text-xs text-gray-500">
-                  Only approved users can view and submit to this genre
+                  Only approved users can view and submit to this channel
                 </span>
               </label>
             </div>
@@ -176,12 +176,12 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
         <button className="border border-gray-300 text-sm p-1 er border-gray-300 text-sm p-1.5" onClick={handleModalClose}>
         Cancel
       </button>
-      <button className="bg-blue-500 text-sm p-1.5" onClick={handleCreateGenre} disabled={loading}>
-        Create Genre
+      <button className="bg-blue-500 text-sm p-1.5" onClick={handleCreateChannel} disabled={loading}>
+        Create Channel
       </button>
     </div>
     </ModalWrapper>
   );
 };
 
-export default CreateGenreModal;
+export default CreateChannelModal;

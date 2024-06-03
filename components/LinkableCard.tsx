@@ -19,7 +19,7 @@ import { Button } from './ui/button';
 interface LinkableCardProps {
   post: PostWith;
   postIdx?: number;
-  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, vote: number, genreId: string, postIdx?: number) => void;
+  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, vote: number, channelId: string, postIdx?: number) => void;
   onSelectPost?: (value: Post, postIdx: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   router?: AppRouterInstance;
@@ -93,7 +93,7 @@ export function LinkableCard({
           <div className="flex items-center gap-2 text-xs">
             <div>
             <Badge>
-            s/{post.genre.name}
+            s/{post.channel.name}
               </Badge>
             </div>
             {post.labels.map((label) => (
@@ -114,14 +114,14 @@ export function LinkableCard({
           <Button 
             variant="ghost"
             size="icon"
-            onClick={(event) => onVote(event, post, 1, post.genreId)}>
+            onClick={(event) => onVote(event, post, 1, post.channelId)}>
           <IoIosHeartEmpty className="h-4 w-4"/>
           </Button>
         ) : (
           <Button 
             variant="ghost"
             size="icon"
-            onClick={(event) => onVote(event, post, -1, post.genreId)}>
+            onClick={(event) => onVote(event, post, -1, post.channelId)}>
           <IoMdHeart className="h-4 w-4"/>
          </Button>
         )}

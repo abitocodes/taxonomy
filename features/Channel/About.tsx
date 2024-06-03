@@ -9,25 +9,25 @@ import { useSearchParams } from "next/navigation";
 import moment from "moment";
 import Link from "next/link";
 
-import { genreState } from "@/atoms/genresAtom";
+import { channelState } from "@/atoms/channelsAtom";
 import { supabase } from "@/utils/supabase/client";
-import { Genre } from "@/types/genresState";
+import { Channel } from "@/types/channelsState";
 import { Session } from '@supabase/supabase-js';
 import { Button } from "@/components/ui/button";
 
 type AboutProps = {
-  genreData: Genre;
+  channelData: Channel;
   pt?: number;
   onCreatePage?: boolean;
   loading?: boolean;
 };
 
-const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
+const About: FC<AboutProps> = ({ channelData, pt, onCreatePage, loading }) => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
   const searchParam = useSearchParams()
   const selectFileRef = useRef<HTMLInputElement>(null);
-  const setGenreStateValue = useSetRecoilState(genreState);
+  const setChannelStateValue = useSetRecoilState(channelState);
 
   const [selectedFile, setSelectedFile] = useState<string>();
   const [imageLoading, setImageLoading] = useState(false);
@@ -53,14 +53,14 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
     if (!selectedFile) return;
     setImageLoading(true);
     try {
-      const { data: uploadData, error: uploadError } = await supabase.storage.from('genres').upload(`${genreData.id}/image`, selectedFile, {
+      const { data: uploadData, error: uploadError } = await supabase.storage.from('channels').upload(`${channelData.id}/image`, selectedFile, {
         cacheControl: '3600',
         upsert: false
       });
     
       if (uploadError) throw uploadError;
     
-      const { data: urlData } = await supabase.storage.from('genres').getPublicUrl(`${genreData.id}/image`);
+      const { data: urlData } = await supabase.storage.from('channels').getPublicUrl(`${channelData.id}/image`);
 
       if (!urlData.publicUrl) {
         throw new Error("Failed to get the public URL.");
@@ -69,16 +69,16 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
       const publicURL = urlData.publicUrl;
     
       const { data: updateData, error: updateError } = await supabase
-        .from('genres')
+        .from('channels')
         .update({ imageURL: publicURL })
-        .match({ id: genreData.id });
+        .match({ id: channelData.id });
     
       if (updateError) throw updateError;
     
-      setGenreStateValue((prev) => ({
+      setChannelStateValue((prev) => ({
         ...prev,
-        currentGenre: {
-          ...prev.currentGenre,
+        currentChannel: {
+          ...prev.currentChannel,
           imageURL: publicURL,
         },
       }));
@@ -89,13 +89,13 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
     setImageLoading(false);
   };
 
-  const genreQuery = searchParam?.get('g');
+  const channelQuery = searchParam?.get('g');
 
   return (
     <div className={`pt-${pt} sticky top-14`}>
       <div className="flex justify-between items-center p-3 bg-blue-400 rounded-t-md">
         <p className="text-sm font-bold">
-          About Genre
+          About Channel
         </p>
         <HiOutlineDotsHorizontal className="cursor-pointer" />
       </div>
@@ -110,7 +110,7 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
           </div>
         ) : (
           <>
-            {user?.id === genreData?.creatorId && (
+            {user?.id === channelData?.creatorId && (
               <div className="bg-gray-100 w-full p-2 rounded border border-gray-300 cursor-pointer">
                 <p className="text-xs font-bold text-blue-500">
                   Add description
@@ -120,7 +120,7 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
             <div className="space-y-2">
               <div className="w-full p-2 font-bold text-sm">
                 <div className="flex flex-col grow">
-                  <p>{genreData?.numberOfMembers?.toLocaleString()}</p>
+                  <p>{channelData?.numberOfMembers?.toLocaleString()}</p>
                   <p>Members</p>
                 </div>
                 {/* <div className="flex flex-col grow">
@@ -131,16 +131,16 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
               <hr />
               <div className="flex items-center w-full p-1 font-medium text-sm">
                 <RiCakeLine className="mr-2 text-xl" />
-                {genreData?.createdAt && <p>Created {moment(genreData.createdAt).format("MMM DD, YYYY")}</p>}
+                {channelData?.createdAt && <p>Created {moment(channelData.createdAt).format("MMM DD, YYYY")}</p>}
               </div>
               {!onCreatePage && (
-                <Link href={`/g/${genreQuery}/submit`}>
+                <Link href={`/ch/${channelQuery}/submit`}>
                   <Button className="mt-3 h-7 w-full rounded">
                     게시글 작성
                   </Button>
                 </Link>
               )}
-              {user?.id === genreData?.creatorId && (
+              {user?.id === channelData?.creatorId && (
                 <>
                   <hr />
                   <div className="text-sm space-y-1">
@@ -149,8 +149,8 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
                       <p className="text-blue-500 cursor-pointer hover:underline" onClick={() => selectFileRef.current?.click()}>
                         Change Image
                       </p>
-                      {genreData?.imageURL || selectedFile ? (
-                        <img className="rounded-full h-10 w-10" src={selectedFile || genreData?.imageURL} alt="Genre Image" />
+                      {channelData?.imageURL || selectedFile ? (
+                        <img className="rounded-full h-10 w-10" src={selectedFile || channelData?.imageURL} alt="Channel Image" />
                       ) : (
                         <FaReddit className="text-brand-100 text-10 mr-2" />
                       )}

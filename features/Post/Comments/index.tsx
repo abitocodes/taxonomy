@@ -16,11 +16,11 @@ import { CommentWith } from "@/features/Post/Comments/CommentItem";
 
 interface CommentsProps {
   user: PublicUser | null;
-  genre: string;
+  channel: string;
   selectedPost: PostWith; // 이 부분을 추가하세요
 }
 
-const Comments: FC<CommentsProps> = ({ user, selectedPost: post, genre }) => {
+const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [commentFetchLoading, setCommentFetchLoading] = useState(false);
@@ -40,7 +40,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost: post, genre }) => {
       postId: post.id,
       creatorId: user.id,
       text: comment,
-      genreId: genre,
+      channelId: channel,
     });
   
     try {
