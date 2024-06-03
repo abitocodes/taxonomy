@@ -57,7 +57,7 @@ const SignUp: FC<SignUpProps> = ({ toggleView }) => {
       <p className="text-center mt-2 text-sm text-red-500">
       {formError || SUPABASE_ERRORS[authError as keyof typeof SUPABASE_ERRORS]}
       </p>
-      <button className="w-full h-9 mb-2 mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" disabled={loading}>
+      <button className="w-full h-9 mb-2 mt-2 bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" disabled={loading}>
         Sign Up
       </button>
       <div className="text-xs text-center">

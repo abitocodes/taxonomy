@@ -60,7 +60,7 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
         .single();
 
       if (error) throw new Error(error.message);
-      if (genreDoc) throw new Error(`Sorry, /r${name} is taken. Try another.`);
+      if (genreDoc) throw new Error(`Sorry, /g${name} is taken. Try another.`);
 
       const { error: insertError } = await supabase
         .from('genres')
@@ -98,7 +98,7 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
       mySnippets: [],
     }));
     handleModalClose();
-    router.push(`/r/${name}`);
+    router.push(`/g/${name}`);
   };
 
   const onGenreTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,7 +176,7 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({ userId }) => {
         <button className="border border-gray-300 text-sm p-1 er border-gray-300 text-sm p-1.5" onClick={handleModalClose}>
         Cancel
       </button>
-      <button className="bg-blue-500 text-white text-sm p-1.5" onClick={handleCreateGenre} disabled={loading}>
+      <button className="bg-blue-500 text-sm p-1.5" onClick={handleCreateGenre} disabled={loading}>
         Create Genre
       </button>
     </div>

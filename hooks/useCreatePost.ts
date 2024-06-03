@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuthState } from "@/hooks/useAuthState"
 import { useSetRecoilState } from "recoil";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { authModalState } from "@/atoms/authModalAtom";
 import { useDirectory } from "@/hooks/useDirectory";
 import { supabase } from '@/utils/supabase/client'; // supabase 클라이언트 경로에 맞게 조정해주세요.
@@ -13,7 +13,7 @@ const useCreatePost = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
   const { toggleMenuOpen } = useDirectory();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const url = usePathname();
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -34,9 +34,9 @@ const useCreatePost = () => {
       return;
     }
 
-    const genre = searchParams?.get('genre');
+    const genre = pathname?.get('genre');
     if (genre) {
-      router.push(`/r/${genre}/submit`);
+      router.push(`/g/${genre}/submit`);
       return;
     }
     // Open directory menu to select genre to post to

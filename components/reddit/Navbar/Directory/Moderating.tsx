@@ -17,7 +17,7 @@ const Moderating: FC<ModeratingProps> = ({ snippets }) => {
         MODERATING
       </Text>
       {snippets.map((snippet) => (
-        <MenuListItem key={snippet.genreId} displayText={`r/${snippet.genreId}`} link={`/r/${snippet.genreId}`} icon={FaReddit} iconColor="brand.100" />
+        <MenuListItem key={snippet.genreId} displayText={`r/${snippet.genreId}`} link={`/g/${snippet.genreId}`} icon={FaReddit} iconColor="brand.100" />
       ))}
     </Box>
   );

@@ -2,9 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/prisma/client';
 
 export async function GET(request: Request) {
-    const { searchParams } = new URL(request.url)
-    const genreId = searchParams.get('genreId')
-    const userId = searchParams.get('userId')
+    const url = new URL(request.url)
+    const genreId = pathname.searchParams.get('genreId')
+    const userId = pathname.searchParams.get('userId')
 
   if (!genreId || !userId) {
     return Response.json({

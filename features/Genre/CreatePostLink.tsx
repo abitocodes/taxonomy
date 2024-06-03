@@ -19,7 +19,7 @@ const CreatePostLink: FC<CreatePostProps> = () => {
         <Input
           type="text"
           placeholder="Create Post"
-          className="placeholder-gray-500 text-sm bg-gray-50 border border-gray-200 h-9 rounded-md mr-4 focus:outline-none focus:border-blue-500 focus:bg-white hover:border-blue-500"
+          className="placeholder-gray-500 text-sm bg-gray-50 border border-gray-200 h-9 rounded-md mr-4 focus:outline-none focus:border-blue-500 focus:hover:border-blue-500"
           onClick={onClick}
         />
         <IoImageOutline className="text-gray-400 text-6xl mr-4 cursor-pointer" />

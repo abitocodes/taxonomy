@@ -3,21 +3,17 @@ import { BiPoll } from "react-icons/bi";
 import { BsLink45Deg, BsMic } from "react-icons/bs";
 import { IoDocumentText, IoImageOutline } from "react-icons/io5";
 import { useSetRecoilState } from "recoil";
-
-import { Button, Flex, Input, Stack } from "@chakra-ui/react";
-import { User } from "firebase/auth";
-import { addDoc, collection, serverTimestamp, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { useRouter } from "next/navigation";
 
-import { postState } from "@/@/atoms/postsAtom";
-import { firestore, storage } from "@/../../utils/supabase/client";
-import useSelectFile from "@/../../hooks/useSelectFile";
-import { PostTabItem } from "@/../../types/PostTabItem";
+import { postState } from "@/atoms/postsAtom";
+import { supabase } from "@/utils/supabase/client";
+import useSelectFile from "@/hooks/useSelectFile";
+import { PostTabItem } from "@/types/PostTabItem";
 import ImageUpload from "./ImageUpload";
 import LinkInput from "./LinkInput";
 import TabItem from "./TabItem";
 import TextInputs from "./TextInputs";
+import { PublicUser } from "@prisma/client";
 
 const formTabs: PostTabItem[] = [
   {
@@ -50,7 +46,7 @@ const formTabs: PostTabItem[] = [
 type NewPostFormProps = {
   genreId: string;
   genreImageURL?: string;
-  user: User;
+  user: PublicUser;
 };
 
 const NewPostForm: FC<NewPostFormProps> = ({ genreId, genreImageURL, user }) => {
@@ -68,47 +64,59 @@ const NewPostForm: FC<NewPostFormProps> = ({ genreId, genreImageURL, user }) => 
   const handleCreatePost = async () => {
     setLoading(true);
     try {
-      const postDocRef = await addDoc(collection(firestore, "posts"), {
+      const { data: postDocRef, error: insertError } = await supabase
+      .from('posts')
+      .insert([{
         genreId,
         genreImageURL: genreImageURL || "",
-        creatorId: user.uid,
-        nickName: user.email!.split("@")[0],
+        creatorId: user.id,
+        nickName: user.nickName,
         title: titleInput,
         body: selectedTab === "Post" ? textInputs : "",
         link: selectedTab === "Link" ? linkText : "",
         numberOfComments: 0,
         voteStatus: 0,
-        createdAt: serverTimestamp(),
-        editedAt: serverTimestamp(),
-      });
+        createdAt: new Date(),
+        editedAt: new Date(),
+      }]).single() as { data: { id: string }, error: any };
+    
+    if (insertError) throw insertError;
 
-      // console.log("HERE IS NEW POST ID", postDocRef.id);
-
-      // check if selectedFile exists, if it does, do image processing
-      if (selectedTab === "Images & Video" && selectedFile) {
-        const mediaType = selectedFile.includes("video") ? "video" : "image";
-        const imageRef = ref(storage, `posts/${postDocRef.id}/media`);
-        await uploadString(imageRef, selectedFile, "data_url");
-        const downloadURL = await getDownloadURL(imageRef);
-        await updateDoc(postDocRef, {
-          mediaURL: downloadURL,
-          mediaType,
+    // check if selectedFile exists, if it does, do image processing
+    if (selectedTab === "Images & Video" && selectedFile) {
+      const mediaType = selectedFile.includes("video") ? "video" : "image";
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('posts')
+        .upload(`media/${postDocRef.id}`, selectedFile, {
+          cacheControl: '3600',
+          upsert: false
         });
-        // console.log("HERE IS DOWNLOAD URL", downloadURL);
-      }
 
-      // Clear the cache to cause a refetch of the posts
-      setPostItems((prev) => ({
-        ...prev,
-        postUpdateRequired: true,
-      }));
-      router.back();
-    } catch (error) {
-      // console.log("createPost error", error);
-      setError("Error creating post");
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from('posts')
+        .getPublicUrl(`media/${postDocRef.id}`);
+
+      const { error: updateError } = await supabase
+        .from('posts')
+        .update({ mediaURL: data.publicUrl, mediaType })
+        .match({ id: postDocRef.id });
+
+      if (updateError) throw updateError;
     }
-    setLoading(false);
-  };
+
+    // Clear the cache to cause a refetch of the posts
+    setPostItems((prev) => ({
+      ...prev,
+      postUpdateRequired: true,
+    }));
+    router.back();
+  } catch (error) {
+    setError("Error creating post: " + error.message);
+  }
+  setLoading(false);
+};
 
   const getTabBody = (selectedTab: string) => {
     switch (selectedTab) {
@@ -127,39 +135,35 @@ const NewPostForm: FC<NewPostFormProps> = ({ genreId, genreImageURL, user }) => 
   };
 
   return (
-    <Flex direction="column" bg="white" borderRadius={4} mt={2}>
-      <Flex width="100%">
+    <div className="flex flex-col bg-white rounded-lg mt-2">
+      <div className="w-full">
         {formTabs.map((item, index) => (
           <TabItem key={index} item={item} selected={item.title === selectedTab} setSelectedTab={setSelectedTab} />
         ))}
-      </Flex>
+      </div>
 
-      <Flex p={4} direction="column">
-        <Stack spacing={3} width="100%">
-          <Input
+      <div className="p-4 flex flex-col">
+        <div className="space-y-3 w-full">
+          <input
             name="title"
             value={titleInput}
             onChange={(event) => setTitleInput(event.target.value)}
-            _placeholder={{ color: "gray.500" }}
-            _focus={{
-              outline: "none",
-              bg: "white",
-              border: "1px solid",
-              borderColor: "black",
-            }}
-            fontSize="10pt"
-            borderRadius={4}
+            className="placeholder-gray-500 focus:outline-none focus:bg-white focus:border focus:border-black text-sm rounded-lg"
             placeholder="Title"
           />
           {getTabBody(selectedTab)}
-        </Stack>
-        <Flex justify="flex-end">
-          <Button height="34px" marginTop="0.75rem" padding="0px 30px" isDisabled={!titleInput.trim()} isLoading={loading} onClick={handleCreatePost}>
+        </div>
+        <div className="flex justify-end">
+          <button
+            className="h-8 mt-2 px-8 disabled:opacity-50"
+            disabled={loading}
+            onClick={handleCreatePost}
+          >
             Post
-          </Button>
-        </Flex>
-      </Flex>
-    </Flex>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 export default NewPostForm;

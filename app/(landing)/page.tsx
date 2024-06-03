@@ -27,23 +27,17 @@ import { docsConfig } from "@/config/docs";
 export default function Home(): ReactElement {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
+  console.log("home user", user)
   const { postStateValue, setPostsStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
   const genreStateValue = useRecoilValue(genreState);
 
   const getUserHomePosts = async () => {
+    console.log("getUserHomePosts called, userId: ", user?.id)
     setLoading(true);
     try {
-      const response = await fetch('/api/getUserHomePosts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user?.id,
-          genreIds: genreStateValue.mySnippets.map(snippet => snippet.genreId),
-        }),
-      });
-      const posts = await response.json();
+      const response = await fetch(`/api/getUserHomePosts?userId=${user?.id}`);
+      const data = await response.json();
+      const posts = data.posts;
       setPostsStateValue((prev) => {
         const newState = {
           ...prev,
@@ -72,7 +66,6 @@ export default function Home(): ReactElement {
         return newState;
       });
     } catch (error: any) {
-      console.error("getNoUserHomePosts error", error.message);
     } finally {
       setLoading(false);
     }
@@ -80,7 +73,6 @@ export default function Home(): ReactElement {
 
   const getUserPostVotes = async () => {
     if (!postStateValue) {
-      console.log("postStateValue is undefined");
       return;
     }
     const postIds = postStateValue.posts.map((post) => post.id);
@@ -98,9 +90,11 @@ export default function Home(): ReactElement {
   };
 
   useEffect(() => {
+    console.log("useEffect called, getUserHomePosts, user: ", user)
     if (!genreStateValue.initSnippetsFetched) return;
 
     if (user) {
+      console.log("here?")
       getUserHomePosts();
     }
   }, [user, genreStateValue.initSnippetsFetched]);
@@ -159,10 +153,9 @@ export default function Home(): ReactElement {
         </div>
         <div className="hidden text-sm xl:block">
           <div className="sticky top-16 -mt-10 max-h-[calc(var(--vh)-4rem)] overflow-y-auto pt-10">
-            <div className="container mx-auto">
+            <div className="container mx-auto space-y-4">
               <Recommendations />
               <Premium />
-              <PersonalHome />
             </div>
           </div>
         </div>

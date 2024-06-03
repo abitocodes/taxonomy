@@ -15,7 +15,7 @@ const Header: FC<HeaderProps> = ({ genreData }) => {
   return (
     <div className="flex flex-col w-full h-36">
       <div className="h-1/2 bg-blue-400" />
-      <div className="flex justify-center bg-white h-1/2">
+      <div className="flex justify-center h-1/2">
         <div className="flex w-95% max-w-5xl">
           {genreStateValue.currentGenre.imageURL ? (
             <img

@@ -13,6 +13,7 @@ import { genreState } from "@/atoms/genresAtom";
 import { supabase } from "@/utils/supabase/client";
 import { Genre } from "@/types/genresState";
 import { Session } from '@supabase/supabase-js';
+import { Button } from "@/components/ui/button";
 
 type AboutProps = {
   genreData: Genre;
@@ -22,9 +23,10 @@ type AboutProps = {
 };
 
 const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
+  console.log("About called genreData", genreData)
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
-  const searchParams = useSearchParams()
+  const searchParam = useSearchParams()
   const selectFileRef = useRef<HTMLInputElement>(null);
   const setGenreStateValue = useSetRecoilState(genreState);
 
@@ -88,17 +90,17 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
     setImageLoading(false);
   };
 
-  const genreQuery = searchParams?.get('genre');
+  const genreQuery = searchParam?.get('g');
 
   return (
     <div className={`pt-${pt} sticky top-14`}>
-      <div className="flex justify-between items-center p-3 text-white bg-blue-400 rounded-t-md">
+      <div className="flex justify-between items-center p-3 bg-blue-400 rounded-t-md">
         <p className="text-sm font-bold">
           About Genre
         </p>
         <HiOutlineDotsHorizontal className="cursor-pointer" />
       </div>
-      <div className="flex flex-col p-3 bg-white rounded-b-md">
+      <div className="flex flex-col p-3 rounded-b-md">
         {loading ? (
           <div className="mt-2 space-y-2">
             <div className="h-10 w-10 rounded-full bg-gray-200 animate-pulse"></div>
@@ -122,10 +124,10 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
                   <p>{genreData?.numberOfMembers?.toLocaleString()}</p>
                   <p>Members</p>
                 </div>
-                <div className="flex flex-col grow">
+                {/* <div className="flex flex-col grow">
                   <p>1</p>
                   <p>Online</p>
-                </div>
+                </div> */}
               </div>
               <hr />
               <div className="flex items-center w-full p-1 font-medium text-sm">
@@ -133,10 +135,10 @@ const About: FC<AboutProps> = ({ genreData, pt, onCreatePage, loading }) => {
                 {genreData?.createdAt && <p>Created {moment(genreData.createdAt).format("MMM DD, YYYY")}</p>}
               </div>
               {!onCreatePage && (
-                <Link href={`/r/${genreQuery}/submit`}>
-                  <button className="mt-3 h-7 w-full bg-blue-500 text-white rounded">
-                    Create Post
-                  </button>
+                <Link href={`/g/${genreQuery}/submit`}>
+                  <Button className="mt-3 h-7 w-full rounded">
+                    게시글 작성
+                  </Button>
                 </Link>
               )}
               {user?.id === genreData?.creatorId && (

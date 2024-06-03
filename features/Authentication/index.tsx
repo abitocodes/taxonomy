@@ -78,7 +78,7 @@ const AuthModal: FC<AuthModalProps> = () => {
             {modalState.view === "resetPassword" && <div>RESET PASSWORD</div>}
             {/* </DialogTitle> */}
             {/* <DialogDescription> */}
-              도지사운드클럽에 온 것을 환영합니다! 로그인을 하고 도지사운드클럽을 시작하세요!
+              슈퍼 유저들을 위한 디지털 공간! 도지사운드클럽입니다.
             {/* </DialogDescription> */}
           {/* </DialogHeader> */}
           {modalState.view === "login" || modalState.view === "signup" ? (

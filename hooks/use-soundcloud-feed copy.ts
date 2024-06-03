@@ -22,7 +22,6 @@ export default function useSoundcloudFeed() {
         }
       });
       const data = await response.json();
-      console.log("Response data: ", data);  // 데이터 구조 확인
       if (Array.isArray(data)) {
         setTracks(data);
       } else {

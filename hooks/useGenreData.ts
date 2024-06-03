@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { authModalState } from "@/atoms/authModalAtom";
 import { genreState, defaultGenre } from "@/atoms/genresAtom";
 import { getMySnippets } from "@/helpers/supabase";
@@ -10,21 +10,37 @@ import { Genre, GenreSnippet } from "@/types/genresState";
 import { prisma } from "@/prisma/client";
 import { Session } from '@supabase/supabase-js';
 
-const useGenreData = (ssrGenreData?: boolean) => {
+// const useGenreData = (ssrGenreData?: boolean) => {
+const useGenreData = () => {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  console.log("useGenreData called", pathname)
   const [genreStateValue, setGenreStateValue] = useRecoilState(genreState);
   const setAuthModalState = useSetRecoilState(authModalState);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!user || !!genreStateValue.mySnippets.length) return;
+    const pathSegments = pathname?.split('/');
+    if (pathSegments) {
+      const genreIndex = pathSegments.indexOf('genre');
+      const genreId = genreIndex !== -1 ? pathSegments[genreIndex + 1] : null;
+      console.log("use !: ", genreId)
+      if (genreId) {
+        getGenreData(genreId);
+      } else {
+        setGenreStateValue((prev) => ({
+          ...prev,
+          currentGenre: defaultGenre,
+        }));
+      }
+    }
+  }, [pathname]);
 
+  useEffect(() => {
+    if (!user || !!genreStateValue.mySnippets.length) return;
     getSnippets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const getSnippets = async () => {
@@ -136,8 +152,11 @@ const useGenreData = (ssrGenreData?: boolean) => {
   };
 
   useEffect(() => {
-    if (searchParams) {
-      const genreId = searchParams.get('genre');
+    const pathSegments = pathname?.split('/');
+    if (pathSegments) {
+      const genreIndex = pathSegments.indexOf('genre');
+      const genreId = genreIndex !== -1 ? pathSegments[genreIndex + 1] : null;
+    
       if (genreId) {
         const genreData = genreStateValue.currentGenre;
 
@@ -153,7 +172,7 @@ const useGenreData = (ssrGenreData?: boolean) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams, genreStateValue.currentGenre]);
+  }, [pathname, genreStateValue.currentGenre]);
 
   return {
     genreStateValue,

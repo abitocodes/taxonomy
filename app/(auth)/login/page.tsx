@@ -6,9 +6,9 @@ import { redirect } from "next/navigation";
 import { SubmitButton } from "./submit-button";
 
 export default function Login({
-  searchParams,
+  pathname,
 }: {
-  searchParams: { message: string };
+  pathname: { message: string };
 }) {
   const signIn = async (formData: FormData) => {
     "use server";
@@ -136,9 +136,9 @@ export default function Login({
         >
           Sign Up
         </SubmitButton>
-        {searchParams?.message && (
+        {pathname?.message && (
           <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">
-            {searchParams.message}
+            {pathname.message}
           </p>
         )}
       </form>

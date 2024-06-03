@@ -25,13 +25,6 @@ export default function LandingLayout({ children }: AppLayoutProps) {
       <header className="sticky top-0 left-0 z-50 h-24 w-full bg-dither">
         <div className="container flex h-full max-w-screen-2xl items-center">
           <MainNav />
-          <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-            <Directory />
-            {/* <div className="w-full flex-1 md:w-auto md:flex-none">
-              <CommandMenu/>
-            </div> */}
-            <RightContent user={user} />
-          </div>
         </div>
       </header>
       <div className="container flex-1">{children}</div>

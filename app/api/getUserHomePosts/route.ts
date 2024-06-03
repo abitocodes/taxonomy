@@ -1,21 +1,43 @@
 import { prisma } from "@/prisma/client";
-import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log("app/api/getUserHomePosts/route.ts req.body", req.body);
-  const { userId, genreIds } = req.body;
+export async function GET(request: Request) {
   try {
+    const url = new URL(request.url);
+    const userId = url.searchParams.get('id');
+    console.log("getUserHomePosts, Param userId: ", userId)
+
+    const userGenres = await prisma.genreSnippet.findMany({
+      where: { userId: userId },
+      select: {
+        genres: {
+          select: {
+            id: true
+          }
+        }
+      }
+    });
+
+    console.log("getUserHomePosts, userGenres of userId: ", userGenres)
+
+    if (!userGenres) {
+      return Response.json({
+          statusCode: 400,
+          message: 'User or genres not found.'
+      });
+  }
+
+    const genreIds = userGenres.flatMap(userGenre => 
+      Array.isArray(userGenre.genres) ? userGenre.genres.map(genre => genre.id) : [userGenre.genres.id]
+    );
+
+    // 해당 장르에 속하는 게시물 검색
     const posts = await prisma.post.findMany({
       where: {
-        genreId: {
-          in: genreIds
-        },
-        creatorId: userId
+        genreId: { in: genreIds },
       },
-      orderBy: { 
-        createdAt: 'desc',
-        voteStatus: 'desc' },
+      orderBy: { voteStatus: 'desc' },
       include: {
+        genre: true,
         labels: true,
         publicUsers: {
           select: {
@@ -25,9 +47,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
       take: 10
     });
-    console.log("app/api/getUserHomePosts/route.ts getUserHomePosts", posts);
-    res.status(200).json(posts);
+
+    return Response.json({
+      statusCode: 200,
+      message: '200 OK',
+      posts: posts,
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    return Response.json({
+      statusCode: 500,
+      message: 'An error occurred while retrieving posts'
+    });
   }
 }

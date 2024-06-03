@@ -22,7 +22,6 @@ export default function GenrePage ({ params }: { params: { genre: string } }) {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: loadingUser, error: authError } = useAuthState(session);
   const [genreStateValue, setGenreStateValue] = useRecoilState(genreState);
-  console.log("GenrePage called, params: ", params)
 
   useEffect(() => {
     async function fetchData() {

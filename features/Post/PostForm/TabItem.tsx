@@ -1,8 +1,6 @@
 import { FC } from "react";
 
-import { Flex, Icon, Text } from "@chakra-ui/react";
-
-import { PostTabItem } from "@/../../types/PostTabItem";
+import { PostTabItem } from "@/types/PostTabItem";
 
 type TabItemProps = {
   item: PostTabItem;
@@ -12,28 +10,21 @@ type TabItemProps = {
 
 const TabItem: FC<TabItemProps> = ({ item, selected, setSelectedTab }) => {
   return (
-    <Flex
-      justify="center"
-      align="center"
-      flexGrow={1}
-      p="14px 0px"
-      cursor="pointer"
-      fontWeight={700}
-      color={selected ? "blue.500" : "gray.500"}
-      borderWidth={selected ? "0px 1px 2px 0px" : "0px 1px 1px 0px"}
-      borderBottomColor={selected ? "blue.500" : "gray.200"}
-      borderRightColor="gray.200"
-      backgroundColor={item.disabled ? "gray.100" : undefined}
-      _hover={{ bg: !item.disabled ? "gray.50" : undefined }}
-      onClick={() => {
-        if (!item.disabled) setSelectedTab(item.title);
-      }}
-    >
-      <Flex align="center" height="20px" mr={2}>
-        <Icon height="100%" as={item.icon} fontSize={18} />
-      </Flex>
-      <Text fontSize="10pt">{item.title}</Text>
-    </Flex>
-  );
+      <div
+        className={`flex justify-center items-center flex-grow p-[14px_0px] cursor-pointer font-bold ${
+          selected ? "text-blue-500 border-b-2 border-blue-500" : "text-gray-500 border-b border-gray-200"
+        } border-x border-gray-200 ${
+          item.disabled ? "bg-gray-100" : "hover:bg-gray-50"
+        }`}
+        onClick={() => {
+          if (!item.disabled) setSelectedTab(item.title);
+        }}
+      >
+        <div className="flex items-center h-5 mr-2">
+          <item.icon className="h-full text-lg" />
+        </div>
+        <span className="text-sm">{item.title}</span>
+      </div>
+    );
 };
 export default TabItem;

@@ -1,7 +1,5 @@
 import { FC } from "react";
 
-import { Box, Button, Flex, Image, Stack } from "@chakra-ui/react";
-
 type ImageUploadProps = {
   selectedFile?: string;
   setSelectedFile: (value: string) => void;
@@ -11,37 +9,31 @@ type ImageUploadProps = {
 
 const ImageUpload: FC<ImageUploadProps> = ({ selectedFile, setSelectedFile, selectFileRef, onSelectImage }) => {
   return (
-    <Flex direction="column" justify="center" align="center" width="100%">
+    <div className="flex flex-col items-center justify-center w-full">
       {selectedFile ? (
         <>
           {selectedFile.includes("video") ? (
-            <Box
-              as="video"
-              controls
-              src={selectedFile as string}
-              objectFit="contain"
-              sx={{
-                aspectRatio: "16/9",
-              }}
-            />
+            <div className="aspect-w-16 aspect-h-9">
+              <video controls src={selectedFile} className="object-contain" />
+            </div>
           ) : (
-            <Image src={selectedFile as string} maxWidth="400px" maxHeight="400px" alt="post image" />
+            <img src={selectedFile} className="max-w-[400px] max-h-[400px]" alt="post image" />
           )}
-          <Stack direction="row" mt={4}>
-            <Button variant="outline" height="28px" onClick={() => setSelectedFile("")}>
+          <div className="flex mt-4">
+            <button className="border border-gray-300 py-1 px-3" onClick={() => setSelectedFile("")}>
               Remove
-            </Button>
-          </Stack>
+            </button>
+          </div>
         </>
       ) : (
-        <Flex justify="center" align="center" p={20} border="1px dashed" borderColor="gray.200" borderRadius={4} width="100%">
-          <Button variant="outline" height="28px" onClick={() => selectFileRef.current?.click()}>
-            {`Upload (<20MB)`}
-          </Button>
+        <div className="flex items-center justify-center p-5 border-dashed border-1 border-gray-200 rounded w-full">
+          <button className="border border-gray-300 py-1 px-3" onClick={() => selectFileRef.current?.click()}>
+            Upload (&lt;20MB)
+          </button>
           <input id="file-upload" type="file" accept="image/x-png,image/gif,image/jpeg,video/mp4" hidden ref={selectFileRef} onChange={onSelectImage} />
-        </Flex>
+        </div>
       )}
-    </Flex>
+    </div>
   );
 };
 export default ImageUpload;

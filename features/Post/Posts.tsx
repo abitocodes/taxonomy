@@ -26,7 +26,7 @@ const Posts: FC<PostsProps> = ({ genreData, userId, loadingUser }) => {
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
-    router.push(`/r/${genreData?.id!}/comments/${post.id}`);
+    router.push(`/g/${genreData?.id!}/comments/${post.id}`);
   };
 
   useEffect(() => {

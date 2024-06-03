@@ -12,7 +12,7 @@ export const defaultGenre: Genre = {
 export const defaultGenreState: GenreState = {
   mySnippets: [],
   initSnippetsFetched: false,
-  visitedCommunities: {},
+  visitedGenres: {},
   currentGenre: defaultGenre,
 };
 

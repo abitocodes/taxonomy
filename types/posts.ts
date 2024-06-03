@@ -3,7 +3,7 @@ import { PostVote } from "@prisma/client";
 
 export type postsWith = posts & {
   labels: labels[];
-  creator: public_users;
+  creator: PublicUser;
 };
 
 export type postssState = {

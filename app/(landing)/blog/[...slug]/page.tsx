@@ -132,7 +132,7 @@ export default async function PostPage({ params }: PostPageProps) {
                     alt={author.title}
                     width={42}
                     height={42}
-                    className="rounded-full bg-white"
+                    className="rounded-full"
                   />
                   <div className="flex-1 text-left leading-tight">
                     <p className="font-medium">{author.title}</p>

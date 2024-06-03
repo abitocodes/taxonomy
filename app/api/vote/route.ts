@@ -2,11 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/prisma/client';
 
 export async function GET(request: Request) {
-    const { searchParams } = new URL(request.url)
-    const genreId = parseInt(searchParams.get('genreId')!, 10)
-    const userId = parseInt(searchParams.get('userId')!, 10)
-    const postId = parseInt(searchParams.get('postId')!, 10)
-    const voteValue = parseInt(searchParams.get('voteValue')!, 10)
+    const url = new URL(request.url)
+    const genreId = parseInt(url.searchParams.get('genreId')!, 10)
+    const userId = parseInt(url.searchParams.get('userId')!, 10)
+    const postId = parseInt(url.searchParams.get('postId')!, 10)
+    const voteValue = parseInt(url.searchParams.get('voteValue')!, 10)
 
   try {
     // 투표 상태 업데이트 또는 생성

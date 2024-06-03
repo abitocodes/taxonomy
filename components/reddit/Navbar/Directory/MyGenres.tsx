@@ -14,11 +14,11 @@ import useGenreModal from "@/hooks/useGenreModal";
 import { GenreSnippet } from "@/types/genresState";
 import MenuListItem from "./MenuListItem";
 
-type MyCommunitiesProps = {
+type MyGenresProps = {
   snippets: GenreSnippet[];
 };
 
-const MyCommunities: FC<MyCommunitiesProps> = ({ snippets }) => {
+const MyGenres: FC<MyGenresProps> = ({ snippets }) => {
   const { openModal } = useGenreModal();
 
   return (
@@ -41,7 +41,7 @@ const MyCommunities: FC<MyCommunitiesProps> = ({ snippets }) => {
               <MenuListItem
                 icon={FaReddit}
                 displayText={`r/${snippet.genreId}`}
-                link={`/r/${snippet.genreId}`}
+                link={`/g/${snippet.genreId}`}
                 iconColor="blue.500"
                 imageURL={snippet.imageURL}
               />
@@ -52,4 +52,4 @@ const MyCommunities: FC<MyCommunitiesProps> = ({ snippets }) => {
     </Box>
   );
 };
-export default MyCommunities;
+export default MyGenres;

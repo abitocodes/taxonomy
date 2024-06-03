@@ -1,7 +1,5 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import { BsLink45Deg } from "react-icons/bs";
-
-import { Button, Flex, Icon, Input, InputGroup, InputLeftElement, Stack } from "@chakra-ui/react";
 import Microlink from "@microlink/react";
 
 type LinkInputProps = {
@@ -11,39 +9,32 @@ type LinkInputProps = {
 
 const LinkInput: FC<LinkInputProps> = ({ linkText, setLinkText }) => {
   return (
-    <Flex direction="column" justify="center" align="center" width="100%">
+    <div className="flex flex-col justify-center items-center w-full">
       {linkText ? (
         <>
           <Microlink style={{ width: "100%" }} url={linkText} />
-          <Stack direction="row" mt={4}>
-            <Button variant="outline" height="28px" onClick={() => setLinkText("")}>
+          <div className="flex flex-row mt-4">
+            <button className="border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-1.5 rounded" onClick={() => setLinkText("")}>
               Remove
-            </Button>
-          </Stack>
+            </button>
+          </div>
         </>
       ) : (
-        <InputGroup>
-          <InputLeftElement pointerEvents="none">
-            <Icon as={BsLink45Deg} />
-          </InputLeftElement>
-          <Input
+        <div className="flex items-center">
+          <div className="text-gray-500">
+            <BsLink45Deg />
+          </div>
+          <input
+            type="text"
             name="link"
             value={linkText}
             onChange={(event) => setLinkText(event.target.value)}
-            _placeholder={{ color: "gray.500" }}
-            _focus={{
-              outline: "none",
-              bg: "white",
-              border: "1px solid",
-              borderColor: "black",
-            }}
-            fontSize="10pt"
-            borderRadius={4}
+            className="placeholder-gray-500 focus:outline-none focus:bg-white focus:border focus:border-black text-sm rounded p-2 flex-1"
             placeholder="Link"
           />
-        </InputGroup>
+        </div>
       )}
-    </Flex>
+    </div>
   );
 };
 

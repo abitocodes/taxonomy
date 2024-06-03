@@ -46,8 +46,8 @@ export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, 
   };
   return (
     <div
-      className="flex w-full flex-col items-center border-b bg-card text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8">
-      <button
+      className="flex w-full flex-col items-center border-b bg-card text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8 cursor-pointer">
+      <div
       className="w-full h-full flex flex-row gap-2"
       onClick={() => {
         console.log("clicked")
@@ -74,7 +74,12 @@ export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, 
           </div>
           </div>
           {post.labels.length ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-xs">
+            <div>
+            <Badge>
+            s/{post.genre.name}
+              </Badge>
+            </div>
             {post.labels.map((label) => (
               <Badge key={label.id} variant={getBadgeVariantFromLabel(label.name)}>
                 {label.name}
@@ -83,7 +88,7 @@ export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, 
           </div>
         ) : null}
 
-          <div className="line-clamp-2 text-left text-xs text-muted-foreground">
+          <div className="line-clamp-2 text-left text-xs text-muted-foreground mt-4">
           {post.description.substring(0, 300)}
         </div>
 
@@ -108,7 +113,7 @@ export function LinkedCard({ post, postIdx, onVote, onSelectPost, onDeletePost, 
             {post.voteStatus}
           </span>
         </div>
-      </button>
+      </div>
     </div>
   );
 }

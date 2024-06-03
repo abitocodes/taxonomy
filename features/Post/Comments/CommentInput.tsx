@@ -7,7 +7,7 @@ interface CommentInputProps {
   comment: string;
   setComment: (comment: string) => void;
   loading: boolean;
-  user?: public_users | null; // User 타입 대신 public_users 타입 사용
+  user?: PublicUser | null; // User 타입 대신 public_users 타입 사용
   onCreateComment: (comment: string) => void;
 }
 
@@ -20,7 +20,7 @@ const CommentInput: FC<CommentInputProps> = ({ comment, setComment, loading, use
             Comment as <span className="text-blue-500">{user?.email?.split("@")[0]}</span>
           </p>
           <textarea
-            className="w-full p-2.5 text-sm border rounded-md min-h-[160px] pb-10 placeholder-gray-500 focus:outline-none focus:bg-white focus:border-black"
+            className="w-full p-2.5 text-sm border rounded-md min-h-[160px] pb-10 placeholder-gray-500 focus:outline-none focus:focus:border-black"
             value={comment}
             onChange={(event) => setComment(event.target.value)}
             placeholder="What are your thoughts?"

@@ -1,14 +1,24 @@
 "use client"
 
-import * as React from "react"
 import Link from "next/link"
-import { useSelectedLayoutSegment } from "next/navigation"
+import { usePathname, useSelectedLayoutSegment } from "next/navigation"
+import React from "react";
 
 import { MainNavItem } from "types"
 import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 import { MobileNav } from "@/components/mobile-nav"
+import { useDirectory } from "@/hooks/useDirectory"
+import { defaultMenuItem } from "@/atoms/directoryMenuAtom";
+
+import { CommandMenu } from "@/components/command-menu"
+// import { ModeToggle } from "@/components/mode-toggle"
+import { FC, useState } from "react";
+import { useAuthState } from "@/hooks/useAuthState"
+import { Directory } from "@/components/reddit/Navbar/Directory";
+import { RightContent } from "@/components/reddit/Navbar/RightContent";
+import { Session } from '@supabase/supabase-js';
 
 interface MainNavProps {
   items?: MainNavItem[]
@@ -16,47 +26,56 @@ interface MainNavProps {
 }
 
 export function MainNav({ items, children }: MainNavProps) {
-  const segment = useSelectedLayoutSegment()
-  const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false)
-  
+  const segment = useSelectedLayoutSegment();
+  const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { onSelectMenuItem } = useDirectory();
+
+  const url = usePathname();
+  const isHidden = url === "/docs" || url === "/contact" || url === "/gallery";
+
   return (
-    <div className="flex gap-6 md:gap-10">
-      <Link href="/" className="mr-6 flex items-center">
-        <Icons.logo className="h-6 w-6" />
-        <Icons.logoText className="h-6 w-24" />
-        {/* <span className="hidden font-bold sm:inline-block">
-          {siteConfig.name}
-        </span> */}
-      </Link>
-      {items?.length ? (
-        <nav className="hidden gap-6 md:flex">
-          {items?.map((item, index) => (
-            <Link
-              key={index}
-              href={item.disabled ? "#" : item.href}
-              className={cn(
-                "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
-                item.href.startsWith(`/${segment}`)
-                  ? "text-foreground"
-                  : "text-foreground/60",
-                item.disabled && "cursor-not-allowed opacity-80"
-              )}
-            >
-              {item.title}
-            </Link>
-          ))}
-        </nav>
-      ) : null}
-      <button
-        className="flex items-center space-x-2 md:hidden"
-        onClick={() => setShowMobileMenu(!showMobileMenu)}
-      > 
-        {showMobileMenu ? <Icons.cancel /> : <Icons.logo />}
-        {/* <span className="font-bold">Menu</span> */}
-      </button>
-      {showMobileMenu && items && (
-        <MobileNav items={items}>{children}</MobileNav>
-      )}
+    <div className="flex max-md:hidden wrapper w-full h-full items-center justify-between gap-x-gutter">
+      <div className="w-full flex gap-6 md:gap-10">
+        <Link
+          href="/"
+          className="mr-6 flex items-center"
+          onClick={() => onSelectMenuItem(defaultMenuItem)}
+        >
+          <Icons.logo className="h-6 w-6" />
+          <Icons.logoText className="h-6 w-24" />
+        </Link>
+        <div className="border-t laptop:flex-1">
+          <ul className="flex overflow-hidden">
+            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+              <Link className="-ml-px flex items-center pr-lg" href="/">
+                <span>FEED</span>
+              </Link>
+            </li>
+            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+              <Link className="-ml-px flex items-center pr-lg" href="/docs">
+                <span>DOCS</span>
+              </Link>
+            </li>
+            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+              <Link className="-ml-px flex items-center pr-lg" href="/gallery">
+                <span>GALLERY</span>
+              </Link>
+            </li>
+            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+              <Link className="-ml-px flex items-center pr-lg" href="/contact">
+                <span>Contact</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="flex items-center">
+        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          {!isHidden && <RightContent user={user} />}
+        </div>
+      </div>
     </div>
-  )
+  );
 }

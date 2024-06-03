@@ -31,7 +31,7 @@ const usePosts = (genreData?: Genre) => {
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
-    router.push(`/r/${post.genreId}/comments/${post.id}`);
+    router.push(`/g/${post.genreId}/comments/${post.id}`);
   };
 
   const onVote = async (
@@ -61,7 +61,7 @@ const usePosts = (genreData?: Genre) => {
       const voteResult = await response.json();
       const voteChange = voteResult.voteValue - (existingVote ? existingVote.voteValue : 0);
   
-      const updatedPost = { ...post, voteStatus: voteStatus + voteChange };
+      const updatedPost = { ...post, voteStatus: (post.voteStatus || 0) + voteChange };
       const updatedPosts = [...postStateValue.posts];
       const postIdx = updatedPosts.findIndex((item) => item.id === post.id);
       updatedPosts[postIdx] = updatedPost;

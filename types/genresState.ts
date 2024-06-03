@@ -19,7 +19,7 @@ export type GenreState = {
   [key: string]: GenreSnippet[] | { [key: string]: Genre } | Genre | boolean | undefined;
   mySnippets: GenreSnippet[];
   initSnippetsFetched: boolean;
-  visitedCommunities: {
+  visitedGenres: {
     [key: string]: Genre;
   };
   currentGenre: Genre;

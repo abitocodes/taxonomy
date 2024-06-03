@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 type RecommendationsProps = {};
 
 const Recommendations: FC<RecommendationsProps> = () => {
-  const [genres, setCommunities] = useState<Genre[]>([]);
+  const [genres, setGenres] = useState<Genre[]>([]);
   const [loading, setLoading] = useState(true);
   const { genreStateValue, onJoinLeaveGenre } = useGenreData(); 
 
@@ -35,7 +35,7 @@ const Recommendations: FC<RecommendationsProps> = () => {
           privacyType: genre.privacyType as "public" | "restricted" | "private",
           imageURL: genre.imageURL ?? undefined
         }));
-        setCommunities(typedData);
+        setGenres(typedData);
         setLoading(false);
       });
     }
@@ -45,18 +45,13 @@ const Recommendations: FC<RecommendationsProps> = () => {
   }, []);
 
   return (
-    <Card className="rounded-t-sm overflow-hidden">
+    <Card>
       <CardHeader 
         className="flex"
-        style={{ 
-          backgroundImage: "url(/images/recCommsArt.png), linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75))", 
-          backgroundSize: "cover", 
-          backgroundBlendMode: "multiply",
-          height: "100%"
-        }}
       >
-        <span className="font-bold text-background">Top Communities</span>
+        <span className="font-bold">상위 채널</span>
       </CardHeader>
+      <CardContent className="flex item-center w-full">
         {loading ? (
           <div>Loading...</div>
         ) : (
@@ -66,12 +61,11 @@ const Recommendations: FC<RecommendationsProps> = () => {
                 const isJoined = !!genreStateValue.mySnippets.find((snippet) => snippet.genreId === genre.id);
                 return (
                     <TableRow key={genre.id} className="flex items-center">
-                      <TableCell className="w-1/5 flex justify-center">
+                      <TableCell className="flex justify-center">
                         <span>{index + 1}</span>
                       </TableCell>
-
                       <TableCell className="flex justify-center"> 
-                        <Link href={`/r/${genre.id}`}>       
+                        <Link href={`/g/${genre.id}`}>       
                           {genre.imageURL ? (
                             <Avatar className="hidden h-9 w-9 sm:flex">
                             <AvatarImage src={genre.imageURL} alt="genre image" />
@@ -83,11 +77,10 @@ const Recommendations: FC<RecommendationsProps> = () => {
                         </Link>
                       </TableCell>
                       <TableCell className="w-full">
-                        <Link href={`/r/${genre.id}`}>  
+                        <Link href={`/g/${genre.id}`}>  
                           <span>{`r/${genre.id}`}</span>
                         </Link>
                       </TableCell>
-
                       <TableCell>
                         <Button
                           className={`h-5.5 text-xs ${isJoined ? "border border-blue-500" : "bg-blue-500 text-white"} rounded-md`}
@@ -106,6 +99,7 @@ const Recommendations: FC<RecommendationsProps> = () => {
             </TableBody>
           </Table>
         )}
+      </CardContent>
     </Card>
   );
 }

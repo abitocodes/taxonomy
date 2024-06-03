@@ -1,7 +1,5 @@
 import { Dispatch, FC, SetStateAction } from "react";
 
-import { Stack, Textarea } from "@chakra-ui/react";
-
 type TextInputsProps = {
   textInputs: string;
   setTextInputs: Dispatch<SetStateAction<string>>;
@@ -9,23 +7,15 @@ type TextInputsProps = {
 
 const TextInputs: FC<TextInputsProps> = ({ textInputs, setTextInputs }) => {
   return (
-    <Stack spacing={3} width="100%">
-      <Textarea
+    <div className="space-y-3 w-full">
+      <textarea
         name="body"
         value={textInputs}
         onChange={(event) => setTextInputs(event.target.value)}
-        fontSize="10pt"
+        className="text-sm placeholder-gray-500 focus:outline-none focus:bg-white focus:border focus:border-black h-24 w-full"
         placeholder="Text (optional)"
-        _placeholder={{ color: "gray.500" }}
-        _focus={{
-          outline: "none",
-          bg: "white",
-          border: "1px solid",
-          borderColor: "black",
-        }}
-        height="100px"
       />
-    </Stack>
+    </div>
   );
 };
 export default TextInputs;

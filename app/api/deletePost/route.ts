@@ -2,8 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/prisma/client';
 
 export async function DELETE(request: Request) {
-    const { searchParams } = new URL(request.url)
-    const postId = searchParams.get('postId')
+    const url = new URL(request.url)
+    const postId = url.searchParams.get('postId')
 
   if (!postId) {
     return Response.json({

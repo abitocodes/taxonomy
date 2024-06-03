@@ -11,7 +11,7 @@ export interface DocsSidebarNavProps {
 }
 
 export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
-  const pathname = usePathname()
+  const url = usePathname()
 
   return items.length ? (
     <div className="w-full">
@@ -48,7 +48,7 @@ export function DocsSidebarNavItems({
             className={cn(
               "flex w-full items-center rounded-md p-2 hover:underline",
               {
-                "bg-muted": pathname === item.href,
+                "bg-muted": url === item.href,
               }
             )}
             target={item.external ? "_blank" : ""}

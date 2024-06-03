@@ -40,13 +40,13 @@ const ResetPassword: FC<ResetPasswordProps> = ({ toggleView }) => {
               name="email"
               placeholder="email"
               type="email"
-              className="mb-2 text-sm placeholder-gray-500 hover:bg-white hover:border-blue-500 focus:outline-none focus:bg-white focus:border-blue-500 bg-gray-50 w-full p-2 border border-gray-300"
+              className="mb-2 text-sm placeholder-gray-500 hover:hover:border-blue-500 focus:outline-none focus:focus:border-blue-500 bg-gray-50 w-full p-2 border border-gray-300"
               onChange={(event) => setEmail(event.target.value)}
             />
             <p className="text-center text-sm text-red-500">
               {error}
             </p>
-            <button type="submit" className={`w-full h-9 mb-2 mt-2 ${sending ? 'loading' : ''} bg-blue-500 text-white font-bold`}>
+            <button type="submit" className={`w-full h-9 mb-2 mt-2 ${sending ? 'loading' : ''} bg-blue-500 font-bold`}>
               Reset Password
             </button>
           </form>

@@ -2,8 +2,8 @@ import { prisma } from "@/prisma/client";
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export async function GET(request: Request) {
-    const { searchParams } = new URL(request.url);
-    const genreId = searchParams.get('genreId');
+    const url = new URL(request.url);
+    const genreId = url.searchParams.get('genreId');
 
     try {
         const genreData = await prisma.genre.findUnique({

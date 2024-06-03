@@ -6,11 +6,11 @@ export async function getAuthorDisplayText(creatorId: string | undefined): Promi
     }
   
     try {
-      const user = await prisma.user.findUnique({
+      const user = await prisma.publicUser.findUnique({
         where: { id: creatorId }
       });
   
-      return user?.name || "Unknown";
+      return user?.nickName || "Unknown";
     } catch (error) {
       console.error("Error fetching user name:", error);
       return "Unknown";

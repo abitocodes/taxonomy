@@ -10,12 +10,13 @@ import { Comment } from "@prisma/client";
 import { Post } from "@prisma/client";
 import { PublicUser } from "@prisma/client";
 import CommentItem from "@/features/Post/Comments/CommentItem";
-import CommentInput from "@/features/Post/Comments/Input";
+import CommentInput from "@/features/Post/Comments/CommentInput";
 
 import { CommentWith } from "@/features/Post/Comments/CommentItem";
+import { GiConsoleController } from "react-icons/gi";
 
 type CommentsProps = {
-  user?: public_users | null;
+  user?: PublicUser | null;
   selectedPost: Post;
   genre: string;
 };
@@ -122,7 +123,11 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, genre }) => {
           postId: selectedPost.id,
         },
         include: {
-          creator: true,
+          publicUsers: {
+            select: {
+              nickName: true
+            }
+          }
         },
         orderBy: {
           createdAt: 'desc',
@@ -141,7 +146,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, genre }) => {
   }, [selectedPost.id]);
 
   return (
-    <div className="bg-white p-2 rounded-b-lg">
+    <div className="p-2 rounded-b-lg">
       <div className="flex flex-col pl-10 pr-4 mb-6 text-sm w-full">
         <CommentInput comment={comment} setComment={setComment} loading={commentCreateLoading} user={user} onCreateComment={onCreateComment} />
       </div>
@@ -149,7 +154,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost, genre }) => {
         {commentFetchLoading ? (
           <>
             {[0, 1, 2].map((item) => (
-              <div key={item} className="p-6 bg-white">
+              <div key={item} className="p-6">
                 <div className="w-10 h-10 rounded-full animate-pulse bg-gray-300"></div>
                 <div className="mt-4 space-y-4">
                   <div className="h-4 bg-gray-300 rounded"></div>

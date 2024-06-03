@@ -5,7 +5,6 @@ import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest, res: Response) {
   try {
-    console.log("getGenreRecommendations called.");
     const genres = await prisma.genre.findMany({
       orderBy: {
         numberOfMembers: 'desc'
