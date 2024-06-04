@@ -16,6 +16,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+
 import { Session } from '@supabase/supabase-js';
 
 type UserListProps = {};
@@ -34,20 +36,19 @@ const UserList: FC<UserListProps> = () => {
 
   return (
       <div>
-        <div onSelect={() => {}}>
+        <DropdownMenuItem onSelect={() => {}}>
           <div className="flex items-center">
               <CgProfile style={{ fontSize: '20px', marginRight: '8px' }} />
               Profile
           </div>
-        </div>
+        </DropdownMenuItem>
         <div />
-        <div onSelect={logout}>
-          
+        <DropdownMenuItem onSelect={logout}>
           <div className="flex items-center">
           <MdOutlineLogin style={{ fontSize: '20px', marginRight: '8px' }} />
             Log Out
           </div>
-        </div>
+        </DropdownMenuItem>
       </div>
   );
 };

@@ -4,8 +4,7 @@ import { AuthModalState } from "@/types/AuthModalState";
 export const authModalState = atom<AuthModalState>({
   key: 'authModalState',
   default: {
-    // open: false,
-    open: true,
+    open: false,
     view: 'login'
   },
 });

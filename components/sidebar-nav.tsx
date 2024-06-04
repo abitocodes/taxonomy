@@ -21,7 +21,7 @@ export function DocsSidebarNav({ items }: DocsSidebarNavProps) {
             {item.title}
           </h4>
           {item.items ? (
-            <DocsSidebarNavItems items={item.items} pathname={pathname} />
+            <DocsSidebarNavItems items={item.items} pathname={url} />
           ) : null}
         </div>
       ))}
@@ -48,7 +48,7 @@ export function DocsSidebarNavItems({
             className={cn(
               "flex w-full items-center rounded-md p-2 hover:underline",
               {
-                "bg-muted": url === item.href,
+                "bg-muted": pathname === item.href,
               }
             )}
             target={item.external ? "_blank" : ""}

@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
-
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
@@ -31,12 +30,12 @@ type NoUserListProps = {
 const NoUserList: FC<NoUserListProps> = ({ setModalState }) => {
   return (
     <>
-        <div className="menuItem" onClick={() => setModalState({ open: true, view: "login" })}>
+        <DropdownMenuItem className="menuItem" onClick={() => setModalState({ open: true, view: "login" })}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <MdOutlineLogin style={{ fontSize: '20px', marginRight: '8px' }} />
             Log In / Sign Up
           </div>
-        </div>
+        </DropdownMenuItem>
     </>
   );
 };
