@@ -83,9 +83,9 @@ export default async function PagePage({ params }: PageProps) {
   }
 
   return (
-    <article className="container max-w-3xl py-6 lg:py-12">
+    <article className="container max-w-3xl py-6 lg:py-12 space-y-8 mt-8">
       <div className="space-y-4">
-        <h1 className="inline-block font-heading text-4xl lg:text-5xl">
+        <h1 className="inline-block font-scor text-4xl lg:text-5xl">
           {page.title}
         </h1>
         {page.description && (

@@ -67,7 +67,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head />
       <body
         className={cn(
-          "min-h-screen bg-background font-scor antialiased",
+          "min-h-screen bg-background font-scol antialiased",
         )}
       >
         <RecoilRootWrapper>

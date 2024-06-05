@@ -20,8 +20,22 @@
 }
 
 @font-face {
-  font-family: 'SC Dream';
+  font-family: 'SCDream';
   src: url('/fonts/score/SCDream5.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SCDreamLight';
+  src: url('/fonts/score/SCDream2.otf') format('opentype');
+  font-weight: normal; /* 가벼운 스타일로 변경 */
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GFODream';
+  src: url('/fonts/GrandifloraOne-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

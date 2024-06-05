@@ -12,7 +12,7 @@ import AuthInputs from "./Inputs";
 import OAuthButtons from "./OAuthButtons";
 import ResetPassword from "./ResetPassword";
 import { Session } from '@supabase/supabase-js';
-import { ModalView } from "@/types/AuthModalState";
+import { ModalView } from "@/types/atoms/AuthModalState";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -66,19 +66,19 @@ const AuthModal: FC<AuthModalProps> = () => {
         setModalState(prev => ({ ...prev, open }));
       }}
     >
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-4/5">
           {/* <DialogHeader> */}
             {/* <DialogTitle className="flex items-center"> */}
             {modalState.view === "login" && 
-            <div className="mr-6 flex items-center">
-                  <Icons.logo className="h-6 w-6" />
+            <div className="mr-6 flex items-center font-gifo font-bold">
+                  <Icons.logo className="h-6 w-6" />&nbsp;&nbsp;너와나의 우주 항해 일지
             </div>
             }
             {modalState.view === "signup" && <div>SIGN UP</div>}
             {modalState.view === "resetPassword" && <div>RESET PASSWORD</div>}
             {/* </DialogTitle> */}
             {/* <DialogDescription> */}
-              슈퍼 유저들을 위한 디지털 공간! 도지사운드클럽입니다.
+              이메일을 입력하고 로그인에 필요한 OTP를 발급 받으세요.
             {/* </DialogDescription> */}
           {/* </DialogHeader> */}
           {modalState.view === "login" || modalState.view === "signup" ? (

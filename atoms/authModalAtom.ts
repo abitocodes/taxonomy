@@ -1,10 +1,14 @@
-import { atom } from 'recoil';
-import { AuthModalState } from "@/types/AuthModalState";
+import { atom } from "recoil";
+
+import { AuthModalState } from "@/types/atoms/AuthModalState";
+
+const defaultModalState: AuthModalState = {
+  open: false,
+  otpSent: false,
+  view: "login",
+};
 
 export const authModalState = atom<AuthModalState>({
-  key: 'authModalState',
-  default: {
-    open: false,
-    view: 'login'
-  },
+  key: "authModalState",
+  default: defaultModalState,
 });

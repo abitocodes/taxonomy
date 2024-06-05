@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { useSendPasswordResetEmail } from "@/hooks/useSendPasswordResetEmail";
 import { BsDot, BsReddit } from "react-icons/bs";
 
-import { ModalView } from "@/types/AuthModalState";
+import { ModalView } from "@/types/atoms/AuthModalState";
 import { Session } from '@supabase/supabase-js';
 
 type ResetPasswordProps = {

@@ -22,6 +22,8 @@ const config = {
       fontFamily: {
         dots: ['"NeoDunggeunmoPro"', ...fontFamily.mono],
         scor: ['"SCDream"', ...fontFamily.mono],
+        scol: ['"SCDreamLight"', ...fontFamily.mono],
+        gifo: ['"GFODream"', ...fontFamily.mono],
         
       },
       backgroundImage: {

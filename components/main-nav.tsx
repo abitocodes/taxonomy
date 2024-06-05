@@ -50,22 +50,22 @@ export function MainNav({ items, children }: MainNavProps) {
           <ul className="flex overflow-hidden">
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/">
-                <span>FEED</span>
+                <span className="font-scor">FEED</span>
               </Link>
             </li>
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/docs">
-                <span>DOCS</span>
+                <span className="font-scor">DOCS</span>
               </Link>
             </li>
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/gallery">
-                <span>GALLERY</span>
+                <span className="font-scor">GALLERY</span>
               </Link>
             </li>
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/contact">
-                <span>Contact</span>
+                <span className="font-scor">Contact</span>
               </Link>
             </li>
           </ul>

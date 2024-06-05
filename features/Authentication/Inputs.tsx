@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useRecoilValue } from "recoil";
 
 import { authModalState } from "@/atoms/authModalAtom";
-import { ModalView } from "@/types/AuthModalState";
+import { ModalView } from "@/types/atoms/AuthModalState";
 import Login from "@/features/Authentication/Login";
 import SignUp from "@/features/Authentication/SignUp";
 

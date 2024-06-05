@@ -4,7 +4,7 @@ import { useCreateUserWithEmailAndPassword } from "@/hooks/useCreateUserWithEmai
 import InputItem from "@/components/InputItem";
 import { SUPABASE_ERRORS } from "@/utils/supabase/errors";
 import { CreateUpdateUser } from "@/helpers/CreateUpdateUser";
-import { ModalView } from "@/types/AuthModalState";
+import { ModalView } from "@/types/atoms/AuthModalState";
 import { Session } from '@supabase/supabase-js';
 
 type SignUpProps = {

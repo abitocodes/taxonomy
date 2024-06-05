@@ -104,7 +104,7 @@ export function LinkableCard({
           </div>
         ) : null}
 
-          <div className="line-clamp-2 text-left text-xs text-muted-foreground mt-4">
+          <div className="line-clamp-2 tracking-wide text-left text-xs text-muted-foreground mt-4">
           {post.description.substring(0, 300)}
         </div>
 

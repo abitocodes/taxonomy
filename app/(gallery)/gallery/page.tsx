@@ -65,8 +65,8 @@ export default function GalleryPage({ params }: { params?: { photoId?: string } 
         )}
         <div className="columns-1 gap-4 sm:columns-2 xl:columns-3 2xl:columns-4">
           <div className="after:content relative mb-5 flex h-[330px] flex-col items-center justify-end gap-4 overflow-hidden rounded-lg bg-white/10 px-6 p-36 text-center text-white shadow-highlight after:pointer-events-none after:absolute after:inset-0 after:rounded-lg after:shadow-highlight lg:pt-0">
-            <h1 className="font-bold uppercase">
-              GALLERY
+            <h1 className="font-bold font-gifo uppercase">
+              갤러리
             </h1>
           </div>
           {images.map(({ id, public_id, format, blurDataUrl }) => (
