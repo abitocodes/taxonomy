@@ -7,7 +7,7 @@ import { IoSparkles } from "react-icons/io5";
 import { VscAccount } from "react-icons/vsc";
 import { useRecoilState } from "recoil";
 
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalState } from "@/atoms/auth/authModalAtom";
 import NoUserList from "./NoUserList";
 import UserList from "./UserList";
 import { Session } from '@supabase/supabase-js';

@@ -3,7 +3,7 @@ import { useAuthState } from "@/hooks/useAuthState";
 import { useRecoilState, useSetRecoilState } from "recoil";
 
 import { useRouter, usePathname } from "next/navigation";
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalState } from "@/atoms/auth/authModalAtom";
 import { channelState, defaultChannel } from "@/atoms/channelsAtom";
 import { getMySnippets } from "@/helpers/supabase";
 import { Channel, ChannelSnippet } from "@/types/channelsState";

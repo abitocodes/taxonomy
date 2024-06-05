@@ -1,7 +1,7 @@
 export type ModalView = "login" | "signup" | "resetPassword";
 
 export type AuthModalState = {
-  open: boolean;
+  loginOpen: boolean;
   otpSent: boolean;
   view: ModalView;
 };

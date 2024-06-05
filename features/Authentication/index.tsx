@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState";
 
 import { useRecoilState, useRecoilValue } from "recoil";
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalState } from "@/atoms/auth/authModalAtom";
 
 import { userState } from "@/atoms/userAtom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
@@ -61,9 +61,9 @@ const AuthModal: FC<AuthModalProps> = () => {
 
   return (
     <Dialog 
-      open={modalState.open} 
-      onOpenChange={(open) => {
-        setModalState(prev => ({ ...prev, open }));
+      open={modalState.loginOpen} 
+      onOpenChange={(loginOpen) => {
+        setModalState(prev => ({ ...prev, loginOpen }));
       }}
     >
       <DialogContent className="w-4/5">

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState";
 import { useSetRecoilState } from "recoil";
 
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalState } from "@/atoms/auth/authModalAtom";
 import { channelModalState } from "@/atoms/channelModalAtom";
 import { Session } from '@supabase/supabase-js';
 

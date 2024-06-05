@@ -3,7 +3,7 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalState } from "@/atoms/auth/authModalAtom";
 import { postState } from "@/atoms/postsAtom";
 
 import { Comment } from "@prisma/client";

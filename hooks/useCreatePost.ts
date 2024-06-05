@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuthState } from "@/hooks/useAuthState"
 import { useSetRecoilState } from "recoil";
 import { useRouter, usePathname } from "next/navigation";
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalState } from "@/atoms/auth/authModalAtom";
 import { useDirectory } from "@/hooks/useDirectory";
 import { supabase } from '@/utils/supabase/client'; // supabase 클라이언트 경로에 맞게 조정해주세요.
 import { Session } from '@supabase/supabase-js';

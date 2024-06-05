@@ -3,7 +3,7 @@ import { atom } from "recoil";
 import { AuthModalState } from "@/types/atoms/AuthModalState";
 
 const defaultModalState: AuthModalState = {
-  open: false,
+  loginOpen: false,
   otpSent: false,
   view: "login",
 };

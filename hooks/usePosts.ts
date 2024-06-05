@@ -5,7 +5,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 
 import { useRouter } from "next/navigation";
 
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalState } from "@/atoms/auth/authModalAtom";
 import { channelState } from "@/atoms/channelsAtom";
 import { postState } from "@/atoms/postsAtom";
 import { supabase } from "@/utils/supabase/client";
