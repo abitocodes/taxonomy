@@ -12,7 +12,6 @@ import AuthInputs from "./Inputs";
 import OAuthButtons from "./OAuthButtons";
 import ResetPassword from "./ResetPassword";
 import { Session } from '@supabase/supabase-js';
-import { ModalView } from "@/types/atoms/AuthModalStateType";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,15 +21,11 @@ import { Icons } from "@/components/icons"
 type AuthModalProps = {};
 
 const AuthModal: FC<AuthModalProps> = () => {
-  const [modalState, setModalState] = useRecoilState(authModalState);
+  const [_authModalState, _setAuthModalState] = useRecoilState(authModalState);
   const [session, setSession] = useState<Session | null>(null);
 
   const handleClose = () => {
-    setModalState(prev => ({ ...prev, open: false }));
-  };
-
-  const toggleView = (view: ModalView) => {
-    setModalState(prev => ({ ...prev, view }));
+    _setAuthModalState(prev => ({ ...prev, open: false }));
   };
 
   const currentUser = useRecoilValue(userState);
@@ -61,34 +56,36 @@ const AuthModal: FC<AuthModalProps> = () => {
 
   return (
     <Dialog 
-      open={modalState.loginOpen} 
-      onOpenChange={(loginOpen) => {
-        setModalState(prev => ({ ...prev, loginOpen }));
+      open={_authModalState.emailInputModalOpen}
+      onOpenChange={(emailInputModalOpen) => {
+        _setAuthModalState(prev => ({ ...prev, emailInputModalOpen: emailInputModalOpen }));
       }}
     >
       <DialogContent className="w-4/5">
           {/* <DialogHeader> */}
             {/* <DialogTitle className="flex items-center"> */}
-            {modalState.view === "login" && 
+            {_authModalState.view === "login" && 
             <div className="mr-6 flex items-center font-gifo font-bold">
                   <Icons.logo className="h-6 w-6" />&nbsp;&nbsp;너와나의 우주 항해 일지
             </div>
             }
-            {modalState.view === "signup" && <div>SIGN UP</div>}
-            {modalState.view === "resetPassword" && <div>RESET PASSWORD</div>}
+            {_authModalState.view === "signup" && <div>SIGN UP</div>}
+            {_authModalState.view === "resetPassword" && <div>RESET PASSWORD</div>}
             {/* </DialogTitle> */}
             {/* <DialogDescription> */}
               이메일을 입력하고 로그인에 필요한 OTP를 발급 받으세요.
             {/* </DialogDescription> */}
           {/* </DialogHeader> */}
-          {modalState.view === "login" || modalState.view === "signup" ? (
+          {_authModalState.view === "login" || _authModalState.view === "signup" ? (
               <>
-                <AuthInputs toggleView={toggleView} />
+                <AuthInputs/>
                 {/* <div>OR</div>
                 <OAuthButtons /> */}
               </>
             ) : (
-              <ResetPassword toggleView={toggleView} />
+              <>
+              {/* <ResetPassword/> */}
+              </>
             )}
             {user && !currentUser && (
               <>

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 
 import { authModalState } from "@/atoms/auth/authModalAtom";
+import { defaultAuthModalState } from "@/atoms/auth/authModalAtom";
 
 type AuthButtonsProps = {};
 
@@ -14,13 +15,14 @@ function AuthButtons({}: AuthButtonsProps): JSX.Element {
       {/* <div className="flex items-center space-x-4"> */}
       <Button
         className="font-scor"
-        onClick={() => setAuthModalState({ 
-          loginOpen: true, 
-          view: "login", 
-          otpSent: false,
-          form: { email: "", otp: "" },
-          formError: ""
-        })}
+        onClick={() => setAuthModalState(
+          (prev) => {
+            console.log(prev); // 여기에 console.log를 추가합니다.
+            return { 
+              ...prev, 
+              emailInputModalOpen: true 
+            };
+          })}
       >
         <LockClosedIcon className="mr-2 h-4 w-4" />
         로그인

@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerFooter, DrawerClose } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
@@ -13,10 +16,13 @@ import { CreateUpdateUser } from "@/helpers/CreateUpdateUser";
 import { AuthModalStateType } from "@/types/atoms/AuthModalStateType";
 import { authModalState } from "@/atoms/auth/authModalAtom";
 import { defaultAuthModalState } from "@/atoms/auth/authModalAtom";
+import { useAuthState } from "@/hooks/useAuthState";
 
 export const OtpInput = () => {
     const [_authModalState, _setAuthModalState] = useRecoilState<AuthModalStateType>(authModalState);
     console.log("OtpInput Arg _authModalState: ", _authModalState);
+    const [session, setSession] = useState<Session | null>(null);
+    const { user, loading: authLoading, error: authError } = useAuthState(session);
 
     const handleOtpChange = (otp: string) => {
         _setAuthModalState(prev => ({
@@ -32,30 +38,21 @@ export const OtpInput = () => {
         console.log("loginFormSubmitButton Clicked")
         console.log("loginFormSubmit authModalState: ", _authModalState);
     
-        _setAuthModalState(prev => ({ ...prev, otpSent: true }));
-    
-        // console.log("loginFormSubmit form: ", form);
-        // const otp = form.otp;
-        // console.log("loginFormSubmit otp: ", otp);
-        // const email = form.email;
-        // console.log("loginFormSubmit email: ", email);
+        _setAuthModalState(prev => ({ ...prev, otpRequestSent: true }));
     
         try {
-        //   const { data, error } = await supabase.auth.verifyOtp({
-        //     email: email,
-        //     token: otp.join(''),
-        //     type: 'email'
-        //   });
+          const _response = await fetch('/api/verifyOtp?email=' + _authModalState.form.email + '&otp=' + _authModalState.form.otp);
+          const response = await _response.json();
+          const data = response.data
     
-        //   if (error) throw error;
-    
-        //   setAuthModalState(prev => ({ ...prev, otpSent: true }));
-        //   setOtpInputModalState(prev => ({ ...prev, otpInputOpen: false, otpInputLoading: false }));
-        //   CreateUpdateUser(data.user as User);
-          console.log("login success: ");
+          console.log("loginFormSubmit data: ", data);
+          _setAuthModalState(prev => ({ ...prev, otpRequestSent: false, otpInputModalOpen: false, otpInputWaiting: false}));
+          //   CreateUpdateUser(data.user as User);
+          setSession(data.session);
           _setAuthModalState(prev => defaultAuthModalState);
+          console.log("login success authModalState: ", _authModalState);
         } catch (error) {
-          _setAuthModalState(prev => ({ ...prev, otpInputModalError: error.message, otpInputLoading: false }));
+          _setAuthModalState(prev => ({ ...prev, otpInputModalError: error.message, otpInputWaiting: false }));
         }
     };
 
@@ -91,13 +88,16 @@ export const OtpInput = () => {
     );
 };
 
+const verifyOtp = async (email, otp) => {
+
+}
 
 
 // const _loginFormSubmit = (_event: React.FormEvent<HTMLFormElement>) => {
 //     if (_authModalState.form.otp.length === 6) {
 //         _setOtpInputModalState(prev => ({
 //             ...prev,
-//             otpInputOpen: false,
+//             otpInputModalOpen: false,
 //             view: "otpInput",
 //             otpEntered: false
 //         }));

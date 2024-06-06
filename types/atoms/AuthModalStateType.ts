@@ -1,6 +1,9 @@
 import { Session } from "@supabase/supabase-js";
 
+export type ModalView = "login" | "signup" | "resetPassword";
+
 export type AuthModalStateType = {
+  view: ModalView,
   emailInputModalOpen: boolean,
   otpInputModalOpen: boolean,
   otpRequestSent: boolean,

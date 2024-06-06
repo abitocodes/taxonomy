@@ -5,8 +5,8 @@ export const useOtpLoginState = () => {
   const [form, setForm] = useState<{ email: string; otp: string }>({ email: "", otp: "" });
   const [formError, setFormError] = useState("");
   const [session, setSession] = useState<Session | null>(null);
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpInputLoading, setOtpInputLoading] = useState(false);
+  const [otpRequestSent, setotpRequestSent] = useState(false);
+  const [otpInputWaiting, setotpInputWaiting] = useState(false);
   const [authError, setAuthError] = useState("");
 
   return {
@@ -16,10 +16,10 @@ export const useOtpLoginState = () => {
     setFormError,
     session,
     setSession,
-    otpSent,
-    setOtpSent,
-    otpInputLoading,
-    setOtpInputLoading,
+    otpRequestSent,
+    setotpRequestSent,
+    otpInputWaiting,
+    setotpInputWaiting,
     authError,
     setAuthError
   };

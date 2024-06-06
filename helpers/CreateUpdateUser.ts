@@ -1,6 +1,4 @@
 import { User } from '@supabase/supabase-js';
-import { createClient } from '@supabase/supabase-js';
-
 import { supabase } from "@/utils/supabase/client";
 
 // ignore specific user properties

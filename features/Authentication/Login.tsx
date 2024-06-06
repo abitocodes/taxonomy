@@ -8,28 +8,34 @@ import { Button } from "@/components/ui/button";
 import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { OtpInput } from '@/features/Authentication/OtpInput';
+import { supabase } from "@/utils/supabase/client";
 
 export default function Login() {
   const [_authModalState, _setAuthModalState] = useRecoilState(authModalState);
 
   const handleClickedEmailInputSubmitButton = async () => {  
     try {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 형식을 검증하는 정규 표현식
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(_authModalState.form.email)) {
         throw new Error("유효한 이메일을 입력해주세요.");
       }
   
-      // const { data, error } = await supabase.auth.signInWithOtp({
-      //   email: form.email,
-      //   options: {
-      //     shouldCreateUser: false
-      //   }
-      // });
-      // if (error) throw error;
-  
-      _setAuthModalState(prev => ({ ...prev, otpRequestSent: true, otpInputModalOpen: true }));
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email: _authModalState.form.email,
+        options: {
+          shouldCreateUser: false
+        }
+      });
+
+      if (error) {
+        console.log("handleClickedEmailInputSubmitButton error: ", error);
+        throw error;
+      } else {
+        console.log("handleClickedEmailInputSubmitButton data: ", data);
+        _setAuthModalState(prev => ({ ...prev, otpRequestSent: true, otpInputModalOpen: true }));
+      }
     } catch (error) {
-      _setAuthModalState(prev => ({ ...prev, formError: error.message, otpInputOpen: false }));
+      _setAuthModalState(prev => ({ ...prev, emailInputModalError: error.message }));
     }
   };
 
@@ -54,7 +60,7 @@ export default function Login() {
                 </DrawerTrigger>
                 <OtpInput/>
               </Drawer>
-              <div className="text-center text-sm text-red-500">
+              <div className="text-center text-sm text-red-500 uppercase font-dots">
                 {_authModalState.emailInputModalError || SUPABASE_ERRORS[_authModalState.otpInputModalError as keyof typeof SUPABASE_ERRORS]}
               </div>
           </div>
@@ -75,8 +81,6 @@ const onEmailInputBoxChange = ({ target: { id, value } }: React.ChangeEvent<HTML
   })});
   console.log("onEmailInputBoxChange, _setAuthModalState: ", setAuthModalState);
 };
-
-
 
 // export const handleOtpChange = (
 //   otp: string,
