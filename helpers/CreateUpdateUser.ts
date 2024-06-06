@@ -14,7 +14,7 @@ const replacer = (key: string, value: any) => {
 export const CreateUpdateUser = async (user: User) => {
   const userData = JSON.parse(JSON.stringify(user, replacer));
   const { data, error } = await supabase
-    .from('users')
+    .from('public_users')
     .upsert({ id: user.id, ...userData }, { onConflict: 'id' });
 
   if (error) throw error;

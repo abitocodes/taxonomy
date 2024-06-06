@@ -14,7 +14,13 @@ function AuthButtons({}: AuthButtonsProps): JSX.Element {
       {/* <div className="flex items-center space-x-4"> */}
       <Button
         className="font-scor"
-        onClick={() => setAuthModalState({ loginOpen: true, view: "login", otpSent: false })}
+        onClick={() => setAuthModalState({ 
+          loginOpen: true, 
+          view: "login", 
+          otpSent: false,
+          form: { email: "", otp: "" },
+          formError: ""
+        })}
       >
         <LockClosedIcon className="mr-2 h-4 w-4" />
         로그인

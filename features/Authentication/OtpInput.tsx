@@ -3,43 +3,68 @@ import { Button } from "@/components/ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import PinInput from "@/components/PinInput";
 import { useRecoilState } from "recoil";
-import { otpInputModalState } from "@/atoms/auth/otpInputModalAtom";
+
 import { Session } from "@supabase/supabase-js";
-import { OtpInputModalState } from "@/types/atoms/OtpInputModalState";
 
-export const OtpInput = ({
-    setOtpInputModalState,
-    otpInputLoading,
-    form,
-    setForm,
-    setFormError,
-    setOtpInputLoading,
-    setSession,
-    handleOtpChange,
-    _setAuthModalState,
-    }) => {
+import { supabase } from "@/utils/supabase/client";
+import { User } from "@supabase/supabase-js";
+import { CreateUpdateUser } from "@/helpers/CreateUpdateUser";
 
-    const [_otpInputModalState, _setOtpInputModalState] = useRecoilState(otpInputModalState);
-        
+import { AuthModalStateType } from "@/types/atoms/AuthModalStateType";
+import { authModalState } from "@/atoms/auth/authModalAtom";
+import { defaultAuthModalState } from "@/atoms/auth/authModalAtom";
+
+export const OtpInput = () => {
+    const [_authModalState, _setAuthModalState] = useRecoilState<AuthModalStateType>(authModalState);
+    console.log("OtpInput Arg _authModalState: ", _authModalState);
+
+    const handleOtpChange = (otp: string) => {
+        _setAuthModalState(prev => ({
+            ...prev,
+            form: {
+                ...prev.form,
+                otp: otp
+            }
+        }));
+    };
+
+    const loginFormSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        console.log("loginFormSubmitButton Clicked")
+        console.log("loginFormSubmit authModalState: ", _authModalState);
+    
+        _setAuthModalState(prev => ({ ...prev, otpSent: true }));
+    
+        // console.log("loginFormSubmit form: ", form);
+        // const otp = form.otp;
+        // console.log("loginFormSubmit otp: ", otp);
+        // const email = form.email;
+        // console.log("loginFormSubmit email: ", email);
+    
+        try {
+        //   const { data, error } = await supabase.auth.verifyOtp({
+        //     email: email,
+        //     token: otp.join(''),
+        //     type: 'email'
+        //   });
+    
+        //   if (error) throw error;
+    
+        //   setAuthModalState(prev => ({ ...prev, otpSent: true }));
+        //   setOtpInputModalState(prev => ({ ...prev, otpInputOpen: false, otpInputLoading: false }));
+        //   CreateUpdateUser(data.user as User);
+          console.log("login success: ");
+          _setAuthModalState(prev => defaultAuthModalState);
+        } catch (error) {
+          _setAuthModalState(prev => ({ ...prev, otpInputModalError: error.message, otpInputLoading: false }));
+        }
+    };
+
     return (
-    <Drawer
-        open={_otpInputModalState.otpInputOpen} 
-        onOpenChange={(otpInputOpen) => {
-        setOtpInputModalState(prev => ({ ...prev, otpInputOpen }));
-        }}>
-        <DrawerTrigger asChild>
-            <Button 
-                className="w-full h-9 mt-2" 
-                onClick={() => handleClickedOtpInputSubmitButton(_setOtpInputModalState, form, setFormError, setOtpInputLoading, setSession)}
-                disabled={otpInputLoading}>
-                {otpInputLoading ? <><ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>OTP 확인중</> : "OTP 요청"}
-            </Button>
-        </DrawerTrigger>
         <DrawerContent>
             <div className="mx-auto w-full max-w-sm">
                 <DrawerHeader>
                     <DrawerTitle>이메일을 확인하고, OTP 번호를 입력해주세요.</DrawerTitle>
-                    <DrawerDescription>{form.email}</DrawerDescription>
+                    <DrawerDescription>{_authModalState.form.email}</DrawerDescription>
                 </DrawerHeader>
                 <div className="flex items-center justify-center space-x-2">
                     <PinInput
@@ -53,49 +78,35 @@ export const OtpInput = ({
                         onComplete={(value, index) => {}}
                         autoSelect={true}
                         regexCriteria={/^[ A-Za-z0-9_@./#&+-]*$/}
-                />
+                    />
                 </div>
                 <DrawerFooter>
-                    <Button onClick={() => handleClickedOtpInputSubmitButton(_setOtpInputModalState, form, setFormError, setOtpInputLoading, setSession)}>OTP 확인</Button>
+                    <Button onClick={loginFormSubmit}>OTP 확인</Button>
                     <DrawerClose asChild>
-                        <Button variant="outline" onClick={() => _setOtpInputModalState(prev => ({ ...prev, otpInputOpen: !prev.otpInputOpen }))}>취소</Button>
+                        <Button variant="outline" onClick={() => _setAuthModalState(prev => defaultAuthModalState)}>취소</Button>
                     </DrawerClose>
                 </DrawerFooter>
             </div>
         </DrawerContent>
-    </Drawer>
-);}
-
-const handleClickedOtpInputSubmitButton = (
-    setOtpInputModalState: (otpInputModalState: OtpInputModalState) => void,
-    form: any,
-    setFormError: (error: string) => void,
-    setOtpInputLoading: (loading: boolean) => void,
-    setSession: (session: Session) => void,
-    ) => {
-
-    if(form.otp.length === 6) {
-        setOtpInputModalState({ otpInputOpen: true, view: "otpInput", otpEntered: false })
-        verifyOTP(form, setFormError, setOtpInputLoading, setSession);
-    } else {
-        setFormError("OTP 번호를 입력해주세요.");
-    }
-  };
-  
-const verifyOTP = async (form, setFormError, setOtpInputLoading, setSession) => {
-    setOtpInputLoading(false);
-    // const otp = form.otp
-    // const { data, error } = await supabase.auth.verifyOtp({
-    //   email: form.email,
-    //   token: otp.join(''),
-    //   type: 'email'
-    // });
-    // if (error) {
-    //   setFormError(error.message);
-    //   setOtpInputLoading(false);
-    // } else {
-    //   setSession(data.session);
-    //   CreateUpdateUser(data.user as User);
-    //   setOtpInputLoading(false);
-    // }
+    );
 };
+
+
+
+// const _loginFormSubmit = (_event: React.FormEvent<HTMLFormElement>) => {
+//     if (_authModalState.form.otp.length === 6) {
+//         _setOtpInputModalState(prev => ({
+//             ...prev,
+//             otpInputOpen: false,
+//             view: "otpInput",
+//             otpEntered: false
+//         }));
+//         loginFormSubmit(_event, _authModalState, _otpInputModalState);
+//     } else {
+//         _setOtpInputModalState(prev => ({
+//             ...prev,
+//             formError: "OTP 번호를 입력해주세요."
+//         }));
+//     }
+// };
+

@@ -1,14 +1,24 @@
 import { atom } from "recoil";
 
-import { AuthModalState } from "@/types/atoms/AuthModalState";
+import { AuthModalStateType } from "@/types/atoms/AuthModalStateType";
 
-const defaultModalState: AuthModalState = {
-  loginOpen: false,
-  otpSent: false,
-  view: "login",
+export const defaultAuthModalState: AuthModalStateType = {
+  emailInputModalOpen: false,
+  otpInputModalOpen: false,
+
+  otpRequestSent: false,
+  otpInputWaiting: false,
+
+  otpEntered: false,
+  otpVerifyWaiting: false,
+
+  form: { email: "", otp: "" },
+  emailInputModalError: "",
+  otpInputModalError: "",
+  session: null,
 };
 
-export const authModalState = atom<AuthModalState>({
+export const authModalState = atom<AuthModalStateType>({
   key: "authModalState",
-  default: defaultModalState,
+  default: defaultAuthModalState,
 });

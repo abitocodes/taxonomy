@@ -12,7 +12,7 @@ import AuthInputs from "./Inputs";
 import OAuthButtons from "./OAuthButtons";
 import ResetPassword from "./ResetPassword";
 import { Session } from '@supabase/supabase-js';
-import { ModalView } from "@/types/atoms/AuthModalState";
+import { ModalView } from "@/types/atoms/AuthModalStateType";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

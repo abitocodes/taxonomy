@@ -1,122 +1,94 @@
 import { FC, useEffect, useState } from "react";
+
 import { useRecoilState } from 'recoil';
 import { authModalState } from '@/atoms/auth/authModalAtom';
 import { SUPABASE_ERRORS } from "@/utils/supabase/errors";
-import { ModalView } from "@/types/atoms/AuthModalState";
-import { useOtpLoginState } from "@/hooks/useOtpLoginState";
-import PinInput from "@/components/PinInput";
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input";
-
+import { Button } from "@/components/ui/button";
+import { Drawer, DrawerTrigger } from "@/components/ui/drawer";
 import { ReloadIcon } from "@radix-ui/react-icons";
-
-import { useSetRecoilState } from "recoil";
-import { LockClosedIcon } from "@radix-ui/react-icons";
-
-import { otpInputModalState } from "@/atoms/auth/otpInputModalAtom";
-type OtpInputButtonsProps = {};
 import { OtpInput } from '@/features/Authentication/OtpInput';
 
-import { OtpInputModalState } from "@/types/atoms/OtpInputModalState";
-
-
-type LoginProps = {
-  toggleView: (view: ModalView) => void;
-};
-
-export default function Login({ toggleView }) {
-  const setOtpInputModalState = useSetRecoilState(otpInputModalState);
-  const [_otpInputModalState, _setOtpInputModalState] = useRecoilState(otpInputModalState);
+export default function Login() {
   const [_authModalState, _setAuthModalState] = useRecoilState(authModalState);
-  const {
-    form, setForm,
-    formError, setFormError,
-    session, setSession,
-    otpInputLoading, setOtpInputLoading,
-    authError, setAuthError
-  } = useOtpLoginState();
 
-  // OTP 상태를 _authModalState에서 관리
-  const otpSent = _authModalState.otpSent;
-  const setOtpSent = (value: boolean) => {
-    _setAuthModalState(prev => ({ ...prev, otpSent: value }));
-  };
-
-  const _loginFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (!form.email.includes("@")) {
-      setFormError("유효한 이메일을 입력해주세요.");
-      return;
+  const handleClickedEmailInputSubmitButton = async () => {  
+    try {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // 이메일 형식을 검증하는 정규 표현식
+      if (!emailRegex.test(_authModalState.form.email)) {
+        throw new Error("유효한 이메일을 입력해주세요.");
+      }
+  
+      // const { data, error } = await supabase.auth.signInWithOtp({
+      //   email: form.email,
+      //   options: {
+      //     shouldCreateUser: false
+      //   }
+      // });
+      // if (error) throw error;
+  
+      _setAuthModalState(prev => ({ ...prev, otpRequestSent: true, otpInputModalOpen: true }));
+    } catch (error) {
+      _setAuthModalState(prev => ({ ...prev, formError: error.message, otpInputOpen: false }));
     }
-    setOtpInputLoading(true);
-    loginFormSubmit(event, otpSent, setOtpSent, form, setFormError, setOtpInputLoading, setAuthError, setSession);
-  };
-
-  const handleOtpChange = (otp: string) => {
-    console.log("handle otp:", otp)
-    setForm(prevForm => ({
-      ...prevForm,
-      otp: otp
-    }));
   };
 
   return (
-  <>
-      <form className="w-full" onSubmit={_loginFormSubmit}>
+    <>
+     <form className="w-full">
           <div className="grid gap-4 py-4">
-            <div className="w-full">
-              <Input
-                className="w-full text-center" 
-                id="email" name="email" type="text" placeholder="이메일 입력" value={form.email} 
-                onChange={(event) => onEmailInputBoxChange(event, setForm)} disabled={otpSent}/>
-            </div>
-            <OtpInput
-              setOtpInputModalState={_setOtpInputModalState}
-              otpInputLoading={otpInputLoading}
-              form={form}
-              setForm={setForm}
-              setFormError={setFormError}
-              setOtpInputLoading={setOtpInputLoading}
-              setSession={setSession}
-              handleOtpChange={handleOtpChange}
-              _setAuthModalState={_setAuthModalState}
-            />
-            </div>
-            <div className="text-center text-sm text-red-500">
-              {formError || SUPABASE_ERRORS[authError as keyof typeof SUPABASE_ERRORS]}
-            </div>
+              <div className="w-full">
+                <Input
+                  className="w-full text-center" 
+                  id="email" name="email" type="text" placeholder="이메일 입력" value={_authModalState.form.email} 
+                  onChange={(event) => onEmailInputBoxChange(event, _setAuthModalState)} disabled={_authModalState.otpEntered}/>
+              </div>
+              <Drawer open={_authModalState.otpInputModalOpen} >
+                <DrawerTrigger asChild>
+                    <Button 
+                        className="w-full h-9 mt-2" 
+                        onClick={() => handleClickedEmailInputSubmitButton()}
+                        disabled={_authModalState.otpEntered}>
+                        {_authModalState.otpVerifyWaiting ? <><ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>OTP 확인중</> : "OTP 요청"}
+                    </Button>
+                </DrawerTrigger>
+                <OtpInput/>
+              </Drawer>
+              <div className="text-center text-sm text-red-500">
+                {_authModalState.emailInputModalError || SUPABASE_ERRORS[_authModalState.otpInputModalError as keyof typeof SUPABASE_ERRORS]}
+              </div>
+          </div>
       </form>
-  </>
-  );
+    </>
+  )
 };
 
-const loginFormSubmit = (
-    event: React.FormEvent<HTMLFormElement>, otpSent: boolean, setOtpSent: (otpSent: boolean) 
-    => void, form, setFormError, setOtpInputLoading, setAuthError, setSession) => {
-    event.preventDefault();
-    requestOTP(form, setFormError, setOtpSent, setOtpInputLoading);
-};
-
-const requestOTP = async (form: { email: string; otp: number[] }, setFormError: (error: string) => void, setOtpSent: (otpSent: boolean) => void, setOtpInputLoading: (otpInputLoading: boolean) => void) => {
-  setOtpSent(true);
-  // // Supabase OTP 요청 로직 추가
-  // const { data, error } = await supabase.auth.signInWithOtp({
-  //   email: form.email,
-  //   options: {
-  //     shouldCreateUser: false
-  //   }
-  // });
-  // if (error) {
-  //   setFormError(error.message);
-  // } else {
-  //   setOtpSent(true);
-  // }
-};
-
-const onEmailInputBoxChange = ({ target: { id, value } }: React.ChangeEvent<HTMLInputElement>, setForm) => {
-  setForm((prev) => {
-    return (
-    {
+const onEmailInputBoxChange = ({ target: { id, value } }: React.ChangeEvent<HTMLInputElement>, setAuthModalState) => {
+  setAuthModalState((prev) => {
+    console.log("onEmailInputBoxChange, prev: ", prev);
+    return ({
     ...prev,
-    [id]: value,
+    form: {
+      ...prev.form,
+      [id]: value,
+    }
   })});
+  console.log("onEmailInputBoxChange, _setAuthModalState: ", setAuthModalState);
 };
+
+
+
+// export const handleOtpChange = (
+//   otp: string,
+//   _setOtpInputModalState: (update: (prev: any) => any) => void
+// ) => {
+//   _setOtpInputModalState(prevForm => ({
+//     ...prevForm,
+//     form: {
+//       ...prevForm.form,
+//       otp: otp
+//     }
+//   }));
+// };
+
+// TypeError: Cannot read properties of undefined (reading 'preventDefault')

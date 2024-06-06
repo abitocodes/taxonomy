@@ -21,7 +21,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { AuthModalState } from "@/types/atoms/AuthModalState";
+import { AuthModalState } from "@/types/atoms/AuthModalStateType";
 
 type NoUserListProps = {
   setModalState: (value: AuthModalState) => void;
