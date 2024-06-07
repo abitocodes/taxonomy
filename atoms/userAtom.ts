@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
 const defaultUserState = {
-  userData: null,
+  currentUser: null,  // userProfileState의 currentUser와 동일한 역할을 하도록 추가
   sessionData: null,
 };
 

@@ -15,6 +15,7 @@ import {
   AvatarImage,
 } from "@/components/shad/new-york/ui/avatar"
 import { Button } from './ui/button';
+import { ChatBubbleIcon } from '@radix-ui/react-icons';
 
 interface LinkableCardProps {
   post: PostWith;
@@ -86,7 +87,7 @@ export function LinkableCard({
           </div>
           <div className="flex items-center">
             <div className="flex items-center gap-2">
-            <div className="font-semibold text-left text-2xl">[{post.numberOfComments}] {post.title} </div>
+            <div className="font-semibold text-left text-2xl">{post.title} </div>
           </div>
           </div>
           {post.labels.length ? (
@@ -109,25 +110,38 @@ export function LinkableCard({
         </div>
 
         </div>
-        <div className={`flex flex-col space-y-4 items-center bg-${singlePostView ? "transparent" : "gray-100"} w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
-        {userVoteValue === 1 ? (
-          <Button 
-            variant="ghost"
-            size="icon"
-            onClick={(event) => onVote(event, post, 1, post.channelId)}>
-          <IoIosHeartEmpty className="h-4 w-4"/>
+        <div className={`flex flex-col items-center space-y-4 bg-${singlePostView ? "transparent" : "gray-100"} w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
+          <div className="flex flex-col items-center">
+          {userVoteValue === 1 ? (
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={(event) => onVote(event, post, 1, post.channelId)}>
+            <IoIosHeartEmpty className="h-4 w-4 "/>
+            </Button>
+          ) : (
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={(event) => onVote(event, post, -1, post.channelId)}>
+            <IoMdHeart className="h-4 w-4"/>
           </Button>
-        ) : (
-          <Button 
-            variant="ghost"
-            size="icon"
-            onClick={(event) => onVote(event, post, -1, post.channelId)}>
-          <IoMdHeart className="h-4 w-4"/>
-         </Button>
-        )}
-          <span className="text-sm font-bold">
-            {post.voteStatus}
-          </span>
+          )}
+            <span className="font-cpmo text-xs text-primary">
+              {post.voteStatus || 0}
+            </span>
+          </div>
+          <div className="flex flex-col items-center">
+            <Button 
+              variant="ghost"
+              size="icon"
+              onClick={(event) => onVote(event, post, 1, post.channelId)}>
+              <ChatBubbleIcon className="h-3 w-3"/>
+            </Button>
+            <span className="font-cpmo text-xs text-primary">
+              {post.numberOfComments}
+            </span>
+          </div>
         </div>
       </div>
     </div>

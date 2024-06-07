@@ -17,7 +17,7 @@
 
 // import { Session } from '@supabase/supabase-js';
 
-// export default function UserProfilePage ({ params }: { params: { user: string } }) {
+// export default function myProfilePage ({ params }: { params: { user: string } }) {
 //   const [session, setSession] = useState<Session | null>(null);
 //   const { user, loading: loadingUser, error: authError } = useAuthState(session);
 //   const [userStateValue, setUserStateValue] = useRecoilState(userState);  // userState 사용

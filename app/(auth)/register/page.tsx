@@ -44,14 +44,14 @@ export default function RegisterPage() {
               href="/terms"
               className="hover:text-brand underline underline-offset-4"
             >
-              Terms of Service
+              TERMS OF SERVICE
             </Link>{" "}
             and{" "}
             <Link
               href="/privacy"
               className="hover:text-brand underline underline-offset-4"
             >
-              Privacy Policy
+              PRIVACY POLICY
             </Link>
             .
           </p>

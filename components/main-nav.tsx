@@ -46,31 +46,31 @@ export function MainNav({ items, children }: MainNavProps) {
           <Icons.logo className="h-6 w-6" />
           <Icons.logoText className="h-6 w-24" />
         </Link>
-        <div className="border-t laptop:flex-1">
+        <div className="border-t laptop:flex-1 font-cpmo">
           <ul className="flex overflow-hidden">
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/">
-                <span className="font-scor">FEED</span>
+                <span>FEED</span>
               </Link>
             </li>
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/ch">
-                <span className="font-scor">CHANNELS</span>
+                <span>CHANNELS</span>
               </Link>
             </li>
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/docs">
-                <span className="font-scor">DOCS</span>
+                <span>DOCS</span>
               </Link>
             </li>
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/gallery">
-                <span className="font-scor">GALLERY</span>
+                <span>GALLERY</span>
               </Link>
             </li>
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/contact">
-                <span className="font-scor">Contact</span>
+                <span>Contact</span>
               </Link>
             </li>
           </ul>

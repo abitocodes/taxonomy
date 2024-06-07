@@ -55,12 +55,12 @@ import { Card, CardHeader, CardDescription, CardTitle } from "@/components/ui/ca
             <CardTitle>최근에 가입한 뉴비들</CardTitle>
         </div>
       <Table className="font-cpmo">
-        <TableCaption className="font-scol text-xs">저출산 시대, 뉴비가 왕이다!</TableCaption>
+        <TableCaption className="font-scor text-xs">저출산 시대, 뉴비가 왕이다!</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[60px]"></TableHead>
-            <TableHead className="text-xs">채널명</TableHead>
-            <TableHead className="text-right text-xs">포스팅 (코멘트)</TableHead>
+            <TableHead className="text-xs">닉네임</TableHead>
+            <TableHead className="text-right text-xs">가입 시기</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

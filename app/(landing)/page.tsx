@@ -25,6 +25,8 @@ import { DocsSidebarNav } from "@/components/sidebar-nav";
 import { docsConfig } from "@/config/docs";
 import { CryptoPriceTable } from "@/components/CryptoPriceTable";
 import { WelcomeNewbies } from "@/components/WelcomeNewbies";
+import { BulletinBoard } from "@/components/BulletinBoard";
+
 
 export default function Home(): ReactElement {
   const [session, setSession] = useState<Session | null>(null);
@@ -149,10 +151,8 @@ export default function Home(): ReactElement {
             )}
           </div>
         </div>
-        {/* <div className="hidden text-sm xl:block"> */}
-          <div className="fixed py-6 space-y-10 pr-4 top-14 z-30 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 overflow-y-auto md:sticky md:block">
-              <WelcomeNewbies/>
-              <CryptoPriceTable/>
+          <div className="fixed md:sticky top-36 mt-14 h-[calc(100vh-3.5rem)] z-30">
+              <BulletinBoard/>
           </div>
         {/* </div> */}
       </main>
