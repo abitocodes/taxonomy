@@ -58,7 +58,7 @@ export function LinkableCard({
     }
   };
 
-  const containerClasses = `flex w-full flex-col items-center border-b bg-card text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8 ${cursorPointer ? 'cursor-pointer' : ''}`;
+  const containerClasses = `flex w-full flex-col items-center border-b border-dashed bg-background/80 rounded-xl text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8 ${cursorPointer ? 'cursor-pointer' : ''}`;
 
   return (
     <div className={containerClasses}>
@@ -78,7 +78,7 @@ export function LinkableCard({
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-          <div className="flex item-center h-1/2 text-xs text-center">
+          <div className="flex item-center h-1/2 text-xs text-center font-cpmo uppercase text-primary">
             @{post.publicUsers.nickName} posted {formatDistanceToNow(new Date(post.createdAt), {
                 addSuffix: true,
               })}
@@ -104,7 +104,7 @@ export function LinkableCard({
           </div>
         ) : null}
 
-          <div className="line-clamp-2 tracking-wide text-left text-xs text-muted-foreground mt-4">
+          <div className="w-11/12 line-clamp-2 tracking-wider leading-loose text-left text-xs text-muted-foreground mt-4">
           {post.description.substring(0, 300)}
         </div>
 

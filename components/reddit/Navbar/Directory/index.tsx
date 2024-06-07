@@ -35,8 +35,8 @@ export const Directory: FC = () => {
       >
         <div className="flex items-center justify-between w-auto lg:w-50">
           <div className="flex items-center">
-            <div className="hidden lg:flex flex-col text-sm font-semibold">
-              <span>g/{directoryState.selectedMenuItem.displayText}</span>
+            <div className="hidden lg:flex flex-col text-sm font-scor">
+              <span>채널: {directoryState.selectedMenuItem.displayText}</span>
             </div>
           </div>
           <svg className="h-5 w-5 text-gray-500" fill="currentColor">

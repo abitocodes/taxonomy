@@ -54,6 +54,11 @@ export function MainNav({ items, children }: MainNavProps) {
               </Link>
             </li>
             <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+              <Link className="-ml-px flex items-center pr-lg" href="/ch">
+                <span className="font-scor">CHANNELS</span>
+              </Link>
+            </li>
+            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/docs">
                 <span className="font-scor">DOCS</span>
               </Link>

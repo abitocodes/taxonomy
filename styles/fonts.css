@@ -1,14 +1,14 @@
 @font-face {
-    font-family: 'CP Mono';
+    font-family: 'CPMono';
     src: url('/fonts/cpmono.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-  font-family: 'CP Mono';
+  font-family: 'CPMonoBold';
   src: url('/fonts/cpmono_bold.otf') format('opentype');
-  font-weight: bold;
+  font-weight: normal;
   font-style: normal;
 }
 

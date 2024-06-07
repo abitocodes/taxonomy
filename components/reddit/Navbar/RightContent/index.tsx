@@ -18,9 +18,9 @@ export const RightContent: FC<RightContentProps> = ({ user }) => {
       <AuthModal />
       <div className="">
         {user ? <>
-        <div className="grid grid-cols-1 gap-2">
-          <MenuWrapper />
+        <div className="flex space-x-2">
           <Directory />
+          <MenuWrapper />
         </div>
           </> : <AuthButtons />}
       </div>

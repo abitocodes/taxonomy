@@ -21,6 +21,8 @@ const config = {
     extend: {
       fontFamily: {
         dots: ['"NeoDunggeunmoPro"', ...fontFamily.mono],
+        cpmo: ['"CPMono"', ...fontFamily.mono],
+        cpmb: ['"CPMonoBold"', ...fontFamily.mono],
         scor: ['"SCDream"', ...fontFamily.mono],
         scol: ['"SCDreamLight"', ...fontFamily.mono],
         gifo: ['"GFODream"', ...fontFamily.mono],
