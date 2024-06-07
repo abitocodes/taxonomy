@@ -151,10 +151,9 @@ export default function Home(): ReactElement {
             )}
           </div>
         </div>
-          <div className="fixed md:sticky top-36 mt-14 h-[calc(100vh-3.5rem)] z-30">
+          <div className="fixed md:sticky top-36 h-[calc(100vh-3.5rem)] z-30">
               <BulletinBoard/>
           </div>
-        {/* </div> */}
       </main>
     </div>
   );
