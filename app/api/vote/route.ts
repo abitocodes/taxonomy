@@ -1,55 +1,60 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { prisma } from '@/prisma/client';
+import { generateHashId } from '@/utils/generateHashId';
 
 export async function GET(request: Request) {
+    console.log("Vote API Called, url: ", request.url)
     const url = new URL(request.url)
-    const channelId = parseInt(url.searchParams.get('channelId')!, 10)
-    const userId = parseInt(url.searchParams.get('userId')!, 10)
-    const postId = parseInt(url.searchParams.get('postId')!, 10)
-    const voteValue = parseInt(url.searchParams.get('voteValue')!, 10)
+    const channelId = url.searchParams.get('channelId')!
+    const userId = url.searchParams.get('userId')!
+    const postId = url.searchParams.get('postId')!
+    const voteValue = url.searchParams.get('voteValue')!
+    const voteValueInt = parseInt(voteValue, 10)
+    console.log("channelId: ", channelId)
+    console.log("userId: ", userId)
+    console.log("postId: ", postId)
+    console.log("voteValue: ", voteValue)
+    console.log("voteValueInt: ", voteValueInt)
 
   try {
-    // 투표 상태 업데이트 또는 생성
-    const existingVote = await prisma.postVote.findFirst({
+    const isAlreadyVoted = await prisma.postVote.findFirst({
         where: {
             postId: postId.toString(),
             userId: userId.toString()
         }
-      });
+    });
 
-    if (!existingVote) {
-      const newVote = await prisma.postVote.create({
+    let voteResult;
+
+    if (!isAlreadyVoted) {
+      voteResult = await prisma.postVote.create({
         data: {
-            postId: postId.toString(),
-            channelId: channelId.toString(),
-            voteValue: voteValue,
-            userId: userId.toString()
+          id: generateHashId(),
+          postId: postId.toString(),
+          channelId: channelId.toString(),
+          voteValue: voteValueInt,
+          userId: userId.toString()
         }
       });
-      return Response.json({
-        statusCode: 200,
-        message: '200 OK, Created Vote',
-        newVote: newVote
-    })
     } else {
-      const updatedVote = await prisma.postVote.update({
+      await prisma.postVote.delete({
         where: {
-          id: existingVote.id
-        },
-        data: {
-          voteValue: voteValue
+          id: postId.toString()
         }
       });
-      return Response.json({
-        statusCode: 200,
-        message: '200 OK, Updated Vote',
-        updatedVote: updatedVote
-    })
+      // 기존 투표 삭제
+      voteResult = null;
     }
+
+    return Response.json({
+      statusCode: 200,
+      message: '200 OK, Vote Processed',
+      voteResult: voteResult,
+      isAlreadyVoted: isAlreadyVoted
+    });
   } catch (error) {
     return Response.json({
         statusCode: 500,
         message: 'Error while voting'
-      });
+    });
   }
 }

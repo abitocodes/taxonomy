@@ -16,16 +16,19 @@ import {
 } from "@/components/shad/new-york/ui/avatar"
 import { Button } from './ui/button';
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userState } from '@/atoms/userAtom';
+import { User } from '@supabase/supabase-js';
 
 interface LinkableCardProps {
   post: PostWith;
   postIdx?: number;
-  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, vote: number, channelId: string, postIdx?: number) => void;
+  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, user: User | null) => void;
   onSelectPost?: (value: Post, postIdx: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   router?: AppRouterInstance;
-  userVoteValue?: number;
-  userIsCreator?: boolean;
+  isAlreadyVoted?: number;
+  userState?: boolean;
   homePage?: boolean;
   cursorPointer?: boolean; // 추가된 prop
 }
@@ -37,8 +40,8 @@ export function LinkableCard({
   onSelectPost,
   onDeletePost,
   router,
-  userVoteValue,
-  userIsCreator,
+  isAlreadyVoted,
+  userState: userStateProp,
   homePage,
   cursorPointer = true, // 기본값은 true로 설정
   ...props
@@ -46,6 +49,7 @@ export function LinkableCard({
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const singlePostView = !onSelectPost;
+  const userAndSession = useRecoilValue(userState);
 
   const handleDelete = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -112,18 +116,18 @@ export function LinkableCard({
         </div>
         <div className={`flex flex-col items-center space-y-4 bg-${singlePostView ? "transparent" : "gray-100"} w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
           <div className="flex flex-col items-center">
-          {userVoteValue === 1 ? (
+          {isAlreadyVoted !== 1 ? (
             <Button 
               variant="ghost"
               size="icon"
-              onClick={(event) => onVote(event, post, 1, post.channelId)}>
+              onClick={(event) => onVote(event, post, userAndSession.currentSessionData)}>
             <IoIosHeartEmpty className="h-4 w-4 "/>
             </Button>
           ) : (
             <Button 
               variant="ghost"
               size="icon"
-              onClick={(event) => onVote(event, post, -1, post.channelId)}>
+              onClick={(event) => onVote(event, post, userAndSession.currentSessionData)}>
             <IoMdHeart className="h-4 w-4"/>
           </Button>
           )}
@@ -135,7 +139,7 @@ export function LinkableCard({
             <Button 
               variant="ghost"
               size="icon"
-              onClick={(event) => onVote(event, post, 1, post.channelId)}>
+            >
               <ChatBubbleIcon className="h-3 w-3"/>
             </Button>
             <span className="font-cpmo text-xs text-primary">

@@ -140,8 +140,8 @@ export default function Home(): ReactElement {
                       postIdx={index}
                       onVote={onVote}
                       onDeletePost={onDeletePost}
-                      userVoteValue={postStateValue?.postVotes.find((item) => item.postId === post.id)?.voteValue}
-                      userIsCreator={user?.id === post.creatorId}
+                      isAlreadyVoted={postStateValue?.postVotes.find((item) => item.postId === post.id)?.voteValue}
+                      userState={user?.id === post.creatorId}
                       onSelectPost={onSelectPost}
                       homePage
                     />
