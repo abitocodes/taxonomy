@@ -22,16 +22,16 @@ export const BulletinBoard = () => {
         orientation="vertical"
         className="w-full max-w-xs"
         >
-        <CarouselContent className="h-[360px]">
-            <CarouselItem>
-                <WelcomeNewbies/>
-            </CarouselItem>
-            <CarouselItem>
-                <CryptoPriceTable/>
-            </CarouselItem>
-        </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+            <CarouselContent className="h-[420px]">
+                <CarouselItem>
+                    <WelcomeNewbies/>
+                </CarouselItem>
+                <CarouselItem className="-mt-20">
+                    <CryptoPriceTable/>
+                </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
         </Carousel>
     )
 }
