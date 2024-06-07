@@ -27,6 +27,7 @@ import { docsConfig } from "@/config/docs";
 export default function Home(): ReactElement {
   const [session, setSession] = useState<Session | null>(null);
   const { user, loading: authLoading, error: authError } = useAuthState(session);
+  
   const { postStateValue, setPostsStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
   const channelStateValue = useRecoilValue(channelState);
 

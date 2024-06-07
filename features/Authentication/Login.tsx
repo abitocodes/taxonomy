@@ -13,10 +13,12 @@ import { supabase } from "@/utils/supabase/client";
 export default function Login() {
   const [_authModalState, _setAuthModalState] = useRecoilState(authModalState);
 
-  const handleClickedEmailInputSubmitButton = async () => {  
+  const handleClickedEmailInputSubmitButton = async () => {
+    _setAuthModalState(prev => ({ ...prev, emailEntered: true }));
     try {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(_authModalState.form.email)) {
+        _setAuthModalState(prev => ({ ...prev, emailEntered: false }));
         throw new Error("유효한 이메일을 입력해주세요.");
       }
   
@@ -35,7 +37,7 @@ export default function Login() {
         _setAuthModalState(prev => ({ ...prev, otpRequestSent: true, otpInputModalOpen: true }));
       }
     } catch (error) {
-      _setAuthModalState(prev => ({ ...prev, emailInputModalError: error.message }));
+      _setAuthModalState(prev => ({ ...prev, emailEntered: false, emailInputModalError: error.message }));
     }
   };
 
@@ -49,13 +51,13 @@ export default function Login() {
                   id="email" name="email" type="text" placeholder="이메일 입력" value={_authModalState.form.email} 
                   onChange={(event) => onEmailInputBoxChange(event, _setAuthModalState)} disabled={_authModalState.otpEntered}/>
               </div>
-              <Drawer open={_authModalState.otpInputModalOpen} >
+              <Drawer open={_authModalState.otpInputModalOpen}>
                 <DrawerTrigger asChild>
                     <Button 
                         className="w-full h-9 mt-2" 
                         onClick={() => handleClickedEmailInputSubmitButton()}
-                        disabled={_authModalState.otpEntered}>
-                        {_authModalState.otpVerifyWaiting ? <><ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>OTP 확인중</> : "OTP 요청"}
+                        disabled={_authModalState.emailEntered}>
+                        {_authModalState.emailEntered ? <div className="flex items-center font-scor"><ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>.. 기다려 주세요 ..</div> : "OTP 요청"}
                     </Button>
                 </DrawerTrigger>
                 <OtpInput/>

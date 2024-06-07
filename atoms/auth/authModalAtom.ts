@@ -8,6 +8,8 @@ export const defaultAuthModalState: AuthModalStateType = {
   emailInputModalOpen: false,
   otpInputModalOpen: false,
 
+  emailEntered: false,
+
   otpRequestSent: false,
   otpInputWaiting: false,
 

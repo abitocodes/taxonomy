@@ -59,6 +59,9 @@ const AuthModal: FC<AuthModalProps> = () => {
       open={_authModalState.emailInputModalOpen}
       onOpenChange={(emailInputModalOpen) => {
         _setAuthModalState(prev => ({ ...prev, emailInputModalOpen: emailInputModalOpen }));
+        if (!emailInputModalOpen) {
+          _setAuthModalState(prev => ({ ...prev, emailEntered: false }));
+        }
       }}
     >
       <DialogContent className="w-4/5">

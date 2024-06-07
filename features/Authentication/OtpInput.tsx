@@ -21,8 +21,6 @@ import { useAuthState } from "@/hooks/useAuthState";
 export const OtpInput = () => {
     const [_authModalState, _setAuthModalState] = useRecoilState<AuthModalStateType>(authModalState);
     console.log("OtpInput Arg _authModalState: ", _authModalState);
-    const [session, setSession] = useState<Session | null>(null);
-    const { user, loading: authLoading, error: authError } = useAuthState(session);
 
     const handleOtpChange = (otp: string) => {
         _setAuthModalState(prev => ({
@@ -41,18 +39,21 @@ export const OtpInput = () => {
         _setAuthModalState(prev => ({ ...prev, otpRequestSent: true }));
     
         try {
-          const _response = await fetch('/api/verifyOtp?email=' + _authModalState.form.email + '&otp=' + _authModalState.form.otp);
-          const response = await _response.json();
-          const data = response.data
+            const _response = await fetch('/api/verifyOtp?email=' + _authModalState.form.email + '&otp=' + _authModalState.form.otp);
+            const response = await _response.json();
+            const data = response.data;
     
-          console.log("loginFormSubmit data: ", data);
-          _setAuthModalState(prev => ({ ...prev, otpRequestSent: false, otpInputModalOpen: false, otpInputWaiting: false}));
-          //   CreateUpdateUser(data.user as User);
-          setSession(data.session);
-          _setAuthModalState(prev => defaultAuthModalState);
-          console.log("login success authModalState: ", _authModalState);
+            if (response.statusCode !== 200) throw new Error(data.message);
+    
+            // Supabase 클라이언트 세션 설정
+            supabase.auth.setSession(data.session);
+    
+            console.log("loginFormSubmit data: ", data);
+            _setAuthModalState(prev => ({ ...prev, otpRequestSent: false, otpInputModalOpen: false, otpEntered: false}));
+            _setAuthModalState(prev => defaultAuthModalState);
+            console.log("login success authModalState: ", _authModalState);
         } catch (error) {
-          _setAuthModalState(prev => ({ ...prev, otpInputModalError: error.message, otpInputWaiting: false }));
+            _setAuthModalState(prev => ({ ...prev, otpInputModalError: error.message, otpEntered: false }));
         }
     };
 
