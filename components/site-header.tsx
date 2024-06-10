@@ -12,7 +12,7 @@ import { defaultMenuItem } from "@/atoms/directoryMenuAtom";
 
 export function SiteHeader() {
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const { onSelectMenuItem } = useDirectory();
 
   return (

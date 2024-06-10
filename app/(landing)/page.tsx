@@ -30,17 +30,16 @@ import { BulletinBoard } from "@/components/BulletinBoard";
 
 export default function Home(): ReactElement {
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
-  
+  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const { postStateValue, setPostsStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
   const channelStateValue = useRecoilValue(channelState);
 
   const getUserHomePosts = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/getUserHomePosts?userId=${user?.id}`);
+      const response = await fetch(`/api/getUserHomePosts?userId=${sessionUser?.id}`);
       const data = await response.json();
-      const posts = data.posts;
+      const posts = data.sortedPosts;
       setPostsStateValue((prev) => {
         const newState = {
           ...prev,
@@ -48,8 +47,9 @@ export default function Home(): ReactElement {
         };
         return newState;
       });
+      console.log("getUserHomePosts", posts);
     } catch (error: any) {
-      console.error("getNoUserHomePosts error", error.message);
+      console.error("getUserHomePosts error", error.message);
     } finally {
       setLoading(false);
     }
@@ -58,6 +58,7 @@ export default function Home(): ReactElement {
   const getNoUserHomePosts = async () => {
     setLoading(true);
     try {
+      console.log("what??")
       const response = await fetch('/api/getNoUserHomePosts');
       const data = await response.json();
       const posts = data.posts;
@@ -94,20 +95,21 @@ export default function Home(): ReactElement {
 
   useEffect(() => {
     if (!channelStateValue.initSnippetsFetched) return;
-
-    if (user) {
+    if (authLoadingState) return;
+    if (sessionUser) {
       getUserHomePosts();
     }
-  }, [user, channelStateValue.initSnippetsFetched]);
+  }, [sessionUser, channelStateValue.initSnippetsFetched]);
 
   useEffect(() => {
-    if (!user && !authLoading) {
+    if (authLoadingState) return;
+    if (!sessionUser) {
       getNoUserHomePosts();
     }
-  }, [user, authLoading]);
+  }, [sessionUser]);
 
   useEffect(() => {
-    if (!user?.id || !postStateValue?.posts.length) return;
+    if (!sessionUser?.id || !postStateValue?.posts.length) return;
     getUserPostVotes();
 
     return () => {
@@ -116,7 +118,7 @@ export default function Home(): ReactElement {
         postVotes: [], // 배열로 초기화
       }));
     };
-  }, [postStateValue?.posts, user?.id]);
+  }, [postStateValue?.posts, sessionUser?.id]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -141,7 +143,7 @@ export default function Home(): ReactElement {
                       onVote={onVote}
                       onDeletePost={onDeletePost}
                       isAlreadyVoted={postStateValue?.postVotes.find((item) => item.postId === post.id)?.voteValue}
-                      userState={user?.id === post.creatorId}
+                      sessionAndPublicUserState={sessionUser?.id === post.creatorId}
                       onSelectPost={onSelectPost}
                       homePage
                     />

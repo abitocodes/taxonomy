@@ -32,7 +32,7 @@ export async function GET(request: Request) {
       where: {
         channelId: { in: channelIds },
       },
-      orderBy: { voteStatus: 'desc' },
+      orderBy: { createdAt: 'desc' },
       include: {
         channel: true,
         labels: true,
@@ -45,10 +45,12 @@ export async function GET(request: Request) {
       take: 10
     });
 
+    const sortedPosts = posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+
     return Response.json({
       statusCode: 200,
       message: '200 OK',
-      posts: posts,
+      posts: sortedPosts,
     });
   } catch (error) {
     return Response.json({

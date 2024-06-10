@@ -54,8 +54,8 @@ import { Card, CardHeader, CardDescription, CardTitle } from "@/components/ui/ca
         <div className="font-scor uppercase p-4">
             <CardTitle>최근에 가입한 뉴비들</CardTitle>
         </div>
-      <Table className="font-cpmo">
-        <TableCaption className="font-scor text-xs">저출산 시대, 뉴비가 왕이다!</TableCaption>
+      <Table className="font-scor">
+        <TableCaption className="text-xs">저출산 시대, 뉴비가 왕이다!</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[60px]"></TableHead>

@@ -31,7 +31,6 @@ model Channel {
   createdAt       DateTime          @default(now())
   imageURL        String?
   channelsSnippets  ChannelSnippet[]
-  PostVote        PostVote[]
   posts           Post[]
 
   @@map(name: "channels")
@@ -67,8 +66,7 @@ model PostVote {
   postId       String
   voteValue    Int
   userId       String
-  channelId      String
-  channels       Channel        @relation(fields: [channelId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt    DateTime     @default(now())
   posts        Post         @relation(fields: [postId], references: [id])
   publicUsers  PublicUser   @relation(fields: [userId], references: [id])
 
@@ -105,7 +103,7 @@ model PublicUser {
   handler                   String            @unique
   email                     String?           @unique
   emailVerified             DateTime?
-  image                     String?
+  profileImageUrl           String?
   createdAt                 DateTime          @default(now())
   editedAt                  DateTime          @default(now())
   stripeCustomerId          String?           @unique

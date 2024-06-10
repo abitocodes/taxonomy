@@ -13,6 +13,7 @@ interface RightContentProps {
 }
 
 export const RightContent: FC<RightContentProps> = ({ user }) => {
+  
   return (
     <>
       <AuthModal />

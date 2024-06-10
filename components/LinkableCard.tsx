@@ -17,18 +17,18 @@ import {
 import { Button } from './ui/button';
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { userState } from '@/atoms/userAtom';
-import { User } from '@supabase/supabase-js';
+import { SessionAndPublicUserStateType } from '@/types/atoms/SessionAndPublicUserStateType';
+import { sessionAndPublicUserState } from '@/atoms/sessionAndUserAtom';
 
 interface LinkableCardProps {
   post: PostWith;
   postIdx?: number;
-  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, user: User | null) => void;
+  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, sessionAndPublicUser: SessionAndPublicUserStateType | null) => void;
   onSelectPost?: (value: Post, postIdx: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   router?: AppRouterInstance;
   isAlreadyVoted?: number;
-  userState?: boolean;
+  sessionAndPublicUserState?: boolean;
   homePage?: boolean;
   cursorPointer?: boolean; // 추가된 prop
 }
@@ -41,15 +41,13 @@ export function LinkableCard({
   onDeletePost,
   router,
   isAlreadyVoted,
-  userState: userStateProp,
   homePage,
   cursorPointer = true, // 기본값은 true로 설정
   ...props
 }: LinkableCardProps) {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const singlePostView = !onSelectPost;
-  const userAndSession = useRecoilValue(userState);
+  const _sessionAndPublicUserState = useRecoilValue(sessionAndPublicUserState);
 
   const handleDelete = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -95,10 +93,10 @@ export function LinkableCard({
           </div>
           </div>
           {post.labels.length ? (
-          <div className="flex items-center gap-2 text-xs">
+          <div className="flex items-center gap-2 text-xs font-scor uppercase">
             <div>
             <Badge>
-            s/{post.channel.name}
+            {post.channel.name}
               </Badge>
             </div>
             {post.labels.map((label) => (
@@ -114,20 +112,20 @@ export function LinkableCard({
         </div>
 
         </div>
-        <div className={`flex flex-col items-center space-y-4 bg-${singlePostView ? "transparent" : "gray-100"} w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
+        <div className={`flex flex-col items-center space-y-4`}>
           <div className="flex flex-col items-center">
           {isAlreadyVoted !== 1 ? (
             <Button 
               variant="ghost"
               size="icon"
-              onClick={(event) => onVote(event, post, userAndSession.currentSessionData)}>
+              onClick={(event) => onVote(event, post, _sessionAndPublicUserState)}>
             <IoIosHeartEmpty className="h-4 w-4 "/>
             </Button>
           ) : (
             <Button 
               variant="ghost"
               size="icon"
-              onClick={(event) => onVote(event, post, userAndSession.currentSessionData)}>
+              onClick={(event) => onVote(event, post, _sessionAndPublicUserState)}>
             <IoMdHeart className="h-4 w-4"/>
           </Button>
           )}

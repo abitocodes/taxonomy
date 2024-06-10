@@ -13,7 +13,7 @@ import { Session } from '@supabase/supabase-js';
 // const useChannelData = (ssrChannelData?: boolean) => {
 const useChannelData = () => {
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const pathname = usePathname();
   const [channelStateValue, setChannelStateValue] = useRecoilState(channelState);
   const setAuthModalState = useSetRecoilState(authModalState);
@@ -37,15 +37,15 @@ const useChannelData = () => {
   }, [pathname]);
 
   useEffect(() => {
-    if (!user || !!channelStateValue.mySnippets.length) return;
+    if (!sessionUser || !!channelStateValue.mySnippets.length) return;
     getSnippets();
-  }, [user]);
+  }, [sessionUser]);
 
   const getSnippets = async () => {
     setLoading(true);
     try {
-      if (!user?.id) throw new Error("User ID is undefined");
-      const snippets = await getMySnippets(user.id);
+      if (!sessionUser?.id) throw new Error("User ID is undefined");
+      const snippets = await getMySnippets(sessionUser.id);
       setChannelStateValue((prev) => ({
         ...prev,
         mySnippets: snippets as ChannelSnippet[],
@@ -77,8 +77,11 @@ const useChannelData = () => {
   };
 
   const onJoinLeaveChannel = (channel: Channel, isJoined?: boolean) => {
-    if (!user) {
-      setAuthModalState({ open: true, view: "login" });
+    if (!sessionUser) {
+      setAuthModalState((prev) => ({
+        ...prev,
+        emailInputModalOpen: true,
+      }));
       return;
     }
 
@@ -95,7 +98,7 @@ const useChannelData = () => {
       // Insert new channel snippet for the user
       const newSnippet = await prisma.channelSnippet.create({
         data: {
-          userId: user?.id,  // 'uid'를 'id'로 변경
+          userId: sessionUser?.id,  // 'uid'를 'id'로 변경
           channelId: channel.id,
           imageURL: channel.imageURL || "",
         }
@@ -128,7 +131,7 @@ const useChannelData = () => {
     try {  
       await prisma.$transaction(async (prisma) => {
         await prisma.channelSnippet.deleteMany({
-          where: { channelId: channelId, userId: user?.id },
+          where: { channelId: channelId, userId: sessionUser?.id },
         });
   
         await prisma.channel.update({

@@ -9,6 +9,8 @@ import { Post } from "@prisma/client";
 import PostItem from "./PostItem";
 import { RecoilRoot } from "recoil";
 import { PostWith } from "@/types/posts";
+import { useRecoilState } from "recoil";
+import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
 
 type PostsProps = {
   channelData?: Channel;
@@ -17,9 +19,9 @@ type PostsProps = {
 };
 
 const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
+  const _sessionAndPublicUserState = useRecoilState(sessionAndPublicUserState);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
   const { postStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(channelData!);
 
   const onSelectPost = (post: PostWith, postIdx: number) => {
@@ -82,7 +84,7 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
             <PostItem
               key={post.id}
               post={post}
-              onVote={onVote}
+              onVote={onVote} // 'vote'는 적절한 숫자 값으로 설정해야 합니다.
               onDeletePost={onDeletePost}
               userVoteValue={postStateValue.postVotes.find((item) => item.postId === post.id)?.voteValue}
               userIsCreator={userId === post.creatorId}

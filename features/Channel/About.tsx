@@ -24,7 +24,7 @@ type AboutProps = {
 
 const About: FC<AboutProps> = ({ channelData, pt, onCreatePage, loading }) => {
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const searchParam = useSearchParams()
   const selectFileRef = useRef<HTMLInputElement>(null);
   const setChannelStateValue = useSetRecoilState(channelState);
@@ -110,7 +110,7 @@ const About: FC<AboutProps> = ({ channelData, pt, onCreatePage, loading }) => {
           </div>
         ) : (
           <>
-            {user?.id === channelData?.creatorId && (
+            {sessionUser?.id === channelData?.creatorId && (
               <div className="bg-gray-100 w-full p-2 rounded border border-gray-300 cursor-pointer">
                 <p className="text-xs font-bold text-blue-500">
                   Add description
@@ -140,7 +140,7 @@ const About: FC<AboutProps> = ({ channelData, pt, onCreatePage, loading }) => {
                   </Button>
                 </Link>
               )}
-              {user?.id === channelData?.creatorId && (
+              {sessionUser?.id === channelData?.creatorId && (
                 <>
                   <hr />
                   <div className="text-sm space-y-1">

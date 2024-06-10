@@ -29,7 +29,7 @@ export function MainNav({ items, children }: MainNavProps) {
   const segment = useSelectedLayoutSegment();
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const { onSelectMenuItem } = useDirectory();
 
   const url = usePathname();
@@ -78,7 +78,7 @@ export function MainNav({ items, children }: MainNavProps) {
       </div>
       <div className="flex items-center">
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          {!isHidden && <RightContent user={user} />}
+          {!isHidden && <RightContent user={sessionUser} />}
         </div>
       </div>
     </div>

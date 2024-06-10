@@ -5,7 +5,7 @@ import { useAuthState } from "@/hooks/useAuthState";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { authModalState } from "@/atoms/auth/authModalAtom";
 
-import { userState } from "@/atoms/userAtom";
+import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/utils/supabase/client";
 import AuthInputs from "./Inputs";
@@ -28,7 +28,7 @@ const AuthModal: FC<AuthModalProps> = () => {
     _setAuthModalState(prev => ({ ...prev, open: false }));
   };
 
-  const currentUser = useRecoilValue(userState);
+  const currentUser = useRecoilValue(sessionAndPublicUserState);
   const authState = useAuthState(session);
   const user = authState.user
   const error = authState.error;

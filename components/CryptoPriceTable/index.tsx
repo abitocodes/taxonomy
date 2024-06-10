@@ -55,7 +55,7 @@ import { Card, CardTitle } from "@/components/ui/card"
           <CardTitle>DSC 애셋 FP 모음</CardTitle>
         </div>
       <Table className="font-cpmo">
-        <TableCaption>DSC 디지털 금은보화 현황</TableCaption>
+        <TableCaption>DSC 금은보화 현황</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className="w-[60px]"></TableHead>

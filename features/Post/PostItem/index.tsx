@@ -14,15 +14,18 @@ import { Post, Label, PublicUser } from "@prisma/client";
 import { PostWith } from "@/types/posts";
 import { Container } from "@radix-ui/themes";
 import { CardContent } from "@/components/ui/card";
+import { SessionAndPublicUserStateType } from "@/types/atoms/SessionAndPublicUserStateType";
+import { useRecoilState } from "recoil";
+import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
 
 type PostItemContentProps = {
   post: PostWith;
-  onVote: (event: React.MouseEvent<SVGElement, MouseEvent>, post: Post, vote: number, channelId: string, postIdx?: number) => void;
+  postIdx?: number;
+  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, sessionAndPublicUser: SessionAndPublicUserStateType | null) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   userIsCreator: boolean;
   onSelectPost?: (value: Post, postIdx: number) => void;
   router?: AppRouterInstance;
-  postIdx?: number;
   userVoteValue?: number;
   homePage?: boolean;
 };
@@ -31,6 +34,7 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const singlePostView = !onSelectPost;
+  const [_sessionAndPublicUser, setSessionAndPublicUser] = useRecoilState(sessionAndPublicUserState);
 
   const handleDelete = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -55,12 +59,12 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
 
         <div className={`flex flex-col items-center bg-${singlePostView ? "transparent" : "gray-100"} p-2 w-10 ${singlePostView ? "" : "rounded-l-md"}`}>
           <TbArrowBigUp className={`text-${userVoteValue === 1 ? "primary" : "muted"} text-xl cursor-pointer`}
-                        onClick={(event) => onVote(event, post, 1, post.channelId)} />
+                        onClick={(event) => onVote(event, post, _sessionAndPublicUser)} />
           <span className="text-sm font-bold">
             {post.voteStatus}
           </span>
           <TbArrowBigDown className={`text-${userVoteValue === -1 ? "secondary" : "muted"} text-xl cursor-pointer`}
-                          onClick={(event) => onVote(event, post, -1, post.channelId)} />
+                          onClick={(event) => onVote(event, post, _sessionAndPublicUser)} />
         </div>
         <div className="flex w-full flex-col gap-1">
           <div className="flex items-center">

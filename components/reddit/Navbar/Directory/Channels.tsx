@@ -12,12 +12,12 @@ import { Session } from '@supabase/supabase-js';
 
 const Channels: FC = () => {
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const mySnippets = useRecoilValue(channelState).mySnippets;
 
   return (
     <>
-      <CreateChannelModal userId={user?.id!} />
+      <CreateChannelModal userId={sessionUser?.id!} />
       <Moderating snippets={mySnippets.filter((item) => item.isModerator)} />
       <MyChannels snippets={mySnippets} />
     </>

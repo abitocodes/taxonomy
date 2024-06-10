@@ -12,7 +12,7 @@ import { CommandMenu } from "@/components/command-menu";
 
 const Navbar: FC = () => {
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const { onSelectMenuItem } = useDirectory();
   
   return (
@@ -21,7 +21,7 @@ const Navbar: FC = () => {
       </div>
       <Directory />
       <CommandMenu/>
-      <RightContent user={user} />
+      <RightContent user={sessionUser} />
     </div>
   );
 };

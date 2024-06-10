@@ -25,9 +25,10 @@ export async function GET(request: Request) {
         });
 
     } catch (error) {
+        console.log("getPublicUser!!!, error: ", error)
         return Response.json({
             statusCode: 500,
-            message: 'An error occurred while retrieving posts'
+            message: 'An error occurred while retrieving public user data'
         });
     }
 }

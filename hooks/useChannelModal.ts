@@ -8,7 +8,7 @@ import { Session } from '@supabase/supabase-js';
 
 const useChannelModal = () => {
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const setAuthModalState = useSetRecoilState(authModalState);
   const setChannelModalState = useSetRecoilState(channelModalState);
 

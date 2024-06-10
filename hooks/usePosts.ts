@@ -13,14 +13,14 @@ import { Channel } from "@/types/channelsState";
 import { Post, PostVote } from "@prisma/client";
 import { PostWith } from "@/types/posts";
 import { Session } from '@supabase/supabase-js';
-import { userAndSessionState } from "@/atoms/userAtom";
+import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
+import { SessionAndPublicUserStateType } from "@/types/atoms/SessionAndPublicUserStateType";
 
 export default function usePosts (channelData?: Channel) {
   const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: authLoading, error: authError } = useAuthState(session);
+  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const [postStateValue, setPostsStateValue] = useRecoilState(postState);
-  const userAndSessionStateValue = useRecoilValue(userAndSessionState);
-
+  const sessionAndPublicUserStateValue = useRecoilValue(sessionAndPublicUserState);
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -40,13 +40,13 @@ export default function usePosts (channelData?: Channel) {
   const onVote = async (
     event: React.MouseEvent<SVGElement, MouseEvent>,
     post: PostWith,
-    channelId: string
+    sessionAndPublicUser: SessionAndPublicUserStateType | null
   ) => {
     console.log("onVote usePosts Called.")
     event.stopPropagation();
 
     console.log("A")
-    if (!user?.id) {
+    if (!sessionUser?.id) {
       setAuthModalState((prev) => ({ ...prev, emailInputModalOpen: true }));
       return;
     }
@@ -57,9 +57,8 @@ export default function usePosts (channelData?: Channel) {
     try {
       console.log("C")
       console.log("postId: ", post.id)
-      console.log("userId: ", user.id)
-      console.log("channelId: ", channelId)
-      const response = await fetch(`/api/vote?postId=${post.id}&userId=${user.id}&channelId=${channelId}`)
+      console.log("userId: ", sessionUser?.id)
+      const response = await fetch(`/api/vote?postId=${post.id}&userId=${sessionUser?.id}`)
       console.log("response: ", response)
       const data = await response.json();
       console.log("data: ", data)
@@ -93,7 +92,6 @@ export default function usePosts (channelData?: Channel) {
           postVotes: updatedPostVotes,
           postsCache: {
             ...postStateValue.postsCache,
-            [channelId]: updatedPosts,
           },
           selectedPost: updatedPost
         };
@@ -116,7 +114,6 @@ export default function usePosts (channelData?: Channel) {
           postVotes: updatedPostVotes,
           postsCache: {
             ...postStateValue.postsCache,
-            [channelId]: updatedPosts,
           },
           selectedPost: null
         };
@@ -178,18 +175,18 @@ const getChannelPostVotes = async (channelId: string) => {
 };
 
 useEffect(() => {
-  if (!user?.id || !channelStateValue.currentChannel) return;
+  if (!sessionUser?.id || !channelStateValue.currentChannel) return;
   getChannelPostVotes(channelStateValue.currentChannel.id);
-}, [user, channelStateValue.currentChannel]);
+}, [sessionUser, channelStateValue.currentChannel]);
 
 useEffect(() => {
-  if (!user?.id) {
+  if (!sessionUser?.id) {
     setPostsStateValue((prev) => ({
       ...prev,
       postVotes: [],
     }));
   }
-}, [user]);
+}, [sessionUser]);
 
 return {
   postStateValue,
