@@ -30,7 +30,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pi
   const { user, loadingUser } = useUser();
   const { channel, pid } = params
   const { channelStateValue } = useChannelData();
-  const { postStateValue, setPostsStateValue, onSelectPost, onDeletePost, loading, setLoading, onVote } = usePosts(channelStateValue.currentChannel);
+  const { postsStateValue, setPostsStateValue, onSelectPost, onDeletePost, loading, setLoading, onVote } = usePosts(channelStateValue.currentChannel);
 
   const fetchPost = async () => {
     
@@ -64,7 +64,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pi
     };
   
     fetchSessionAndPost();
-  }, [params, postStateValue.posts]);
+  }, [params, postsStateValue.posts]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -78,19 +78,19 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pi
             <PostLoader skeletonCount={1} />
           ) : (
             <>
-              {postStateValue.selectedPost && (
+              {postsStateValue.selectedPost && (
                 <>
                       <LinkableCard
-                        post={postStateValue.selectedPost}
+                        post={postsStateValue.selectedPost}
                         onVote={onVote}
                         onDeletePost={onDeletePost}
-                        userVoteValue={postStateValue.postVotes.find((item) => item.postId === postStateValue.selectedPost!.id)?.voteValue}
-                        userIsCreator={user?.id === postStateValue.selectedPost?.creatorId}
+                        userVoteValue={postsStateValue.postVotes.find((item) => item.postId === postsStateValue.selectedPost!.id)?.voteValue}
+                        userIsCreator={user?.id === postsStateValue.selectedPost?.creatorId}
                         onSelectPost={onSelectPost}
                         homePage
                         cursorPointer={false}
                         />
-                        <Comments user={user} channel={channel as string} selectedPost={postStateValue.selectedPost} />
+                        <Comments user={user} channel={channel as string} selectedPost={postsStateValue.selectedPost} />
                       </>
                     )}
                   </>

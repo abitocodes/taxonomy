@@ -1,45 +1,35 @@
 "use client"
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { channelState } from "@/atoms/channelsAtom";
-import PageContentLayout from "@/components/reddit/Layout/PageContent";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
-import CreatePostLink from "@/features/Channel/CreatePostLink";
-import PersonalHome from "@/features/Channel/PersonalHome";
-import Premium from "@/features/Channel/Premium";
-import Recommendations from "@/features/Channel/Recommendations";
-import PostItem from "@/features/Post/PostItem";
-import SimplePostItem from "@/features/Post/SimplePostItem";
 import usePosts from "@/hooks/usePosts";
 import { PostVote } from "@prisma/client";
-import { useUser } from "@/hooks/useUser";
 import { ReactElement } from "react";
-import { AppProps } from 'next/app';
-import { Session } from '@supabase/supabase-js';
-import { useAuthState } from "@/hooks/useAuthState";
-import { Container } from "@radix-ui/themes";
 import { PostWith } from "@/types/posts";
 import { LinkableCard } from "@/components/LinkableCard";
-import { DocsSidebarNav } from "@/components/sidebar-nav";
-import { docsConfig } from "@/config/docs";
-import { CryptoPriceTable } from "@/components/CryptoPriceTable";
-import { WelcomeNewbies } from "@/components/WelcomeNewbies";
 import { BulletinBoard } from "@/components/BulletinBoard";
 
-
 export default function Home(): ReactElement {
-  const [session, setSession] = useState<Session | null>(null);
-  const { sessionUser, authLoadingState, authError } = useAuthState(session);
-  const { postStateValue, setPostsStateValue, onVote, onSelectPost, onDeletePost, loading, setLoading } = usePosts();
-  const channelStateValue = useRecoilValue(channelState);
-
+  const { sessionUser,
+          authLoadingState,
+          authError,
+          postsStateValue,
+          setPostsStateValue,
+          postsLoading,
+          setPostsLoading,
+          onSelectPost,
+          onDeletePost,
+          onVote } = usePosts();
+          
   const getUserHomePosts = async () => {
-    setLoading(true);
+    setPostsLoading(true);
     try {
       const response = await fetch(`/api/getUserHomePosts?userId=${sessionUser?.id}`);
       const data = await response.json();
-      const posts = data.sortedPosts;
+
+      console.log("datataasdfa: ", data)
+      const posts = data.posts;
+      console.log("posts posts: ", posts)
       setPostsStateValue((prev) => {
         const newState = {
           ...prev,
@@ -47,18 +37,19 @@ export default function Home(): ReactElement {
         };
         return newState;
       });
-      console.log("getUserHomePosts", posts);
+      console.log("getUserHomePosts postsStateValue:", postsStateValue);
     } catch (error: any) {
       console.error("getUserHomePosts error", error.message);
     } finally {
-      setLoading(false);
+      setPostsLoading(false);
     }
   };
 
   const getNoUserHomePosts = async () => {
-    setLoading(true);
+    console.log("getNoUserHomePosts Called.")
+    console.log("getNoUserHomePosts User: ", sessionUser)
+    setPostsLoading(true);
     try {
-      console.log("what??")
       const response = await fetch('/api/getNoUserHomePosts');
       const data = await response.json();
       const posts = data.posts;
@@ -71,15 +62,15 @@ export default function Home(): ReactElement {
       });
     } catch (error: any) {
     } finally {
-      setLoading(false);
+      setPostsLoading(false);
     }
   };
 
   const getUserPostVotes = async () => {
-    if (!postStateValue) {
+    if (!postsStateValue) {
       return;
     }
-    const postIds = postStateValue.posts.map((post) => post.id);
+    const postIds = postsStateValue.posts.map((post) => post.id);
     try {
       const response = await fetch(`/api/getUserPostVotes?postIds=${postIds}`);
       const data = await response.json();
@@ -94,31 +85,25 @@ export default function Home(): ReactElement {
   };
 
   useEffect(() => {
-    if (!channelStateValue.initSnippetsFetched) return;
     if (authLoadingState) return;
     if (sessionUser) {
       getUserHomePosts();
-    }
-  }, [sessionUser, channelStateValue.initSnippetsFetched]);
-
-  useEffect(() => {
-    if (authLoadingState) return;
-    if (!sessionUser) {
+    } else {
       getNoUserHomePosts();
     }
-  }, [sessionUser]);
+  }, [sessionUser, authLoadingState]);
 
   useEffect(() => {
-    if (!sessionUser?.id || !postStateValue?.posts.length) return;
+    if (!sessionUser?.id || !postsStateValue.posts ) return;
     getUserPostVotes();
-
+  
     return () => {
       setPostsStateValue((prev) => ({
         ...prev,
         postVotes: [], // 배열로 초기화
       }));
     };
-  }, [postStateValue?.posts, sessionUser?.id]);
+  }, [postsStateValue?.posts, sessionUser?.id]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -128,13 +113,13 @@ export default function Home(): ReactElement {
         <div className="mx-auto w-full min-w-0">
           <div className="container mx-auto">
             {/* <CreatePostLink /> */}
-            {loading ? (
+            {postsLoading ? (
               <div>
                 <PostLoader />
               </div>
             ) : (
               <div className="space-y-6">
-                {(postStateValue?.posts || []).map((post: PostWith, index: number) => {
+                {(postsStateValue?.posts || []).map((post: PostWith, index: number) => {
                   return (
                     <LinkableCard
                       key={index}
@@ -142,7 +127,7 @@ export default function Home(): ReactElement {
                       postIdx={index}
                       onVote={onVote}
                       onDeletePost={onDeletePost}
-                      isAlreadyVoted={postStateValue?.postVotes.find((item) => item.postId === post.id)?.voteValue}
+                      isAlreadyVoted={postsStateValue?.postVotes.find((item) => item.postId === post.id)?.voteValue}
                       sessionAndPublicUserState={sessionUser?.id === post.creatorId}
                       onSelectPost={onSelectPost}
                       homePage

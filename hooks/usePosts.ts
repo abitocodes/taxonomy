@@ -19,10 +19,10 @@ import { SessionAndPublicUserStateType } from "@/types/atoms/SessionAndPublicUse
 export default function usePosts (channelData?: Channel) {
   const [session, setSession] = useState<Session | null>(null);
   const { sessionUser, authLoadingState, authError } = useAuthState(session);
-  const [postStateValue, setPostsStateValue] = useRecoilState(postState);
+  const [postsStateValue, setPostsStateValue] = useRecoilState(postState);
   const sessionAndPublicUserStateValue = useRecoilValue(sessionAndPublicUserState);
   
-  const [loading, setLoading] = useState(false);
+  const [postsLoading, setPostsLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -52,7 +52,7 @@ export default function usePosts (channelData?: Channel) {
     }
   
     console.log("B")
-    const existingVote = postStateValue.postVotes.find((v) => v.postId === post.id);
+    const existingVote = postsStateValue.postVotes.find((v) => v.postId === post.id);
   
     try {
       console.log("C")
@@ -72,11 +72,11 @@ export default function usePosts (channelData?: Channel) {
       if (voteResult) {
         const voteChange = voteResult.voteValue - (existingVote ? existingVote.voteValue : 0);
         const updatedPost = { ...post, voteStatus: (post.voteStatus || 0) + voteChange };
-        const updatedPosts = [...postStateValue.posts];
+        const updatedPosts = [...postsStateValue.posts];
         const postIdx = updatedPosts.findIndex((item) => item.id === post.id);
         updatedPosts[postIdx] = updatedPost;
   
-        let updatedPostVotes = [...postStateValue.postVotes];
+        let updatedPostVotes = [...postsStateValue.postVotes];
         if (!existingVote) {
           updatedPostVotes.push(voteResult);
         } else {
@@ -87,11 +87,11 @@ export default function usePosts (channelData?: Channel) {
         }
   
         const updatedState = {
-          ...postStateValue,
+          ...postsStateValue,
           posts: updatedPosts,
           postVotes: updatedPostVotes,
           postsCache: {
-            ...postStateValue.postsCache,
+            ...postsStateValue.postsCache,
           },
           selectedPost: updatedPost
         };
@@ -99,21 +99,21 @@ export default function usePosts (channelData?: Channel) {
         setPostsStateValue(updatedState);
       } else {
         // 투표가 삭제된 경우
-        const updatedPosts = postStateValue.posts.map(p => {
+        const updatedPosts = postsStateValue.posts.map(p => {
           if (p.id === post.id) {
             return { ...p, voteStatus: (p.voteStatus || 0) - (existingVote ? existingVote.voteValue : 0) };
           }
           return p;
         });
   
-        const updatedPostVotes = postStateValue.postVotes.filter(v => v.postId !== post.id);
+        const updatedPostVotes = postsStateValue.postVotes.filter(v => v.postId !== post.id);
   
         const updatedState = {
-          ...postStateValue,
+          ...postsStateValue,
           posts: updatedPosts,
           postVotes: updatedPostVotes,
           postsCache: {
-            ...postStateValue.postsCache,
+            ...postsStateValue.postsCache,
           },
           selectedPost: null
         };
@@ -189,12 +189,15 @@ useEffect(() => {
 }, [sessionUser]);
 
 return {
-  postStateValue,
+  sessionUser,
+  authLoadingState,
+  authError,
+  postsStateValue,
   setPostsStateValue,
+  postsLoading,
+  setPostsLoading,
   onSelectPost,
   onDeletePost,
-  loading,
-  setLoading,
   onVote,
   error,
 };

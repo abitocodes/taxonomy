@@ -22,7 +22,7 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   const _sessionAndPublicUserState = useRecoilState(sessionAndPublicUserState);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { postStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(channelData!);
+  const { postsStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(channelData!);
 
   const onSelectPost = (post: PostWith, postIdx: number) => {
     setPostsStateValue((prev) => ({
@@ -33,16 +33,16 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   };
 
   useEffect(() => {
-    if (postStateValue.postsCache[channelData?.id!] && !postStateValue.postUpdateRequired) {
+    if (postsStateValue.postsCache[channelData?.id!] && !postsStateValue.postUpdateRequired) {
       setPostsStateValue((prev) => ({
         ...prev,
-        posts: postStateValue.postsCache[channelData?.id!],
+        posts: postsStateValue.postsCache[channelData?.id!],
       }));
       return;
     }
 
     getPosts();
-  }, [channelData, postStateValue.postUpdateRequired]);
+  }, [channelData, postsStateValue.postUpdateRequired]);
 
   const getPosts = async () => {
     setLoading(true);
@@ -80,13 +80,13 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
         <PostLoader />
       ) : (
         <div className="flex flex-col">
-          {postStateValue.posts.map((post: PostWith, index) => (
+          {postsStateValue.posts.map((post: PostWith, index) => (
             <PostItem
               key={post.id}
               post={post}
               onVote={onVote} // 'vote'는 적절한 숫자 값으로 설정해야 합니다.
               onDeletePost={onDeletePost}
-              userVoteValue={postStateValue.postVotes.find((item) => item.postId === post.id)?.voteValue}
+              userVoteValue={postsStateValue.postVotes.find((item) => item.postId === post.id)?.voteValue}
               userIsCreator={userId === post.creatorId}
               onSelectPost={onSelectPost}
             />

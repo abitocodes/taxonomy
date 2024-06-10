@@ -11,7 +11,7 @@ datasource db {
 model Comment {
   id              String       @id
   creatorId       String
-  channelId         String
+  channelId       String
   postId          String
   text            String
   createdAt       DateTime     @default(now())
@@ -22,28 +22,27 @@ model Comment {
 }
 
 model Channel {
-  id              String            @id
-  name            String            @unique
-  description     String?
-  creatorId       String
-  numberOfMembers Int
-  privacyType     String            @default("public")
-  createdAt       DateTime          @default(now())
-  imageURL        String?
+  id                String            @id
+  name              String            @unique
+  description       String?
+  creatorId         String
+  numberOfMembers   Int
+  privacyType       String            @default("public")
+  createdAt         DateTime          @default(now())
+  imageURL          String?
   channelsSnippets  ChannelSnippet[]
-  posts           Post[]
+  posts             Post[]
 
   @@map(name: "channels")
 }
 
 model ChannelSnippet {
-  id           Int             @id @default(autoincrement())
-  channelId      String 
+  id           Int                  @id @default(autoincrement())
+  channelId    String 
   userId       String?
-  isModerator  Boolean?        @default(false)
-  imageURL     String?
-  channels       Channel           @relation(fields: [channelId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  publicUsers  PublicUser?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  isModerator  Boolean?             @default(false)
+  channels     Channel              @relation(fields: [channelId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  publicUsers  PublicUser?          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map(name: "channels_snippets")
 }
@@ -74,25 +73,25 @@ model PostVote {
 }
 
 model Post {
-  id                String       @id
-  title             String
+  id                  String       @id
+  title               String
   channelId           String
-  createdAt         DateTime     @default(now())
-  creatorId         String
-  editedAt          DateTime     @default(now())
-  link              String?
-  mediaType         String?
-  mediaURL          String?
-  numberOfComments  Int          @default(0)
-  postIdx           Int?
-  voteStatus        Int?
-  coverImageUrl     String?
-  description       String
-  channel             Channel        @relation(fields: [channelId], references: [id])
-  comments          Comment[]
-  postVotes         PostVote[]
-  publicUsers       PublicUser   @relation(fields: [creatorId], references: [id])
-  labels            Label[]
+  createdAt           DateTime     @default(now())
+  creatorId           String
+  editedAt            DateTime     @default(now())
+  link                String?
+  mediaType           String?
+  mediaURL            String?
+  numberOfComments    Int          @default(0)
+  postIdx             Int?
+  voteStatus          Int?
+  coverImageUrl       String?
+  description         String
+  channel             Channel      @relation(fields: [channelId], references: [id])
+  comments            Comment[]
+  postVotes           PostVote[]
+  publicUsers         PublicUser   @relation(fields: [creatorId], references: [id])
+  labels              Label[]
 
   @@map(name: "posts")
 }
@@ -111,7 +110,7 @@ model PublicUser {
   stripePriceId             String?
   stripeCurrentPeriodEnd    DateTime?
   comments                  Comment[]
-  channelsSnippets            ChannelSnippet[]
+  channelsSnippets          ChannelSnippet[]
   postVotes                 PostVote[]
   posts                     Post[]
 
