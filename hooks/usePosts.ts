@@ -21,6 +21,8 @@ export default function usePosts (channelData?: Channel) {
   const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const [postsStateValue, setPostsStateValue] = useRecoilState(postState);
   const sessionAndPublicUserStateValue = useRecoilValue(sessionAndPublicUserState);
+
+  console.log(`usePosts::authLoadingState1 ${authLoadingState}`)
   
   const [postsLoading, setPostsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -28,6 +30,10 @@ export default function usePosts (channelData?: Channel) {
 
   const setAuthModalState = useSetRecoilState(authModalState);
   const channelStateValue = useRecoilValue(channelState);
+
+  useEffect(() => {
+    console.log(`usePosts::authLoadingState2 ${authLoadingState}`)
+  }, [authLoadingState])
 
   const onSelectPost = (post: PostWith, postIdx: number) => {
     setPostsStateValue((prev) => ({
@@ -42,22 +48,16 @@ export default function usePosts (channelData?: Channel) {
     post: PostWith,
     sessionAndPublicUser: SessionAndPublicUserStateType | null
   ) => {
-    console.log("onVote usePosts Called.")
     event.stopPropagation();
 
-    console.log("A")
     if (!sessionUser?.id) {
       setAuthModalState((prev) => ({ ...prev, emailInputModalOpen: true }));
       return;
     }
   
-    console.log("B")
     const existingVote = postsStateValue.postVotes.find((v) => v.postId === post.id);
   
     try {
-      console.log("C")
-      console.log("postId: ", post.id)
-      console.log("userId: ", sessionUser?.id)
       const response = await fetch(`/api/vote?postId=${post.id}&userId=${sessionUser?.id}`)
       console.log("response: ", response)
       const data = await response.json();
@@ -187,6 +187,10 @@ useEffect(() => {
     }));
   }
 }, [sessionUser]);
+
+console.log(`usePost authLoadingState ${authLoadingState}`)
+console.log(`usePost postsLoading ${postsLoading}`)
+console.log(authLoadingState)
 
 return {
   sessionUser,

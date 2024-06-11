@@ -3,9 +3,7 @@ import { prisma } from "@/prisma/client";
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
-    console.log("url: ", url)
     const userId = url.searchParams.get('userId');
-    console.log("userId: ", userId)
 
     const userChannels = await prisma.channelSnippet.findMany({
       where: { userId: userId },
@@ -17,10 +15,8 @@ export async function GET(request: Request) {
         }
       }
     });
+    console.log("userChannels: ", userChannels)
 
-    console.log("BBB")
-
-    console.log("User Home Posts User Channels: ", userChannels)
 
     if (!userChannels) {
       return Response.json({
@@ -32,8 +28,6 @@ export async function GET(request: Request) {
     const channelIds = userChannels.flatMap(userChannel => 
       Array.isArray(userChannel.channels) ? userChannel.channels.map(channel => channel.id) : [userChannel.channels.id]
     );
-
-    console.log("channelIds: ", channelIds)
 
     // 해당 장르에 속하는 게시물 검색
     const posts = await prisma.post.findMany({
@@ -52,8 +46,6 @@ export async function GET(request: Request) {
       },
       take: 10
     });
-
-    console.log("posts: ", posts)
 
     const sortedPosts = posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 

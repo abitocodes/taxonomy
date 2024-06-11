@@ -20,16 +20,16 @@ export default function Home(): ReactElement {
           onSelectPost,
           onDeletePost,
           onVote } = usePosts();
+
           
   const getUserHomePosts = async () => {
+    console.log("getUserHomePosts Called.")
     setPostsLoading(true);
     try {
       const response = await fetch(`/api/getUserHomePosts?userId=${sessionUser?.id}`);
       const data = await response.json();
 
-      console.log("datataasdfa: ", data)
       const posts = data.posts;
-      console.log("posts posts: ", posts)
       setPostsStateValue((prev) => {
         const newState = {
           ...prev,
@@ -47,7 +47,6 @@ export default function Home(): ReactElement {
 
   const getNoUserHomePosts = async () => {
     console.log("getNoUserHomePosts Called.")
-    console.log("getNoUserHomePosts User: ", sessionUser)
     setPostsLoading(true);
     try {
       const response = await fetch('/api/getNoUserHomePosts');
@@ -71,6 +70,7 @@ export default function Home(): ReactElement {
       return;
     }
     const postIds = postsStateValue.posts.map((post) => post.id);
+    console.log("getUserPostVotes postIds: ", postIds)
     try {
       const response = await fetch(`/api/getUserPostVotes?postIds=${postIds}`);
       const data = await response.json();
@@ -85,11 +85,14 @@ export default function Home(): ReactElement {
   };
 
   useEffect(() => {
-    if (authLoadingState) return;
-    if (sessionUser) {
-      getUserHomePosts();
-    } else {
-      getNoUserHomePosts();
+    console.log("useEffect Hook")
+    console.log(`Page::authLoadingState ${authLoadingState} sessionUser ${sessionUser}`)
+    if (!authLoadingState) {
+      if (sessionUser) {
+        getUserHomePosts();
+      } else if (sessionUser === null) {
+        getNoUserHomePosts();
+      }
     }
   }, [sessionUser, authLoadingState]);
 
@@ -113,7 +116,7 @@ export default function Home(): ReactElement {
         <div className="mx-auto w-full min-w-0">
           <div className="container mx-auto">
             {/* <CreatePostLink /> */}
-            {postsLoading ? (
+            {postsLoading || authLoadingState ? (
               <div>
                 <PostLoader />
               </div>
