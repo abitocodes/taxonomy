@@ -1,6 +1,6 @@
 "use client"
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
 import usePosts from "@/hooks/usePosts";
 import { PostVote } from "@prisma/client";
@@ -20,24 +20,18 @@ export default function Home(): ReactElement {
           onSelectPost,
           onDeletePost,
           onVote } = usePosts();
-
           
   const getUserHomePosts = async () => {
     console.log("getUserHomePosts Called.")
     setPostsLoading(true);
     try {
       const response = await fetch(`/api/getUserHomePosts?userId=${sessionUser?.id}`);
-      const data = await response.json();
+      const { posts } = await response.json();
 
-      const posts = data.posts;
-      setPostsStateValue((prev) => {
-        const newState = {
-          ...prev,
-          posts: posts as PostWith[],
-        };
-        return newState;
-      });
-      console.log("getUserHomePosts postsStateValue:", postsStateValue);
+      setPostsStateValue((prev) => ({
+        ...prev,
+        posts: posts as PostWith[],
+      }));
     } catch (error: any) {
       console.error("getUserHomePosts error", error.message);
     } finally {
@@ -50,15 +44,12 @@ export default function Home(): ReactElement {
     setPostsLoading(true);
     try {
       const response = await fetch('/api/getNoUserHomePosts');
-      const data = await response.json();
-      const posts = data.posts;
-      setPostsStateValue((prev) => {
-        const newState = {
-          ...prev,
-          posts: posts as PostWith[],
-        };
-        return newState;
-      });
+      const { posts } = await response.json();
+      
+      setPostsStateValue((prev) => ({
+        ...prev,
+        posts: posts as PostWith[],
+      }));
     } catch (error: any) {
     } finally {
       setPostsLoading(false);
@@ -70,11 +61,11 @@ export default function Home(): ReactElement {
       return;
     }
     const postIds = postsStateValue.posts.map((post) => post.id);
-    console.log("getUserPostVotes postIds: ", postIds)
     try {
       const response = await fetch(`/api/getUserPostVotes?postIds=${postIds}`);
       const data = await response.json();
       const postVotes = Array.isArray(data.postVotes) ? data.postVotes : [];
+
       setPostsStateValue((prev) => ({
         ...prev,
         postVotes: postVotes as PostVote[],
@@ -85,8 +76,6 @@ export default function Home(): ReactElement {
   };
 
   useEffect(() => {
-    console.log("useEffect Hook")
-    console.log(`Page::authLoadingState ${authLoadingState} sessionUser ${sessionUser}`)
     if (!authLoadingState) {
       if (sessionUser) {
         getUserHomePosts();
