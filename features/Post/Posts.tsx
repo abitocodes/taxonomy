@@ -22,10 +22,10 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   const _sessionAndPublicUserState = useRecoilState(sessionAndPublicUserState);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { postsStateValue, setPostsStateValue, onVote, onDeletePost } = usePosts(channelData!);
+  const { postsState, setPostsState, onVote, onDeletePost } = usePosts(channelData!);
 
   const onSelectPost = (post: PostWith, postIdx: number) => {
-    setPostsStateValue((prev) => ({
+    setPostsState((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
@@ -33,16 +33,16 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   };
 
   useEffect(() => {
-    if (postsStateValue.postsCache[channelData?.id!] && !postsStateValue.postUpdateRequired) {
-      setPostsStateValue((prev) => ({
+    if (postsState.postsCache[channelData?.id!] && !postsState.postUpdateRequired) {
+      setPostsState((prev) => ({
         ...prev,
-        posts: postsStateValue.postsCache[channelData?.id!],
+        posts: postsState.postsCache[channelData?.id!],
       }));
       return;
     }
 
     getPosts();
-  }, [channelData, postsStateValue.postUpdateRequired]);
+  }, [channelData, postsState.postUpdateRequired]);
 
   const getPosts = async () => {
     setLoading(true);
@@ -59,7 +59,7 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   
       if (error) throw error;
   
-      setPostsStateValue((prev) => ({
+      setPostsState((prev) => ({
         ...prev,
         posts: posts as PostWith[], // 여기서 posts는 labels와 creator를 포함해야 합니다.
         postsCache: {
@@ -80,13 +80,13 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
         <PostLoader />
       ) : (
         <div className="flex flex-col">
-          {postsStateValue.posts.map((post: PostWith, index) => (
+          {postsState.posts.map((post: PostWith, index) => (
             <PostItem
               key={post.id}
               post={post}
               onVote={onVote} // 'vote'는 적절한 숫자 값으로 설정해야 합니다.
               onDeletePost={onDeletePost}
-              userVoteValue={postsStateValue.postVotes.find((item) => item.postId === post.id)?.voteValue}
+              userVoteValue={postsState.postVotes.find((item) => item.postId === post.id)?.voteValue}
               userIsCreator={userId === post.creatorId}
               onSelectPost={onSelectPost}
             />

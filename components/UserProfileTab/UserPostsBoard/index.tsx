@@ -18,7 +18,7 @@ interface UserPostsBoardProps {
 
 export const UserPostsBoard = ({ userId }: UserPostsBoardProps) => {
   const [loading, setLoading] = useState(false);
-  const [postsStateValue, setPostStateValue] = useState<PostWith[]>([]);
+  const [postsState, setPostStateValue] = useState<PostWith[]>([]);
 
   const getUserPosts = async () => {
     setLoading(true);
@@ -54,7 +54,7 @@ export const UserPostsBoard = ({ userId }: UserPostsBoardProps) => {
                     <TableCell colSpan={4} className="text-center">Loading...</TableCell>
                 </TableRow>
             ) : (
-                postsStateValue.map((post: PostWith, index: number) => (
+                postsState.map((post: PostWith, index: number) => (
                     <TableRow key={index}>
                         <TableCell className="font-medium">{post.id}</TableCell>
                         <TableCell>{post.title}</TableCell>

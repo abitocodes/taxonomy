@@ -13,30 +13,23 @@ import { Channel } from "@/types/channelsState";
 import { Post, PostVote } from "@prisma/client";
 import { PostWith } from "@/types/posts";
 import { Session } from '@supabase/supabase-js';
-import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
 import { SessionAndPublicUserStateType } from "@/types/atoms/SessionAndPublicUserStateType";
 
 export default function usePosts (channelData?: Channel) {
   const [session, setSession] = useState<Session | null>(null);
   const { sessionUser, authLoadingState, authError } = useAuthState(session);
-  const [postsStateValue, setPostsStateValue] = useRecoilState(postState);
-  const sessionAndPublicUserStateValue = useRecoilValue(sessionAndPublicUserState);
 
-  console.log(`usePosts::authLoadingState1 ${authLoadingState}`)
-  
+  const [postsState, setPostsState] = useRecoilState(postState);
   const [postsLoading, setPostsLoading] = useState(false);
+
   const [error, setError] = useState("");
   const router = useRouter();
 
   const setAuthModalState = useSetRecoilState(authModalState);
   const channelStateValue = useRecoilValue(channelState);
 
-  useEffect(() => {
-    console.log(`usePosts::authLoadingState2 ${authLoadingState}`)
-  }, [authLoadingState])
-
   const onSelectPost = (post: PostWith, postIdx: number) => {
-    setPostsStateValue((prev) => ({
+    setPostsState((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
@@ -54,71 +47,19 @@ export default function usePosts (channelData?: Channel) {
       setAuthModalState((prev) => ({ ...prev, emailInputModalOpen: true }));
       return;
     }
-  
-    const existingVote = postsStateValue.postVotes.find((v) => v.postId === post.id);
-  
+
+    const existingVote = postsState.postVotes.find((v) => v.postId === post.id);
+
     try {
-      const response = await fetch(`/api/vote?postId=${post.id}&userId=${sessionUser?.id}`)
-      console.log("response: ", response)
+      const response = await fetch(`/api/vote?postId=${post.id}&userId=${sessionUser?.id}`);
       const data = await response.json();
-      console.log("data: ", data)
-      if (!response.ok) {
-        throw new Error('투표 처리 실패');
-      }
-   
-      const voteResult = data.voteResult
-      console.log("voteResult: ", voteResult)
-      
+      if (!response.ok) throw new Error('투표 처리 실패');
+
+      const voteResult = data.voteResult;
       if (voteResult) {
-        const voteChange = voteResult.voteValue - (existingVote ? existingVote.voteValue : 0);
-        const updatedPost = { ...post, voteStatus: (post.voteStatus || 0) + voteChange };
-        const updatedPosts = [...postsStateValue.posts];
-        const postIdx = updatedPosts.findIndex((item) => item.id === post.id);
-        updatedPosts[postIdx] = updatedPost;
-  
-        let updatedPostVotes = [...postsStateValue.postVotes];
-        if (!existingVote) {
-          updatedPostVotes.push(voteResult);
-        } else {
-          const voteIdx = updatedPostVotes.findIndex((v) => v.id === existingVote.id);
-          if (voteIdx !== -1) {
-            updatedPostVotes[voteIdx] = voteResult;
-          }
-        }
-  
-        const updatedState = {
-          ...postsStateValue,
-          posts: updatedPosts,
-          postVotes: updatedPostVotes,
-          postsCache: {
-            ...postsStateValue.postsCache,
-          },
-          selectedPost: updatedPost
-        };
-  
-        setPostsStateValue(updatedState);
+        updatePostVotes(post, voteResult, existingVote, postsState, setPostsState);
       } else {
-        // 투표가 삭제된 경우
-        const updatedPosts = postsStateValue.posts.map(p => {
-          if (p.id === post.id) {
-            return { ...p, voteStatus: (p.voteStatus || 0) - (existingVote ? existingVote.voteValue : 0) };
-          }
-          return p;
-        });
-  
-        const updatedPostVotes = postsStateValue.postVotes.filter(v => v.postId !== post.id);
-  
-        const updatedState = {
-          ...postsStateValue,
-          posts: updatedPosts,
-          postVotes: updatedPostVotes,
-          postsCache: {
-            ...postsStateValue.postsCache,
-          },
-          selectedPost: null
-        };
-  
-        setPostsStateValue(updatedState);
+        removePostVote(post, existingVote, postsState, setPostsState);
       }
     } catch (error) {
       console.error("onVote error", error);
@@ -142,7 +83,7 @@ export default function usePosts (channelData?: Channel) {
       throw new Error('Failed to delete post');
     }
 
-    setPostsStateValue((prev) => ({
+    setPostsState((prev) => ({
       ...prev,
       posts: prev.posts.filter((item) => item.id !== post.id),
       postsCache: {
@@ -168,7 +109,7 @@ const getChannelPostVotes = async (channelId: string) => {
     return;
   }
   const postVotes: PostVote[] = await response.json();
-  setPostsStateValue((prev) => ({
+  setPostsState((prev) => ({
     ...prev,
     postVotes: postVotes,
   }));
@@ -181,23 +122,19 @@ useEffect(() => {
 
 useEffect(() => {
   if (!sessionUser?.id) {
-    setPostsStateValue((prev) => ({
+    setPostsState((prev) => ({
       ...prev,
       postVotes: [],
     }));
   }
 }, [sessionUser]);
 
-console.log(`usePost authLoadingState ${authLoadingState}`)
-console.log(`usePost postsLoading ${postsLoading}`)
-console.log(authLoadingState)
-
 return {
   sessionUser,
   authLoadingState,
   authError,
-  postsStateValue,
-  setPostsStateValue,
+  postsState,
+  setPostsState,
   postsLoading,
   setPostsLoading,
   onSelectPost,
@@ -206,4 +143,46 @@ return {
   error,
 };
 };
-         
+
+const updatePostVotes = (
+  post: PostWith,
+  voteResult: PostVote,
+  existingVote: PostVote | undefined,
+  postsState: any,
+  setPostsState: any
+) => {
+  const voteChange = voteResult.voteValue - (existingVote ? existingVote.voteValue : 0);
+  const updatedPost = { ...post, voteStatus: (post.voteStatus || 0) + voteChange };
+  const updatedPosts = postsState.posts.map((p) => (p.id === post.id ? updatedPost : p));
+
+  const updatedPostVotes = existingVote
+    ? postsState.postVotes.map((v) => (v.id === existingVote.id ? voteResult : v))
+    : [...postsState.postVotes, voteResult];
+
+  setPostsState((prev) => ({
+    ...prev,
+    posts: updatedPosts,
+    postVotes: updatedPostVotes,
+    selectedPost: updatedPost,
+  }));
+};
+
+const removePostVote = (
+  post: PostWith,
+  existingVote: PostVote | undefined,
+  postsState: any,
+  setPostsState: any
+) => {
+  const updatedPosts = postsState.posts.map((p) =>
+    p.id === post.id ? { ...p, voteStatus: (p.voteStatus || 0) - (existingVote ? existingVote.voteValue : 0) } : p
+  );
+
+  const updatedPostVotes = postsState.postVotes.filter((v) => v.postId !== post.id);
+
+  setPostsState((prev) => ({
+    ...prev,
+    posts: updatedPosts,
+    postVotes: updatedPostVotes,
+    selectedPost: null,
+  }));
+};

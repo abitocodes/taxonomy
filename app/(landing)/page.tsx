@@ -13,8 +13,8 @@ export default function Home(): ReactElement {
   const { sessionUser,
           authLoadingState,
           authError,
-          postsStateValue,
-          setPostsStateValue,
+          postsState,
+          setPostsState,
           postsLoading,
           setPostsLoading,
           onSelectPost,
@@ -28,7 +28,7 @@ export default function Home(): ReactElement {
       const response = await fetch(`/api/getUserHomePosts?userId=${sessionUser?.id}`);
       const { posts } = await response.json();
 
-      setPostsStateValue((prev) => ({
+      setPostsState((prev) => ({
         ...prev,
         posts: posts as PostWith[],
       }));
@@ -46,7 +46,7 @@ export default function Home(): ReactElement {
       const response = await fetch('/api/getNoUserHomePosts');
       const { posts } = await response.json();
       
-      setPostsStateValue((prev) => ({
+      setPostsState((prev) => ({
         ...prev,
         posts: posts as PostWith[],
       }));
@@ -57,16 +57,16 @@ export default function Home(): ReactElement {
   };
 
   const getUserPostVotes = async () => {
-    if (!postsStateValue) {
+    if (!postsState) {
       return;
     }
-    const postIds = postsStateValue.posts.map((post) => post.id);
+    const postIds = postsState.posts.map((post) => post.id);
     try {
       const response = await fetch(`/api/getUserPostVotes?postIds=${postIds}`);
       const data = await response.json();
       const postVotes = Array.isArray(data.postVotes) ? data.postVotes : [];
 
-      setPostsStateValue((prev) => ({
+      setPostsState((prev) => ({
         ...prev,
         postVotes: postVotes as PostVote[],
       }));
@@ -86,16 +86,16 @@ export default function Home(): ReactElement {
   }, [sessionUser, authLoadingState]);
 
   useEffect(() => {
-    if (!sessionUser?.id || !postsStateValue.posts ) return;
+    if (!sessionUser?.id || !postsState.posts ) return;
     getUserPostVotes();
   
     return () => {
-      setPostsStateValue((prev) => ({
+      setPostsState((prev) => ({
         ...prev,
         postVotes: [], // 배열로 초기화
       }));
     };
-  }, [postsStateValue?.posts, sessionUser?.id]);
+  }, [postsState?.posts, sessionUser?.id]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -111,7 +111,7 @@ export default function Home(): ReactElement {
               </div>
             ) : (
               <div className="space-y-6">
-                {(postsStateValue?.posts || []).map((post: PostWith, index: number) => {
+                {(postsState?.posts || []).map((post: PostWith, index: number) => {
                   return (
                     <LinkableCard
                       key={index}
@@ -119,7 +119,7 @@ export default function Home(): ReactElement {
                       postIdx={index}
                       onVote={onVote}
                       onDeletePost={onDeletePost}
-                      isAlreadyVoted={postsStateValue?.postVotes.find((item) => item.postId === post.id)?.voteValue}
+                      isAlreadyVoted={postsState?.postVotes.find((item) => item.postId === post.id)?.voteValue}
                       sessionAndPublicUserState={sessionUser?.id === post.creatorId}
                       onSelectPost={onSelectPost}
                       homePage
