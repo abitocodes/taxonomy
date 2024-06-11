@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { cn } from "@/lib/utils";
 import { Post } from "@prisma/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { PostWith } from "@/types/posts";
+import { PostWith } from "@/types/post";
 import { TbArrowBigDown, TbArrowBigDownFilled, TbArrowBigUp, TbArrowBigUpFilled } from "react-icons/tb";
 import formatDistanceToNow from "date-fns/formatDistanceToNow"
 import { getBadgeVariantFromLabel } from "@/utils/getBadgeVariantFromLabel";
@@ -14,29 +14,30 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/shad/new-york/ui/avatar"
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SessionAndPublicUserStateType } from '@/types/atoms/SessionAndPublicUserStateType';
 import { sessionAndPublicUserState } from '@/atoms/sessionAndUserAtom';
 
-interface LinkableCardProps {
+interface PostItemProps {
   post: PostWith;
   postIdx?: number;
-  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, sessionAndPublicUser: SessionAndPublicUserStateType | null) => void;
+  onVotePost: (event: React.MouseEvent<Element, MouseEvent>, post: Post, sessionAndPublicUser: SessionAndPublicUserStateType | null) => void;
   onSelectPost?: (value: Post, postIdx: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   router?: AppRouterInstance;
   isAlreadyVoted?: number;
+  isSessionUserCreator?: boolean;
   sessionAndPublicUserState?: boolean;
   homePage?: boolean;
   cursorPointer?: boolean; // 추가된 prop
 }
 
-export function LinkableCard({
+export function PostItem({
   post,
   postIdx,
-  onVote,
+  onVotePost,
   onSelectPost,
   onDeletePost,
   router,
@@ -44,7 +45,7 @@ export function LinkableCard({
   homePage,
   cursorPointer = true, // 기본값은 true로 설정
   ...props
-}: LinkableCardProps) {
+}: PostItemProps) {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const _sessionAndPublicUserState = useRecoilValue(sessionAndPublicUserState);
@@ -118,14 +119,14 @@ export function LinkableCard({
             <Button 
               variant="ghost"
               size="icon"
-              onClick={(event) => onVote(event, post, _sessionAndPublicUserState)}>
+              onClick={(event) => onVotePost(event, post, _sessionAndPublicUserState)}>
             <IoIosHeartEmpty className="h-4 w-4 "/>
             </Button>
           ) : (
             <Button 
               variant="ghost"
               size="icon"
-              onClick={(event) => onVote(event, post, _sessionAndPublicUserState)}>
+              onClick={(event) => onVotePost(event, post, _sessionAndPublicUserState)}>
             <IoMdHeart className="h-4 w-4"/>
           </Button>
           )}

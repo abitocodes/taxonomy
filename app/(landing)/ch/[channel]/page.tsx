@@ -19,8 +19,7 @@ import { Channel } from "@/types/channelsState";
 import { Session } from '@supabase/supabase-js';
 
 export default function ChannelPage ({ params }: { params: { channel: string } }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: loadingUser, error: authError } = useAuthState(session);
+  const { user, loading: loadingUser, error: authErrorMsg } = useAuthState();
   const [channelStateValue, setChannelStateValue] = useRecoilState(channelState);
 
   useEffect(() => {

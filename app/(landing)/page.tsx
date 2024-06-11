@@ -2,71 +2,72 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
-import usePosts from "@/hooks/usePosts";
+import usePostList from "@/hooks/usePostList";
 import { PostVote } from "@prisma/client";
 import { ReactElement } from "react";
-import { PostWith } from "@/types/posts";
-import { LinkableCard } from "@/components/LinkableCard";
+import { PostWith } from "@/types/post";
+import { PostItem } from "@/components/Post/PostItem";
 import { BulletinBoard } from "@/components/BulletinBoard";
 
 export default function Home(): ReactElement {
-  const { sessionUser,
+  console.log("Home 실행")
+  const { session,
           authLoadingState,
-          authError,
-          postsState,
-          setPostsState,
-          postsLoading,
-          setPostsLoading,
+          authErrorMsg,
+          postListState,
+          setPostListState,
+          postListLoading,
+          setPostListLoading,
           onSelectPost,
           onDeletePost,
-          onVote } = usePosts();
+          onVotePost } = usePostList();
           
-  const getUserHomePosts = async () => {
-    console.log("getUserHomePosts Called.")
-    setPostsLoading(true);
+  const getHomePostListWithSession = async () => {
+    console.log("getHomePostListWithSession Called.")
+    setPostListLoading(true);
     try {
-      const response = await fetch(`/api/getUserHomePosts?userId=${sessionUser?.id}`);
-      const { posts } = await response.json();
+      const response = await fetch(`/api/getHomePostListWithSession?userId=${session?.user.id}`);
+      const { postList } = await response.json();
 
-      setPostsState((prev) => ({
+      setPostListState((prev) => ({
         ...prev,
-        posts: posts as PostWith[],
+        postList: postList as PostWith[],
       }));
     } catch (error: any) {
-      console.error("getUserHomePosts error", error.message);
+      console.error("getHomePostListWithSession error", error.message);
     } finally {
-      setPostsLoading(false);
+      setPostListLoading(false);
     }
   };
 
-  const getNoUserHomePosts = async () => {
-    console.log("getNoUserHomePosts Called.")
-    setPostsLoading(true);
+  const getHomePostListWithoutSession = async () => {
+    console.log("getHomePostListWithoutSession Called.")
+    setPostListLoading(true);
     try {
-      const response = await fetch('/api/getNoUserHomePosts');
-      const { posts } = await response.json();
+      const response = await fetch('/api/getHomePostListWithoutSession');
+      const { postList } = await response.json();
       
-      setPostsState((prev) => ({
+      setPostListState((prev) => ({
         ...prev,
-        posts: posts as PostWith[],
+        postList: postList as PostWith[],
       }));
     } catch (error: any) {
     } finally {
-      setPostsLoading(false);
+      setPostListLoading(false);
     }
   };
 
   const getUserPostVotes = async () => {
-    if (!postsState) {
+    if (!postListState) {
       return;
     }
-    const postIds = postsState.posts.map((post) => post.id);
+    const postIds = postListState.postList.map((post) => post.id);
     try {
       const response = await fetch(`/api/getUserPostVotes?postIds=${postIds}`);
       const data = await response.json();
       const postVotes = Array.isArray(data.postVotes) ? data.postVotes : [];
 
-      setPostsState((prev) => ({
+      setPostListState((prev) => ({
         ...prev,
         postVotes: postVotes as PostVote[],
       }));
@@ -77,25 +78,25 @@ export default function Home(): ReactElement {
 
   useEffect(() => {
     if (!authLoadingState) {
-      if (sessionUser) {
-        getUserHomePosts();
-      } else if (sessionUser === null) {
-        getNoUserHomePosts();
+      if (session?.user) {
+        getHomePostListWithSession();
+      } else if (session?.user === null) {
+        getHomePostListWithoutSession();
       }
     }
-  }, [sessionUser, authLoadingState]);
+  }, [authLoadingState]);
 
   useEffect(() => {
-    if (!sessionUser?.id || !postsState.posts ) return;
+    if (!session?.user?.id || !postListState.postList ) return;
     getUserPostVotes();
   
     return () => {
-      setPostsState((prev) => ({
+      setPostListState((prev) => ({
         ...prev,
         postVotes: [], // 배열로 초기화
       }));
     };
-  }, [postsState?.posts, sessionUser?.id]);
+  }, [postListState?.postList, session?.user?.id]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -105,22 +106,22 @@ export default function Home(): ReactElement {
         <div className="mx-auto w-full min-w-0">
           <div className="container mx-auto">
             {/* <CreatePostLink /> */}
-            {postsLoading || authLoadingState ? (
+            {postListLoading || authLoadingState ? (
               <div>
                 <PostLoader />
               </div>
             ) : (
               <div className="space-y-6">
-                {(postsState?.posts || []).map((post: PostWith, index: number) => {
+                {(postListState?.postList || []).map((post: PostWith, index: number) => {
                   return (
-                    <LinkableCard
+                    <PostItem
                       key={index}
                       post={post}
                       postIdx={index}
-                      onVote={onVote}
+                      onVotePost={onVotePost}
                       onDeletePost={onDeletePost}
-                      isAlreadyVoted={postsState?.postVotes.find((item) => item.postId === post.id)?.voteValue}
-                      sessionAndPublicUserState={sessionUser?.id === post.creatorId}
+                      isAlreadyVoted={postListState?.postVotes.find((item) => item.postId === post.id)?.voteValue}
+                      sessionAndPublicUserState={session?.user?.id === post.creatorId}
                       onSelectPost={onSelectPost}
                       homePage
                     />

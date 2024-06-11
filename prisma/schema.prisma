@@ -11,14 +11,28 @@ datasource db {
 model Comment {
   id              String       @id
   creatorId       String
-  channelId       String
   postId          String
   text            String
   createdAt       DateTime     @default(now())
   publicUsers     PublicUser   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   posts           Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  commentVotes    CommentVote[]
+  voteStatus      Int?         @default(0)  // 추가된 투표 상태 필드
 
   @@map(name: "comments")
+}
+
+model CommentVote {
+  id        String   @id
+  commentId String
+  userId    String
+  voteValue Int      // 투표 값 (예: 1 또는 -1)
+  createdAt DateTime @default(now())
+
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user      PublicUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map(name: "comment_votes")
 }
 
 model Channel {
@@ -113,6 +127,7 @@ model PublicUser {
   channelsSnippets          ChannelSnippet[]
   postVotes                 PostVote[]
   posts                     Post[]
+  commentVotes             CommentVote[]
 
   @@map(name: "public_users")
 }

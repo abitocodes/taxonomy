@@ -4,20 +4,20 @@ import { User, Session } from '@supabase/supabase-js';
 
 export const useSignInWithGoogle = (initialSession: Session | null) => {
     const [loading, setLoading] = useState(false);
-    const [authError, setAuthError] = useState<string | null>(null);
+    const [authErrorMsg, setAuthErrorMsg] = useState<string | null>(null);
     const [userCred, setUserCred] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(initialSession);
 
     const signInWithGoogle = async () => {
         setLoading(true);
-        setAuthError(null);
+        setAuthErrorMsg(null);
     
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google'
         });
     
         if (error) {
-            setAuthError(error.message);
+            setAuthErrorMsg(error.message);
         } else {
             window.location.href = data.url;
         }
@@ -28,7 +28,7 @@ export const useSignInWithGoogle = (initialSession: Session | null) => {
         userCred,
         session,
         loading,
-        authError,
+        authErrorMsg,
         signInWithGoogle
     };
 };

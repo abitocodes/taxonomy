@@ -1,22 +1,21 @@
 import { prisma } from "@/prisma/client";
-import { generateHashId } from "@/utils/generateHashId";
+import { generateCommentHashId } from "@/utils/generateHashId";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const channelId = url.searchParams.get('channelId');
   const postId = url.searchParams.get('postId');
   const creatorId = url.searchParams.get('creatorId');
   const text = url.searchParams.get('text');
 
   try {
+    const createdAt = new Date();
     const createdComment = await prisma.comment.create({
       data: {
-        id: generateHashId(),
+        id: generateCommentHashId(createdAt, creatorId!, postId!, text!),
         postId: postId || "",
         creatorId: creatorId || "",
         text: text || "",
-        channelId: channelId || "",
-        createdAt: new Date(),
+        createdAt: createdAt,
       },
       include: {
         publicUsers: true // 사용자 정보를 포함하여 댓글 생성

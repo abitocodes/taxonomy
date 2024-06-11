@@ -1,6 +1,7 @@
 import { prisma } from "@/prisma/client";
 
 export async function GET(request: Request) {
+    console.log("getPostCommentList request", request);
     const url = new URL(request.url);
     const postId = url.searchParams.get('postId');
     if (!postId) {
@@ -30,7 +31,7 @@ export async function GET(request: Request) {
         return Response.json({
             statusCode: 200,
             message: '200 OK',
-            comments: comments
+            commentList: comments
         });
     } catch (error) {
         console.error("getPostComments error", error.message);

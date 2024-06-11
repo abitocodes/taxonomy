@@ -23,7 +23,7 @@ import { UserProfileTab } from "@/components/UserProfileTab";
 
 export default function MyProfilePage () {
     const [session, setSession] = useState<Session | null>(null);
-    const { user, loading: loadingUser, error: authError } = useAuthState(session);
+    const { user, loading: loadingUser, error: authErrorMsg } = useAuthState();
     const [ publicUser, setPublicUser ] = useState<PublicUser | null>(null);
 
     const fetchData = async () => {

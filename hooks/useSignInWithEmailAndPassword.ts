@@ -4,13 +4,13 @@ import { User, Session } from '@supabase/supabase-js';
 
 const useSignInWithEmailAndPassword = (initialSession: Session | null) => {
     const [loading, setLoading] = useState(false);
-    const [authError, setAuthError] = useState<string | null>(null);
+    const [authErrorMsg, setAuthErrorMsg] = useState<string | null>(null);
     const [userCred, setUserCred] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(initialSession);
 
     const signInWithEmailAndPassword = async (email: string, password: string) => {
         setLoading(true);
-        setAuthError(null);
+        setAuthErrorMsg(null);
 
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
@@ -18,7 +18,7 @@ const useSignInWithEmailAndPassword = (initialSession: Session | null) => {
         });
 
         if (error) {
-            setAuthError(error.message);
+            setAuthErrorMsg(error.message);
         } else {
             setUserCred(data.user);
             setSession(data.session);
@@ -30,7 +30,7 @@ const useSignInWithEmailAndPassword = (initialSession: Session | null) => {
         userCred,
         session,
         loading,
-        authError,
+        authErrorMsg,
         signInWithEmailAndPassword
     };
 };

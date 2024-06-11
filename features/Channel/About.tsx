@@ -23,8 +23,7 @@ type AboutProps = {
 };
 
 const About: FC<AboutProps> = ({ channelData, pt, onCreatePage, loading }) => {
-  const [session, setSession] = useState<Session | null>(null);
-  const { sessionUser, authLoadingState, authError } = useAuthState(session);
+  const { session, authLoadingState, authErrorMsg } = useAuthState();
   const searchParam = useSearchParams()
   const selectFileRef = useRef<HTMLInputElement>(null);
   const setChannelStateValue = useSetRecoilState(channelState);

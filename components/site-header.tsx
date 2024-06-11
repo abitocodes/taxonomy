@@ -11,8 +11,7 @@ import { Session } from '@supabase/supabase-js';
 import { defaultMenuItem } from "@/atoms/directoryMenuAtom";
 
 export function SiteHeader() {
-  const [session, setSession] = useState<Session | null>(null);
-  const { sessionUser, authLoadingState, authError } = useAuthState(session);
+  const { session, authLoadingState, authErrorMsg } = useAuthState();
   const { onSelectMenuItem } = useDirectory();
 
   return (

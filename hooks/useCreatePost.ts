@@ -8,8 +8,7 @@ import { supabase } from '@/utils/supabase/client'; // supabase 클라이언트 
 import { Session } from '@supabase/supabase-js';
 
 const useCreatePost = () => {
-  const [session, setSession] = useState<Session | null>(null);
-  const { sessionUser, authLoadingState, authError } = useAuthState(session);
+  const { session, authLoadingState, authErrorMsg } = useAuthState();
   const setAuthModalState = useSetRecoilState(authModalState);
   const { toggleMenuOpen } = useDirectory();
   const router = useRouter();
@@ -29,12 +28,15 @@ const useCreatePost = () => {
   }, []);
 
   const onClick = () => {
-    if (!user?.id) {
-      setAuthModalState({ open: true, view: "login" });
+    if (!sessionUser?.id) {
+      setAuthModalState((prev) => ({
+        ...prev,
+        emailInputModalOpen: true,
+      }));
       return;
     }
 
-    const channel = pathname?.get('channel');
+    const channel = url?.split('/')[3];
     if (channel) {
       router.push(`/ch/${channel}/submit`);
       return;

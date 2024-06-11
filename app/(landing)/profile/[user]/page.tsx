@@ -20,8 +20,7 @@ import { Session } from '@supabase/supabase-js';
 import { UserProfileCard } from "@/components/UserProfileCard";
 
 export default function UserProfilePage ({ params }: { params: { user: string } }) {
-  const [session, setSession] = useState<Session | null>(null);
-  const { user, loading: loadingUser, error: authError } = useAuthState(session);
+  const { user, loading: loadingUser, error: authErrorMsg } = useAuthState();
   const [sessionAndPublicUserStateValue, setSessionAndPublicUserStateValue] = useRecoilState(sessionAndPublicUserState);  // sessionAndPublicUserState 사용
 
   useEffect(() => {

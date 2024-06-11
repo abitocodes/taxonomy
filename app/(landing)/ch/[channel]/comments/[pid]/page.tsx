@@ -9,45 +9,44 @@ import { supabase } from "@/utils/supabase/client";
 import PageContentLayout from "@/components/reddit/Layout/PageContent";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
 import About from "@/features/Channel/About";
-import Comments from "@/features/Post/Comments";
-import PostItem from "@/features/Post/PostItem";
+import Comments from "@/components/CommentSection";
+
 import useChannelData from "@/hooks/useChannelData";
-import usePosts from "@/hooks/usePosts";
+import usePostList from "@/hooks/usePostList";
 import { Post } from "@prisma/client";
 import { useState } from "react";
 import { Session } from '@supabase/supabase-js';
 import { PublicUser } from "@prisma/client";
 import { useUser } from "@/hooks/useUser";
-import { LinkableCard } from "@/components/LinkableCard";
-import { PostWith } from "@/types/posts";
+import { PostItem } from "@/components/Post/PostItem";
+import { PostWith } from "@/types/post";
 import { CryptoPriceTable } from "@/components/CryptoPriceTable";
 
 type PostPageProps = {};
 
 const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pid: string } }) => {
-
-  const [session, setSession] = useState<Session | null>(null);
-  const { user, loadingUser } = useUser();
   const { channel, pid } = params
-  const { channelStateValue } = useChannelData();
-  const { postsState, setPostsState, onSelectPost, onDeletePost, loading, setLoading, onVote } = usePosts(channelStateValue.currentChannel);
+
+  const { user, loadingUser } = useUser();
+  const { channelStateValue, loading: channelLoading } = useChannelData();
+  const { postListState, setPostListState, onSelectPost, onDeletePost, postListLoading, setPostListLoading, onVotePost } = usePostList(channelStateValue.currentChannel);
 
   const fetchPost = async () => {
     
-    setLoading(true);
+    setPostListLoading(true);
     try {
       const response = await fetch(`/api/getPost?postId=${pid}`);
       const data = await response.json();
       const postData = data.post
 
-      setPostsState((prev) => ({
+      setPostListState((prev) => ({
         ...prev,
         selectedPost: { id: postData.id, ...postData } as PostWith,
       }));
     } catch (error: any) {
       console.error("fetchPost error", error.message);
     }
-    setLoading(false);
+    setPostListLoading(false);
   };
 
   useEffect(() => {
@@ -64,7 +63,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pi
     };
   
     fetchSessionAndPost();
-  }, [params, postsState.posts]);
+  }, [params, postListState.postList]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -74,23 +73,27 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pi
       <main className="relative py-6 lg:gap-10 lg:py-10 xl:grid xl:grid-cols-[1fr_300px]">
         <div className="mx-auto w-full min-w-0">
           <div className="container mx-auto space-y-4">
-          {loading ? (
+          {postListLoading ? (
             <PostLoader skeletonCount={1} />
           ) : (
             <>
-              {postsState.selectedPost && (
+              {postListState.selectedPost && (
                 <>
-                      <LinkableCard
-                        post={postsState.selectedPost}
-                        onVote={onVote}
+                      <PostItem
+                        post={postListState.selectedPost}
+                        onVotePost={onVotePost}
                         onDeletePost={onDeletePost}
-                        userVoteValue={postsState.postVotes.find((item) => item.postId === postsState.selectedPost!.id)?.voteValue}
-                        userIsCreator={user?.id === postsState.selectedPost?.creatorId}
+                        isAlreadyVoted={postListState.postVotes.find((item) => item.postId === postListState.selectedPost!.id)?.voteValue}
+                        isSessionUserCreator={user?.id === postListState.selectedPost?.creatorId}
                         onSelectPost={onSelectPost}
                         homePage
                         cursorPointer={false}
                         />
-                        <Comments user={user} channel={channel as string} selectedPost={postsState.selectedPost} />
+                        <Comments 
+                          user={user} 
+                          channel={channel as string} 
+                          selectedPost={postListState.selectedPost}
+                          />
                       </>
                     )}
                   </>
@@ -100,7 +103,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pi
         <div className="hidden text-sm xl:block">
           <div className="sticky top-16 -mt-10 max-h-[calc(var(--vh)-4rem)] overflow-y-auto pt-10">
             <div className="container mx-auto space-y-4">
-              <About channelData={channelStateValue.currentChannel} loading={loading} />
+              <About channelData={channelStateValue.currentChannel} loading={channelLoading} />
             </div>
           </div>
         </div>

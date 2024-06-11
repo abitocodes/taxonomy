@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { PostTabItem } from "@/types/PostTabItem";
+import { PostTabItem } from "@/types/post/PostTabItem";
 
 type TabItemProps = {
   item: PostTabItem;

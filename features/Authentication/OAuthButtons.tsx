@@ -14,8 +14,7 @@ import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { CgGoogle } from "react-icons/cg";
 
 const OAuthButtons: FC<OAuthButtonsProps> = () => {
-  const [session, setSession] = useState<Session | null>(null);
-  const { signInWithGoogle, userCred, loading, authError: error } = useSignInWithGoogle(session);
+  const { signInWithGoogle, userCred, loading, authErrorMsg: error } = useSignInWithGoogle(session);
 
   useEffect(() => {
     if (userCred) {

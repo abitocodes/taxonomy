@@ -11,8 +11,7 @@ import MyChannels from "@/components/reddit/Navbar/Directory/MyChannels";
 import { Session } from '@supabase/supabase-js';
 
 const Channels: FC = () => {
-  const [session, setSession] = useState<Session | null>(null);
-  const { sessionUser, authLoadingState, authError } = useAuthState(session);
+  const { session, authLoadingState, authErrorMsg } = useAuthState();
   const mySnippets = useRecoilValue(channelState).mySnippets;
 
   return (

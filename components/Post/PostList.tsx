@@ -1,21 +1,21 @@
 import React from 'react';
-import { PostWith } from "@/types/posts";
+import { PostWith } from "@/types/post";
 import { PostVote } from "@prisma/client";
 import PostItem from "@/features/Post/PostItem";
 
 interface PostListProps {
-    post: PostWith[];
-    postVote: PostVote[];
+    postList: PostWith[];
+    postVotes: PostVote[];
     onVote: (postId: string, voteValue: number) => Promise<void>;
     onDeletePost: (postId: string) => Promise<void>;
     onSelectPost: (post: PostWith) => void;
     userId: string | undefined;
   }
 
-export const PostList: React.FC<PostListProps> = ({ posts, postVotes, onVote, onDeletePost, onSelectPost, userId }) => {
+export const PostList: React.FC<PostListProps> = ({ postList, postVotes, onVote, onDeletePost, onSelectPost, userId }) => {
     return (
       <div className="space-y-6">
-        {posts.map((post, index) => (
+        {postList.map((post, index) => (
           <PostItem
             key={index}
             post={post}

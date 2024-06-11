@@ -22,37 +22,33 @@ type AuthModalProps = {};
 
 const AuthModal: FC<AuthModalProps> = () => {
   const [_authModalState, _setAuthModalState] = useRecoilState(authModalState);
-  const [session, setSession] = useState<Session | null>(null);
+  const { session } = useAuthState();
 
   const handleClose = () => {
-    _setAuthModalState(prev => ({ ...prev, open: false }));
+    _setAuthModalState(prev => ({ ...prev, emailInputModalOpen: false }));
   };
 
-  const currentUser = useRecoilValue(sessionAndPublicUserState);
-  const authState = useAuthState(session);
-  const user = authState.user
-  const error = authState.error;
+  useEffect(() => {
+    if (session?.user) handleClose();
+  }, [session?.user]);
 
   useEffect(() => {
-    if (currentUser) handleClose();
-  }, [currentUser]);
+    if (session?.user) handleClose();
+  }, [session?.user]);
 
-  useEffect(() => {
-    if (user) handleClose();
-  }, [user]);
+  // useEffect(() => {
+  //   console.log("AuthModal useEffect 실행")
+  //   const fetchSession = async () => {
+  //     const { data, error } = await supabase.auth.getSession();
+  //     if (error) {
+  //       console.error('Failed to fetch session:', error);
+  //     } else {
+  //       setSession(data.session);
+  //     }
+  //   };
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error('Failed to fetch session:', error);
-      } else {
-        setSession(data.session);
-      }
-    };
-
-    fetchSession();
-  }, []);
+  //   fetchSession();
+  // }, []);
 
   return (
     <Dialog 
@@ -90,7 +86,7 @@ const AuthModal: FC<AuthModalProps> = () => {
               {/* <ResetPassword/> */}
               </>
             )}
-            {user && !currentUser && (
+            {session?.user && (
               <>
                 <div className="spinner-border animate-spin mt-2 mb-2 h-8 w-8 border-4"></div>
                 <p className="text-xs text-center text-blue-500">

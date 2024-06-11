@@ -12,8 +12,7 @@ import { Session } from '@supabase/supabase-js';
 
 // const useChannelData = (ssrChannelData?: boolean) => {
 const useChannelData = () => {
-  const [session, setSession] = useState<Session | null>(null);
-  const { sessionUser, authLoadingState, authError } = useAuthState(session);
+  const { session, authLoadingState, authErrorMsg } = useAuthState();
   const pathname = usePathname();
   const [channelStateValue, setChannelStateValue] = useRecoilState(channelState);
   const setAuthModalState = useSetRecoilState(authModalState);
@@ -100,7 +99,6 @@ const useChannelData = () => {
         data: {
           userId: sessionUser?.id,  // 'uid'를 'id'로 변경
           channelId: channel.id,
-          imageURL: channel.imageURL || "",
         }
       });
   
@@ -119,10 +117,11 @@ const useChannelData = () => {
         ...prev,
         mySnippets: [...prev.mySnippets, {
           channelId: channel.id,
-          imageURL: channel.imageURL || "",
+          imageURL: channel.imageURL || "",  // 채널 이미지 URL 저장
         }],
       }));
     } catch (error) {
+      setError(error.message);
     }
     setLoading(false);
   };

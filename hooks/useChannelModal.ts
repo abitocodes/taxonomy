@@ -7,8 +7,7 @@ import { channelModalState } from "@/atoms/channelModalAtom";
 import { Session } from '@supabase/supabase-js';
 
 const useChannelModal = () => {
-  const [session, setSession] = useState<Session | null>(null);
-  const { sessionUser, authLoadingState, authError } = useAuthState(session);
+  const { session, authLoadingState, authErrorMsg } = useAuthState();
   const setAuthModalState = useSetRecoilState(authModalState);
   const setChannelModalState = useSetRecoilState(channelModalState);
 

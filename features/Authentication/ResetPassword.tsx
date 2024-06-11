@@ -12,7 +12,6 @@ type ResetPasswordProps = {
 const ResetPassword: FC<ResetPasswordProps> = ({ toggleView }) => {
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
   const { sendPasswordResetEmail, loading: sending, error } = useSendPasswordResetEmail(session);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

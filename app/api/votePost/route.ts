@@ -1,5 +1,5 @@
 import { prisma } from '@/prisma/client';
-import { generateHashId } from '@/utils/generateHashId';
+import { generateVoteHashId } from '@/utils/generateHashId';
 
 export async function GET(request: Request) {
     console.log("Vote API Called, url: ", request.url)
@@ -20,12 +20,14 @@ export async function GET(request: Request) {
         let voteResult;
   
         if (!isAlreadyVoted) {
+            const createdAt = new Date();
             voteResult = await prisma.postVote.create({
                 data: {
-                    id: generateHashId(),
+                    id: generateVoteHashId(createdAt, userId, postId),
                     postId: postId,
                     userId: userId,
-                    voteValue: 1
+                    voteValue: 1,
+                    createdAt: createdAt
                 }
             });
             // 새로운 투표가 추가되면 Post의 voteStatus 업데이트

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname, useSelectedLayoutSegment } from "next/navigation"
-import React from "react";
+import React, { useEffect } from "react";
 
 import { MainNavItem } from "types"
 import { siteConfig } from "@/config/site"
@@ -18,7 +18,7 @@ import { FC, useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState"
 import { Directory } from "@/components/reddit/Navbar/Directory";
 import { RightContent } from "@/components/reddit/Navbar/RightContent";
-import { Session } from '@supabase/supabase-js';
+
 
 interface MainNavProps {
   items?: MainNavItem[]
@@ -26,10 +26,10 @@ interface MainNavProps {
 }
 
 export function MainNav({ items, children }: MainNavProps) {
+  const { session, authLoadingState, authErrorMsg } = useAuthState();
+
   const segment = useSelectedLayoutSegment();
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
-  const [session, setSession] = useState<Session | null>(null);
-  const { sessionUser, authLoadingState, authError } = useAuthState(session);
   const { onSelectMenuItem } = useDirectory();
 
   const url = usePathname();
@@ -78,7 +78,7 @@ export function MainNav({ items, children }: MainNavProps) {
       </div>
       <div className="flex items-center">
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          {!isHidden && <RightContent user={sessionUser} />}
+          {!isHidden && <RightContent user={session?.user!} />}
         </div>
       </div>
     </div>

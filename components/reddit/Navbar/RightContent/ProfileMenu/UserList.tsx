@@ -24,7 +24,6 @@ type UserListProps = {};
 
 const UserList: FC<UserListProps> = () => {
   const resetChannelState = useResetRecoilState(channelState);
-  const [session, setSession] = useState<Session | null>(null);
 
   const logout = async () => {
     resetChannelState();

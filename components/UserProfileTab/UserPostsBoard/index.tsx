@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { PostWith } from "@/types/posts"
+import { PostWith } from "@/types/post/PostList"
 
 import {
     Table,
@@ -18,7 +18,7 @@ interface UserPostsBoardProps {
 
 export const UserPostsBoard = ({ userId }: UserPostsBoardProps) => {
   const [loading, setLoading] = useState(false);
-  const [postsState, setPostStateValue] = useState<PostWith[]>([]);
+  const [postsState, setpostListStateValue] = useState<PostWith[]>([]);
 
   const getUserPosts = async () => {
     setLoading(true);
@@ -27,7 +27,7 @@ export const UserPostsBoard = ({ userId }: UserPostsBoardProps) => {
       const data = await response.json();
       const posts = data.posts;
       console.log("posts: ", posts)
-      setPostStateValue(posts as PostWith[]);
+      setpostListStateValue(posts as PostWith[]);
     } catch (error: any) {
       console.error("getUserPosts error", error.message);
     } finally {

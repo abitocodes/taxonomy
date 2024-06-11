@@ -3,12 +3,12 @@ import { useRouter } from "next/navigation";
 
 import PostLoader from "@/components/reddit/Loader/PostLoader";
 import { supabase } from "@/utils/supabase/client";
-import usePosts from "@/hooks/usePosts";
+import usePosts from "@/hooks/usePostList";
 import { Channel } from "@/types/channelsState";
 import { Post } from "@prisma/client";
 import PostItem from "./PostItem";
 import { RecoilRoot } from "recoil";
-import { PostWith } from "@/types/posts";
+import { PostWith } from "@/types/post";
 import { useRecoilState } from "recoil";
 import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
 
@@ -22,10 +22,10 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   const _sessionAndPublicUserState = useRecoilState(sessionAndPublicUserState);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { postsState, setPostsState, onVote, onDeletePost } = usePosts(channelData!);
+  const { postListState, setPostListState, onVote, onDeletePost } = usePosts(channelData!);
 
   const onSelectPost = (post: PostWith, postIdx: number) => {
-    setPostsState((prev) => ({
+    setPostListState((prev) => ({
       ...prev,
       selectedPost: { ...post, postIdx },
     }));
@@ -33,16 +33,16 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   };
 
   useEffect(() => {
-    if (postsState.postsCache[channelData?.id!] && !postsState.postUpdateRequired) {
-      setPostsState((prev) => ({
+    if (postListState.postListCache[channelData?.id!] && !postListState.postUpdateRequired) {
+      setPostListState((prev) => ({
         ...prev,
-        posts: postsState.postsCache[channelData?.id!],
+        posts: postListState.postListCache[channelData?.id!],
       }));
       return;
     }
 
     getPosts();
-  }, [channelData, postsState.postUpdateRequired]);
+  }, [channelData, postListState.postUpdateRequired]);
 
   const getPosts = async () => {
     setLoading(true);
@@ -59,11 +59,11 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   
       if (error) throw error;
   
-      setPostsState((prev) => ({
+      setPostListState((prev) => ({
         ...prev,
         posts: posts as PostWith[], // 여기서 posts는 labels와 creator를 포함해야 합니다.
-        postsCache: {
-          ...prev.postsCache,
+        postListCache: {
+          ...prev.postListCache,
           [channelData?.id!]: posts as PostWith[],
         },
         postUpdateRequired: false,
@@ -80,13 +80,13 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
         <PostLoader />
       ) : (
         <div className="flex flex-col">
-          {postsState.posts.map((post: PostWith, index) => (
+          {postListState.postList.map((post: PostWith, index) => (
             <PostItem
               key={post.id}
               post={post}
               onVote={onVote} // 'vote'는 적절한 숫자 값으로 설정해야 합니다.
               onDeletePost={onDeletePost}
-              userVoteValue={postsState.postVotes.find((item) => item.postId === post.id)?.voteValue}
+              userVoteValue={postListState.postVotes.find((item) => item.postId === post.id)?.voteValue}
               userIsCreator={userId === post.creatorId}
               onSelectPost={onSelectPost}
             />

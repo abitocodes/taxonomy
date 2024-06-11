@@ -1,6 +1,7 @@
 import { prisma } from "@/prisma/client";
 
 export async function GET(request: Request) {
+  console.log("getHomePostListWithSession API 실행")
   try {
     const url = new URL(request.url);
     const userId = url.searchParams.get('userId');
@@ -15,8 +16,6 @@ export async function GET(request: Request) {
         }
       }
     });
-    console.log("userChannels: ", userChannels)
-
 
     if (!userChannels) {
       return Response.json({
@@ -30,7 +29,7 @@ export async function GET(request: Request) {
     );
 
     // 해당 장르에 속하는 게시물 검색
-    const posts = await prisma.post.findMany({
+    const postList = await prisma.post.findMany({
       where: {
         channelId: { in: channelIds },
       },
@@ -47,17 +46,17 @@ export async function GET(request: Request) {
       take: 10
     });
 
-    const sortedPosts = posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    const sortedPostList = postList.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
     return Response.json({
       statusCode: 200,
       message: '200 OK',
-      posts: sortedPosts,
+      postList: sortedPostList,
     });
   } catch (error) {
     return Response.json({
       statusCode: 500,
-      message: 'An error occurred while retrieving posts'
+      message: 'An error occurred while retrieving postList'
     });
   }
 }

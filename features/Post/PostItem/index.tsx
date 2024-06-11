@@ -11,7 +11,7 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 import { Badge } from "@/components/ui/badge";
 
 import { Post, Label, PublicUser } from "@prisma/client";
-import { PostWith } from "@/types/posts";
+import { PostWith } from "@/types/post";
 import { Container } from "@radix-ui/themes";
 import { CardContent } from "@/components/ui/card";
 import { SessionAndPublicUserStateType } from "@/types/atoms/SessionAndPublicUserStateType";

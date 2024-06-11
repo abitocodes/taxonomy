@@ -5,10 +5,10 @@ import { IoDocumentText, IoImageOutline } from "react-icons/io5";
 import { useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
 
-import { postState } from "@/atoms/postsAtom";
+import { postListState } from "@/atoms/postListAtom";
 import { supabase } from "@/utils/supabase/client";
 import useSelectFile from "@/hooks/useSelectFile";
-import { PostTabItem } from "@/types/PostTabItem";
+import { PostTabItem } from "@/types/post/PostTabItem";
 import ImageUpload from "./ImageUpload";
 import LinkInput from "./LinkInput";
 import TabItem from "./TabItem";
@@ -59,7 +59,7 @@ const NewPostForm: FC<NewPostFormProps> = ({ channelId, channelImageURL, user })
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  const setPostItems = useSetRecoilState(postState);
+  const setPostItems = useSetRecoilState(postListState);
 
   const handleCreatePost = async () => {
     setLoading(true);

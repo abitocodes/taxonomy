@@ -24,8 +24,7 @@ type MenuWrapperProps = {};
 
 const MenuWrapper: FC<MenuWrapperProps> = () => {
   const [authModal, setModalState] = useRecoilState(authModalState);
-  const [session, setSession] = useState<Session | null>(null);
-  const { sessionUser, authLoadingState, authError } = useAuthState(session);
+  const { session, authLoadingState, authErrorMsg } = useAuthState();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

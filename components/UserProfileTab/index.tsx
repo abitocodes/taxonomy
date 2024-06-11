@@ -17,7 +17,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { PostWith } from "@/types/posts"
+import { PostWith } from "@/types/post/PostList"
 
 import { GameIconChat_bubble } from "@/components/ReactGameIcons"
 import { GameIconAndroid_mask } from "@/components/ReactGameIcons"

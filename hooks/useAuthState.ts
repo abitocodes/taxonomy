@@ -1,50 +1,57 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
+import { SessionAndPublicUserStateType } from "@/types/atoms/SessionAndPublicUserStateType";
+import { useRecoilState } from "recoil";
+import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
 
 type AuthStateHook = {
-  sessionUser: User | null;
+  session: Session | null;
+  setSession: (session: Session | null) => void;
   authLoadingState: boolean;
-  authError: Error | null;
+  authErrorMsg: Error | null;
 };
 
 type AuthStateOptions = {
-  onUserChanged?: (user: User | null) => Promise<void>;
+  onSessionChanged?: (session: Session | null) => Promise<void>;
 };
 
-export function useAuthState(session: Session | null, options?: AuthStateOptions): AuthStateHook {
-  const [sessionUser, setSessionUser] = useState<User | null>(null);
-  const [authLoadingState, setAuthLoadingState] = useState<boolean>(true);
-  const [authError, setAuthError] = useState<Error | null>(null);
+export function useAuthState(options?: AuthStateOptions): AuthStateHook {
+  // const [sessionUser, setSessionUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [authLoadingState, setAuthLoadingState] = useState<boolean>(!session);
+  const [authErrorMsg, setAuthErrorMsg] = useState<Error | null>(null);
+
+  const [_sessionAndPublicUser, _setSessionAndPublicUser] = useRecoilState(sessionAndPublicUserState);
 
   useEffect(() => {
+    let authListener: { subscription: { unsubscribe: () => void } } | null = null;
+  
     const handleAuthChange = async () => {
-      const { data: authListener } = supabase.auth.onAuthStateChange(async (event, updatedSession) => {
-        const currentUser = updatedSession?.user ?? null;
-        
-        setSessionUser(currentUser);
-        setAuthLoadingState(false);
-
-        if (options?.onUserChanged) {
-          await options.onUserChanged(currentUser);
-        }
-      });
-
-      return () => {
-        authListener.subscription.unsubscribe();
-      };
+      try {
+        const { data } = supabase.auth.onAuthStateChange(async (event, updatedSession) => {
+          const currentSession = updatedSession ?? null;
+          
+          setSession(currentSession);
+          setAuthLoadingState(false);
+  
+          if (options?.onSessionChanged) {
+            await options.onSessionChanged(currentSession);
+          }
+        });
+  
+        authListener = data;
+      } catch (error) {
+        setAuthErrorMsg(error as Error);
+      }
     };
-
+  
     handleAuthChange();
+  
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
   }, [session, options]);
 
-  useEffect(() => {
-    console.log("sessionUser: ", sessionUser)
-    console.log("AAA useAuthState authLoadingState: ", authLoadingState)
-  }, [authLoadingState])
-
-  console.log(`useAuthState::authLoadingState ${authLoadingState}`)
-
-  return { sessionUser, authLoadingState, authError };
+  return { session, setSession, authLoadingState, authErrorMsg };
 }
-

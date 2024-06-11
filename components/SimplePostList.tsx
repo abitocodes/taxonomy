@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react';
-import { PostWith } from "@/types/posts";
+import { PostWith } from "@/types/post";
 import SimplePostItem from "@/features/Post/SimplePostItem";
 
 interface SimplePostListProps {
