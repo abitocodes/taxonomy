@@ -13,7 +13,6 @@ export default function Home(): ReactElement {
   console.log("Home 실행")
   const { session,
           authLoadingState,
-          authErrorMsg,
           postListState,
           setPostListState,
           postListLoading,
@@ -84,7 +83,7 @@ export default function Home(): ReactElement {
         getHomePostListWithoutSession();
       }
     }
-  }, [authLoadingState]);
+  }, [session?.user, authLoadingState]);
 
   useEffect(() => {
     if (!session?.user?.id || !postListState.postList ) return;

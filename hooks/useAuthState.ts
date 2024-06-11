@@ -13,11 +13,11 @@ type AuthStateHook = {
 };
 
 type AuthStateOptions = {
-  onSessionChanged?: (session: Session | null) => Promise<void>;
+  onUserChanged?: (user: User | null) => Promise<void>;
 };
 
 export function useAuthState(options?: AuthStateOptions): AuthStateHook {
-  // const [sessionUser, setSessionUser] = useState<User | null>(null);
+  const [sessionUser, setSessionUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [authLoadingState, setAuthLoadingState] = useState<boolean>(!session);
   const [authErrorMsg, setAuthErrorMsg] = useState<Error | null>(null);
@@ -31,12 +31,13 @@ export function useAuthState(options?: AuthStateOptions): AuthStateHook {
       try {
         const { data } = supabase.auth.onAuthStateChange(async (event, updatedSession) => {
           const currentSession = updatedSession ?? null;
+          const currentUser = currentSession?.user ?? null;
           
-          setSession(currentSession);
+          setSessionUser(currentUser);
           setAuthLoadingState(false);
   
-          if (options?.onSessionChanged) {
-            await options.onSessionChanged(currentSession);
+          if (options?.onUserChanged) {
+            await options.onUserChanged(currentUser);
           }
         });
   
@@ -51,7 +52,7 @@ export function useAuthState(options?: AuthStateOptions): AuthStateHook {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [session, options]);
+  }, [sessionUser, options]);
 
   return { session, setSession, authLoadingState, authErrorMsg };
 }
