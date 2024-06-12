@@ -21,49 +21,26 @@ import { useUser } from "@/hooks/useUser";
 import { PostItem } from "@/components/Post/PostItem";
 import { PostWith } from "@/types/post";
 import { CryptoPriceTable } from "@/components/CryptoPriceTable";
+import { useRecoilValue } from "recoil";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
 type PostPageProps = {};
 
 const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pid: string } }) => {
   const { channel, pid } = params
 
+  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
   const { user, loadingUser } = useUser();
   const { channelStateValue, loading: channelLoading } = useChannelData();
-  const { postListState, setPostListState, onSelectPost, onDeletePost, postListLoading, setPostListLoading, onVotePost } = usePostList(channelStateValue.currentChannel);
+  const { 
+    postListState,
+    setPostListState,
+    postListLoading,
+    setPostListLoading,
+    onSelectPost,
+    onDeletePost,
+    onVotePost } = usePostList(globalSessionData, globalAuthLoadingState, channelStateValue.currentChannel);
 
-  const fetchPost = async () => {
-    
-    setPostListLoading(true);
-    try {
-      const response = await fetch(`/api/getPost?postId=${pid}`);
-      const data = await response.json();
-      const postData = data.post
-
-      setPostListState((prev) => ({
-        ...prev,
-        selectedPost: { id: postData.id, ...postData } as PostWith,
-      }));
-    } catch (error: any) {
-      console.error("fetchPost error", error.message);
-    }
-    setPostListLoading(false);
-  };
-
-  useEffect(() => {
-    const fetchSessionAndPost = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      setSession(data.session);
-      if (data.session) {
-        if (pid) {
-          fetchPost();
-        }
-      } else {
-        console.log("로그인이 필요합니다.");
-      }
-    };
-  
-    fetchSessionAndPost();
-  }, [params, postListState.postList]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -83,6 +60,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pi
                         post={postListState.selectedPost}
                         onVotePost={onVotePost}
                         onDeletePost={onDeletePost}
+                        globalSessionData={globalSessionData}
                         isAlreadyVoted={postListState.postVotes.find((item) => item.postId === postListState.selectedPost!.id)?.voteValue}
                         isSessionUserCreator={user?.id === postListState.selectedPost?.creatorId}
                         onSelectPost={onSelectPost}

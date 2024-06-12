@@ -23,14 +23,9 @@ export function useAuthState(where: string, options?: AuthStateOptions): AuthSta
   const handleAuthChange = async () => {
     
     console.log(`handleAuthChange Called(1/2) @${where}, globalAuthLoadingState: `, _globalAuthState.globalAuthLoadingState);
-    console.log(`handleAuthChange Called(2/2) @${where}, _sessionAndPublicUser: `, _globalAuthState.globalPublicUserData);
+    console.log(`handleAuthChange Called(2/2) @${where}, globalAuthState: `, _globalAuthState);
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, updatedSession) => {
       const currentSession = updatedSession ?? null;
-
-      _setGlobalAuthState((prev) => ({
-        ...prev,
-        globalAuthLoadingState: false
-      }));
 
       if (currentSession) {
         const response = await fetch(`/api/getPublicUser?userId=${currentSession.user.id}`);
@@ -51,6 +46,11 @@ export function useAuthState(where: string, options?: AuthStateOptions): AuthSta
       if (options?.onSessionChanged) {
         await options.onSessionChanged(currentSession);
       }
+
+      _setGlobalAuthState((prev) => ({
+        ...prev,
+        globalAuthLoadingState: false
+      }));
     });
 
     return () => {

@@ -14,7 +14,7 @@ import { Post, PostVote } from "@prisma/client";
 import { PostWith } from "@/types/post";
 import { Channel } from "@/types/channelsState";
 
-export default function usePostList (globalSession, globalAuthLoadingState) {
+export default function usePostList (globalSession, globalAuthLoadingState, channel?) {
 
   const [_postListState, _setPostListState] = useRecoilState(postListState);
   const [postListLoading, setPostListLoading] = useState(false);
