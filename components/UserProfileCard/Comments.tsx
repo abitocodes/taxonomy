@@ -1,4 +1,4 @@
-export const Comments = () => {
-    return <div>Comments</div>
+export const CommentList = () => {
+    return <div>CommentList</div>
 }
 

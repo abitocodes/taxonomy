@@ -1,4 +1,4 @@
-export const UserCommentsBoard = () => {
-  return <div>UserCommentsBoard</div>;
+export const UserCommentListBoard = () => {
+  return <div>UserCommentListBoard</div>;
 };
 

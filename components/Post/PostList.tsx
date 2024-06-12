@@ -1,30 +1,39 @@
 import React from 'react';
 import { PostWith } from "@/types/post";
 import { PostVote } from "@prisma/client";
-import PostItem from "@/features/Post/PostItem";
+import { PostItem } from '@/components/Post/PostItem';
+import { Session } from '@supabase/supabase-js';
+import { Post } from '@prisma/client';
 
 interface PostListProps {
-    postList: PostWith[];
-    postVotes: PostVote[];
-    onVote: (postId: string, voteValue: number) => Promise<void>;
-    onDeletePost: (postId: string) => Promise<void>;
-    onSelectPost: (post: PostWith) => void;
-    userId: string | undefined;
-  }
+  postList: PostWith[];
+  postVotes: PostVote[];
+  globalSessionData: Session | null;
+  onSelectPost?: (value: Post, postIdx: number) => void;
+  onVotePost: (event: React.MouseEvent<Element, MouseEvent>, post: Post, globalSessionData: Session | null) => void;
+  onDeletePost: (post: Post) => Promise<boolean>;
+}
 
-export const PostList: React.FC<PostListProps> = ({ postList, postVotes, onVote, onDeletePost, onSelectPost, userId }) => {
+export const PostList: React.FC<PostListProps> = ({ 
+  postList, 
+  postVotes, 
+  globalSessionData, 
+  onSelectPost, 
+  onVotePost, 
+  onDeletePost }) => {
     return (
       <div className="space-y-6">
         {postList.map((post, index) => (
           <PostItem
-            key={index}
+            key={post.id}
             post={post}
             postIdx={index}
-            onVote={() => onVote(post.id, 1).then(() => true).catch(() => false)}
-            onDeletePost={() => onDeletePost(post.id).then(() => true).catch(() => false)}
-            userVoteValue={postVotes.find((item) => item.postId === post.id)?.voteValue}
-            userIsCreator={userId === post.creatorId}
-            onSelectPost={() => onSelectPost(post)}
+            globalSessionData={globalSessionData || null}
+            onSelectPost={onSelectPost}
+            onVotePost={onVotePost}
+            onDeletePost={onDeletePost}
+            isAlreadyVoted={!!postVotes.find((v) => v.postId === post.id)}
+            isUserCreator={globalSessionData?.user?.id === post.creatorId}
             homePage
           />
         ))}

@@ -6,6 +6,7 @@ import { channelState } from "@/atoms/channelsAtom";
 import { postListState } from "@/atoms/postListAtom";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
+
 import { Post, PostVote } from "@prisma/client";
 import { PostWith } from "@/types/post";
 

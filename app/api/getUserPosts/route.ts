@@ -33,7 +33,7 @@ export async function GET(request: Request) {
             posts: posts
         });
     } catch (error) {
-        console.error("getPostComments error", error.message);
+        console.error("getPostCommentList error", error.message);
         return Response.json({
             statusCode: 500,
             message: 'Failed to fetch getUserPosts'

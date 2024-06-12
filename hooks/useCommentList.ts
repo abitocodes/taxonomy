@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react';
-import { Comment, CommentVote } from '@prisma/client';
 import { useSetRecoilState } from 'recoil';
 import { postListState } from '@/atoms/postListAtom';
 import { useAuthState } from '@/hooks/useAuthState';
@@ -8,6 +7,9 @@ import { useRecoilState } from 'recoil';
 import { commentListState } from '@/atoms/commentListAtom';
 import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 import { useRecoilValue } from "recoil";
+
+import { Comment, CommentVote } from '@prisma/client';
+import { CommentWith } from '@/types/comment/CommentList';
 
 export const useCommentList = (postId: string) => {
   const { globalSessionData } = useRecoilValue(globalAuthState);
@@ -21,12 +23,11 @@ export const useCommentList = (postId: string) => {
 
   const onVoteComment = async (
     event: React.MouseEvent<SVGElement, MouseEvent>,
-    comment: Comment,
+    comment: CommentWith,
   ) => {
     console.log("onVoteComment Called.");
     setIsLoading(true);
     const isAlreadyVoted = _commentListState.commentVotes.find((v) => v.commentId === comment.id);
-
 
     try {
       const response = await fetch(`/api/voteComment?commentId=${comment.id}&userId=${globalSessionData?.user?.id}`);

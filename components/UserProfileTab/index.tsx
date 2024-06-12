@@ -43,7 +43,7 @@ export function UserProfileTab({ user }: { user: PublicUser }) {
               size={42}
             />
           </TabsTrigger>
-        <TabsTrigger value="comments">
+        <TabsTrigger value="commentList">
           <GameIconTelepathy
               backgroundColor="transparent"
               foregroundColor="hsl(var(--foreground))"
@@ -61,26 +61,26 @@ export function UserProfileTab({ user }: { user: PublicUser }) {
       <TabsContent value="posts">
         <UserPostsBoard userId={user.id}/>
       </TabsContent>
-      <TabsContent value="comments">
+      <TabsContent value="commentList">
         <Card>
           <CardHeader>
-            <CardTitle>Comments</CardTitle>
+            <CardTitle>CommentList</CardTitle>
             <CardDescription>
-              Change your comments here. After saving, you'll be logged out.
+              Change your commentList here. After saving, you'll be logged out.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="space-y-1">
-              <Label htmlFor="current">Current comments</Label>
-              <Input id="current" type="comments" />
+              <Label htmlFor="current">Current commentList</Label>
+              <Input id="current" type="commentList" />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="new">New comments</Label>
-              <Input id="new" type="comments" />
+              <Label htmlFor="new">New commentList</Label>
+              <Input id="new" type="commentList" />
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Save comments</Button>
+            <Button>Save commentList</Button>
           </CardFooter>
         </Card>
       </TabsContent>

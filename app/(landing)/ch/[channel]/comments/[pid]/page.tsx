@@ -9,7 +9,7 @@ import { supabase } from "@/utils/supabase/client";
 import PageContentLayout from "@/components/reddit/Layout/PageContent";
 import PostLoader from "@/components/reddit/Loader/PostLoader";
 import About from "@/features/Channel/About";
-import Comments from "@/components/CommentSection";
+import CommentList from "@/components/Comment";
 
 import useChannelData from "@/hooks/useChannelData";
 import usePostList from "@/hooks/usePostList";
@@ -28,8 +28,6 @@ type PostPageProps = {};
 
 const PostPage: FC<PostPageProps> = ({ params }: { params: { pid: string } }) => {
   const { pid } = params
-  const [isAlreadyVoted, setIsAlreadyVoted] = useState(false);
-  const [isUserCreator, setIsUserCreator] = useState(false);
   const { globalSessionData, globalPublicUserData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
   const { channelStateValue, loading: channelLoading } = useChannelData();
   const { 
@@ -42,22 +40,29 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { pid: string } }) =>
     onVotePost 
   } = usePostList(globalSessionData, globalAuthLoadingState, channelStateValue.currentChannel);
 
+  const [isAlreadyVoted, setIsAlreadyVoted] = useState(false);
+  const [isUserCreator, setIsUserCreator] = useState(false);
+
+  const fetchPost = async () => {
+    if (!postListState.selectedPost) {
+      const response = await fetch(`/api/getPost?postId=${pid}&userId=${globalSessionData?.user?.id}`);
+      console.log("AAA ", globalSessionData);
+      const { post, isAlreadyVoted, isUserCreator } = await response.json();
+      console.log("post, isAlreadyVoted, isUserCreator", post, isAlreadyVoted, isUserCreator);
+      setPostListState((prev) => ({
+        ...prev,
+        selectedPost: post
+      }));
+      setIsAlreadyVoted(isAlreadyVoted);
+      setIsUserCreator(isUserCreator);
+    }
+  };
+
   useEffect(() => {
-    const fetchPost = async () => {
-      if (!postListState.selectedPost) {
-        const response = await fetch(`/api/getPost?postId=${pid}&userId=${globalSessionData?.user?.id}`);
-        const { post, isAlreadyVoted, isUserCreator } = await response.json();
-        setPostListState((prev) => ({
-          ...prev,
-          selectedPost: post
-        }));
-        setIsAlreadyVoted(isAlreadyVoted);
-        setIsUserCreator(isUserCreator);
-      }
-    };
-  
-    fetchPost();
-  }, [globalAuthState]); // user.id가 변경될 때마다 useEffect를 다시 실행합니다.
+    if (!globalAuthLoadingState) {
+      fetchPost();
+    }
+  }, [globalAuthLoadingState]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -84,7 +89,7 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { pid: string } }) =>
                         homePage
                         cursorPointer={false}
                         />
-                        <Comments 
+                        <CommentList 
                           user={globalPublicUserData?.user} 
                           selectedPost={postListState.selectedPost}
                           />

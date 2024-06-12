@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     }
 
     try {
-        const comments = await prisma.comment.findMany({
+        const commentList = await prisma.comment.findMany({
             where: {
                 postId: postId as string,
             },
@@ -31,13 +31,13 @@ export async function GET(request: Request) {
         return Response.json({
             statusCode: 200,
             message: '200 OK',
-            commentList: comments
+            commentList: commentList
         });
     } catch (error) {
-        console.error("getPostComments error", error.message);
+        console.error("getPostCommentList error", error.message);
         return Response.json({
             statusCode: 500,
-            message: 'Failed to fetch comments'
+            message: 'Failed to fetch commentList'
         })
     }
 }

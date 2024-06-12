@@ -1,6 +1,6 @@
 import { PostVote } from "@prisma/client";
 import { PostWith } from "@/types/post";
-import { CommentWith } from "@/components/CommentSection/CommentItem";
+import { CommentWith } from "@/types/comment/CommentList";
 import { CommentVote } from "@prisma/client";
 
 export type PostListState = {

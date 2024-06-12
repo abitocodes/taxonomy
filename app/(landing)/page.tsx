@@ -10,6 +10,7 @@ import { PostItem } from "@/components/Post/PostItem";
 import { BulletinBoard } from "@/components/BulletinBoard";
 import { useRecoilValue } from "recoil";
 import { globalAuthState } from "@/atoms/globalAuthStateAtom";
+import { PostList } from "@/components/Post/PostList";
 
 export default function Home(): ReactElement {
   const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
@@ -67,24 +68,14 @@ export default function Home(): ReactElement {
             {postListLoading || globalAuthLoadingState ? (
               <PostLoader />
             ) : (
-              <div className="space-y-6">
-                {(postListState?.postList || []).map((post: PostWith, index: number) => {
-                  return (
-                    <PostItem
-                      key={index}
-                      post={post}
-                      postIdx={index}
-                      onVotePost={onVotePost}
-                      onDeletePost={onDeletePost}
-                      globalSessionData={globalSessionData}
-                      isAlreadyVoted={!!postListState.postVotes.find((v) => v.postId === post.id)}
-                      isUserCreator={post.creatorId === globalSessionData?.user?.id}
-                      onSelectPost={onSelectPost}
-                      homePage
-                    />
-                  );
-                })}
-              </div>
+              <PostList
+                postList={postListState?.postList || []}
+                postVotes={postListState?.postVotes || []}
+                globalSessionData={globalSessionData}
+                onSelectPost={onSelectPost}
+                onVotePost={onVotePost}
+                onDeletePost={onDeletePost}
+              />
             )}
           </div>
         </div>

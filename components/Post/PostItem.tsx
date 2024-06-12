@@ -26,12 +26,12 @@ interface PostItemProps {
   onVotePost: (event: React.MouseEvent<Element, MouseEvent>, post: Post, globalSessionData: Session | null) => void;
   onSelectPost?: (value: Post, postIdx: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
-  router?: AppRouterInstance;
   isAlreadyVoted?: boolean;
   isUserCreator?: boolean;
   globalSessionData: Session | null;
   homePage?: boolean;
   cursorPointer?: boolean; // 추가된 prop
+  router?: AppRouterInstance;
 }
 
 export function PostItem({
@@ -40,13 +40,12 @@ export function PostItem({
   onVotePost,
   onSelectPost,
   onDeletePost,
-  router,
-  globalSessionData,
   isAlreadyVoted,
   isUserCreator,
+  globalSessionData,
   homePage,
-  cursorPointer = true, // 기본값은 true로 설정
-  ...props
+  cursorPointer = true,
+  router,
 }: PostItemProps) {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);

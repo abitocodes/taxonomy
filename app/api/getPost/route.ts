@@ -11,7 +11,7 @@ interface ResponseData {
 export async function GET(request: Request) {
     const url = new URL(request.url);
     const pid = url.searchParams.get('postId');
-    const userId = url.searchParams.get('userId'); // 사용자 ID를 선택적으로 가져옵니다.
+    const userId = url.searchParams.get('userId'); 
 
     if (!pid) {
         return Response.json({
@@ -51,12 +51,15 @@ export async function GET(request: Request) {
 
         if (userId) {
             // 투표 여부를 확인합니다.
+            console.log("pid, userid: ", pid, userId);
             const postVote = await prisma.postVote.findFirst({
                 where: {
                     postId: pid,
                     userId: userId
                 }
             });
+
+            console.log("postVote", postVote);
 
             // 게시글 작성자 여부를 확인합니다.
             const isUserCreator = postData.creatorId === userId;
