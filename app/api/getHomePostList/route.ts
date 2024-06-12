@@ -9,14 +9,12 @@ export async function GET(request: Request) {
 
     if (userId) {
       console.log("A")
-      const { postList, postVotes, isAlreadyVotedList, isUserCreatorList } = await getPostList(userId);
+      const { postList, postVotes } = await getPostList(userId);
       return new Response(JSON.stringify({
         statusCode: 200,
         message: '200 OK',
         postList: postList,
         postVotes: postVotes,
-        isAlreadyVotedList: isAlreadyVotedList,
-        isUserCreatorList: isUserCreatorList
       }), { status: 200 });
     } else {
       console.log("B")

@@ -13,9 +13,6 @@ export type PostListState = {
   };
   postListUpdateRequired: boolean;
 
-  isAlreadyVotedList: boolean[];
-  isUserCreatorList: boolean[];
-
   selectedPostCommentList: CommentWith[];
   selectedPostCommentVotes: CommentVote[];
   selectedPostCommentListCache: {

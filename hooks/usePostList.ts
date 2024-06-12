@@ -1,18 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { authModalState } from "@/atoms/auth/authModalAtom";
 import { channelState } from "@/atoms/channelsAtom";
 import { postListState } from "@/atoms/postListAtom";
-
-import { useAuthState } from "@/hooks/useAuthState"
-
 import { useRouter } from "next/navigation";
-
 import { supabase } from "@/utils/supabase/client";
 import { Post, PostVote } from "@prisma/client";
 import { PostWith } from "@/types/post";
-import { Channel } from "@/types/channelsState";
 
 export default function usePostList (globalSession, globalAuthLoadingState, channel?) {
   const [_postListState, _setPostListState] = useRecoilState(postListState);

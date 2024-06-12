@@ -35,8 +35,6 @@ export default function Home(): ReactElement {
           ...prev,
           postList: data.postList as PostWith[],
           postVotes: data.postVotes as PostVote[],
-          isAlreadyVotedList: data.isAlreadyVotedList as boolean[],
-          isUserCreatorList: data.isUserCreatorList as boolean[],
         }));
         console.log("postListState", postListState)
       } else {
@@ -79,8 +77,8 @@ export default function Home(): ReactElement {
                       onVotePost={onVotePost}
                       onDeletePost={onDeletePost}
                       globalSessionData={globalSessionData}
-                      isAlreadyVoted={postListState?.isAlreadyVotedList[index]}
-                      isUserCreator={postListState?.isUserCreatorList[index]}
+                      isAlreadyVoted={!!postListState.postVotes.find((v) => v.postId === post.id)}
+                      isUserCreator={post.creatorId === globalSessionData?.user?.id}
                       onSelectPost={onSelectPost}
                       homePage
                     />
