@@ -109,7 +109,7 @@ const NewPostForm: FC<NewPostFormProps> = ({ channelId, channelImageURL, user })
     // Clear the cache to cause a refetch of the posts
     setPostItems((prev) => ({
       ...prev,
-      postUpdateRequired: true,
+      postListUpdateRequired: true,
     }));
     router.back();
   } catch (error) {

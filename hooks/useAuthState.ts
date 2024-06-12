@@ -21,9 +21,7 @@ export function useAuthState(where: string, options?: AuthStateOptions): AuthSta
   const [_globalAuthState, _setGlobalAuthState] = useRecoilState(globalAuthState);
 
   const handleAuthChange = async () => {
-    
-    console.log(`handleAuthChange Called(1/2) @${where}, globalAuthLoadingState: `, _globalAuthState.globalAuthLoadingState);
-    console.log(`handleAuthChange Called(2/2) @${where}, globalAuthState: `, _globalAuthState);
+    console.log(`handleAuthChange Called, @${where}, globalAuthState: `, _globalAuthState);
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, updatedSession) => {
       const currentSession = updatedSession ?? null;
 

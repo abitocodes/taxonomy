@@ -27,9 +27,7 @@ interface PostItemProps {
   onSelectPost?: (value: Post, postIdx: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   router?: AppRouterInstance;
-  isAlreadyVoted?: number;
-  isSessionUserCreator?: boolean;
-  isUserCreator?: boolean;
+  isAlreadyVoted?: boolean;
   globalSessionData: Session | null;
   homePage?: boolean;
   cursorPointer?: boolean; // 추가된 prop
@@ -43,13 +41,14 @@ export function PostItem({
   onDeletePost,
   router,
   globalSessionData,
-  isAlreadyVoted,
   homePage,
   cursorPointer = true, // 기본값은 true로 설정
   ...props
 }: PostItemProps) {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const [isAlreadyVoted, setIsAlreadyVoted] = useState(false);
+  const [isUserCreator, setIsUserCreator] = useState(false);
 
   const handleDelete = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -116,7 +115,7 @@ export function PostItem({
         </div>
         <div className={`flex flex-col items-center space-y-4`}>
           <div className="flex flex-col items-center">
-          {isAlreadyVoted !== 1 ? (
+          {isAlreadyVoted !== true ? (
             <Button 
               variant="ghost"
               size="icon"

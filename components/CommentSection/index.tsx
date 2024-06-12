@@ -13,15 +13,11 @@ import { CommentVote } from "@prisma/client";
 
 interface CommentsProps {
   user: PublicUser | null;
-  channel: string;
   selectedPost: PostWith;
 }
 
-const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
+const Comments: FC<CommentsProps> = ({ user, selectedPost: post }) => {
   const { 
-    sessionUser,
-    globalAuthLoadingState,
-    globalAuthErrorMsg,
     commentListState,
     setCommentListState, 
     commentListLoading, 
@@ -31,7 +27,6 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
     error } = useCommentList(post.id);
 
   const [ commentInput, setCommentInput] = useState("");
-  const _globalAuthState = useRecoilValue(globalAuthState);
 
   const getCommentList = async () => {
     setCommentListLoading(true);
@@ -72,10 +67,10 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
 
   useEffect(() => {
     getCommentList()
-  }, [sessionUser, globalAuthLoadingState]);
+  }, [globalAuthState]);
 
   useEffect(() => {
-    if (!sessionUser?.id || !commentListState.commentList ) return;
+    if (!user?.id || !commentListState.commentList ) return;
     getCommentVotes();
   
     return () => {
@@ -84,7 +79,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
         commentVotes: [], // 배열로 초기화
       }));
     };
-  }, [commentListState?.commentList, sessionUser?.id]);
+  }, [commentListState?.commentList, user?.id]);
 
   return (
     <div className="p-2 rounded-b-lg">
@@ -117,7 +112,6 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
                     onDeleteComment={() => onDeleteComment(item.id)} 
                     isLoading={commentListLoading} userId={user?.id} 
                     onVoteComment={onVoteComment}
-                    globalAuthState={_globalAuthState}
                     />
                 ))}
               </>

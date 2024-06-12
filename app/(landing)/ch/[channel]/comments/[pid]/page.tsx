@@ -26,11 +26,11 @@ import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
 type PostPageProps = {};
 
-const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pid: string } }) => {
-  const { channel, pid } = params
-
-  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
-  const { user, loadingUser } = useUser();
+const PostPage: FC<PostPageProps> = ({ params }: { params: { pid: string } }) => {
+  const { pid } = params
+  const [isAlreadyVoted, setIsAlreadyVoted] = useState(false);
+  const [isUserCreator, setIsUserCreator] = useState(false);
+  const { globalSessionData, globalPublicUserData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
   const { channelStateValue, loading: channelLoading } = useChannelData();
   const { 
     postListState,
@@ -39,8 +39,25 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pi
     setPostListLoading,
     onSelectPost,
     onDeletePost,
-    onVotePost } = usePostList(globalSessionData, globalAuthLoadingState, channelStateValue.currentChannel);
+    onVotePost 
+  } = usePostList(globalSessionData, globalAuthLoadingState, channelStateValue.currentChannel);
 
+  useEffect(() => {
+    const fetchPost = async () => {
+      if (!postListState.selectedPost) {
+        const response = await fetch(`/api/getPost?postId=${pid}&userId=${globalSessionData?.user?.id}`);
+        const { post, isAlreadyVoted, isUserCreator } = await response.json();
+        setPostListState((prev) => ({
+          ...prev,
+          selectedPost: post
+        }));
+        setIsAlreadyVoted(isAlreadyVoted);
+        setIsUserCreator(isUserCreator);
+      }
+    };
+  
+    fetchPost();
+  }, [globalAuthState]); // user.id가 변경될 때마다 useEffect를 다시 실행합니다.
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -61,15 +78,14 @@ const PostPage: FC<PostPageProps> = ({ params }: { params: { channel: string, pi
                         onVotePost={onVotePost}
                         onDeletePost={onDeletePost}
                         globalSessionData={globalSessionData}
-                        isAlreadyVoted={postListState.postVotes.find((item) => item.postId === postListState.selectedPost!.id)?.voteValue}
-                        isSessionUserCreator={user?.id === postListState.selectedPost?.creatorId}
+                        isAlreadyVoted={isAlreadyVoted}
+                        isUserCreator={isUserCreator}
                         onSelectPost={onSelectPost}
                         homePage
                         cursorPointer={false}
                         />
                         <Comments 
-                          user={user} 
-                          channel={channel as string} 
+                          user={globalPublicUserData?.user} 
                           selectedPost={postListState.selectedPost}
                           />
                       </>

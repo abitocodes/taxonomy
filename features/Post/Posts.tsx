@@ -33,7 +33,7 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
   };
 
   useEffect(() => {
-    if (postListState.postListCache[channelData?.id!] && !postListState.postUpdateRequired) {
+    if (postListState.postListCache[channelData?.id!] && !postListState.postListUpdateRequired) {
       setPostListState((prev) => ({
         ...prev,
         posts: postListState.postListCache[channelData?.id!],
@@ -42,7 +42,7 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
     }
 
     getPosts();
-  }, [channelData, postListState.postUpdateRequired]);
+  }, [channelData, postListState.postListUpdateRequired]);
 
   const getPosts = async () => {
     setLoading(true);
@@ -66,7 +66,7 @@ const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
           ...prev.postListCache,
           [channelData?.id!]: posts as PostWith[],
         },
-        postUpdateRequired: false,
+        postListUpdateRequired: false,
       }));
     } catch (error: any) {
       console.error("getPosts error", error.message);

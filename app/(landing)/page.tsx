@@ -29,11 +29,12 @@ export default function Home(): ReactElement {
     setPostListLoading(true);
     try {
       const response = await fetch(`/api/getHomePostListWithSession?userId=${globalSessionData?.user.id}`);
-      const { postList } = await response.json();
-
+      const { postList, postVotes } = await response.json();
+  
       setPostListState((prev) => ({
         ...prev,
         postList: postList as PostWith[],
+        postVotes: postVotes as PostVote[],
       }));
     } catch (error: any) {
       console.error("getHomePostListWithSession error", error.message);
@@ -54,27 +55,9 @@ export default function Home(): ReactElement {
         postList: postList as PostWith[],
       }));
     } catch (error: any) {
+      console.error("getHomePostListWithoutSession error", error.message);
     } finally {
       setPostListLoading(false);
-    }
-  };
-
-  const getUserPostVotes = async () => {
-    if (!postListState) {
-      return;
-    }
-    const postIds = postListState.postList.map((post) => post.id);
-    try {
-      const response = await fetch(`/api/getUserPostVotes?postIds=${postIds}`);
-      const data = await response.json();
-      const postVotes = Array.isArray(data.postVotes) ? data.postVotes : [];
-
-      setPostListState((prev) => ({
-        ...prev,
-        postVotes: postVotes as PostVote[],
-      }));
-    } catch (error: any) {
-      console.error("Error fetching user post votes:", error.message);
     }
   };
 
@@ -86,19 +69,16 @@ export default function Home(): ReactElement {
         getHomePostListWithoutSession();
       }
     }
-  }, [globalAuthState]);
-
-  useEffect(() => {
-    if (!globalSessionData?.user?.id || !postListState.postList ) return;
-    getUserPostVotes();
+  }, [globalAuthState, globalAuthLoadingState, globalSessionData?.user]);
   
+  useEffect(() => {
     return () => {
       setPostListState((prev) => ({
         ...prev,
         postVotes: [],
       }));
     };
-  }, [postListState?.postList, globalSessionData?.user?.id]);
+  }, []);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -122,8 +102,6 @@ export default function Home(): ReactElement {
                       postIdx={index}
                       onVotePost={onVotePost}
                       onDeletePost={onDeletePost}
-                      isAlreadyVoted={postListState?.postVotes.find((item) => item.postId === post.id)?.voteValue}
-                      isUserCreator={globalSessionData?.user?.id === post.creatorId}
                       globalSessionData={globalSessionData}
                       onSelectPost={onSelectPost}
                       homePage

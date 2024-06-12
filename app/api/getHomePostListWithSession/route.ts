@@ -1,62 +1,31 @@
 import { prisma } from "@/prisma/client";
+import { getPostList } from "@/utils/getPostList";
 
 export async function GET(request: Request) {
-  console.log("getHomePostListWithSession API 실행")
+  console.log("getHomePostListWithSession API Called")
   try {
     const url = new URL(request.url);
     const userId = url.searchParams.get('userId');
 
-    const userChannels = await prisma.channelSnippet.findMany({
-      where: { userId: userId },
-      select: {
-        channels: {
-          select: {
-            id: true
-          }
-        }
-      }
-    });
-
-    if (!userChannels) {
-      return Response.json({
+    if (!userId) {
+      return new Response(JSON.stringify({
           statusCode: 400,
-          message: 'User or channels not found.'
-      });
+          message: 'User ID is required.'
+      }), { status: 400 });
     }
 
-    const channelIds = userChannels.flatMap(userChannel => 
-      Array.isArray(userChannel.channels) ? userChannel.channels.map(channel => channel.id) : [userChannel.channels.id]
-    );
+    const { postList, postVotes } = await getPostList(userId);
 
-    // 해당 장르에 속하는 게시물 검색
-    const postList = await prisma.post.findMany({
-      where: {
-        channelId: { in: channelIds },
-      },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        channel: true,
-        labels: true,
-        publicUsers: {
-          select: {
-            nickName: true
-          }
-        }
-      },
-      take: 10
-    });
-
-    const sortedPostList = postList.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-
-    return Response.json({
+    return new Response(JSON.stringify({
       statusCode: 200,
       message: '200 OK',
-      postList: sortedPostList,
-    });
+      postList: postList,
+      postVotes: postVotes
+    }), { status: 200 });
   } catch (error) {
-    return Response.json({
+    return new Response(JSON.stringify({
       statusCode: 500,
       message: 'An error occurred while retrieving postList'
-    });
+    }), { status: 500 });
   }
 }

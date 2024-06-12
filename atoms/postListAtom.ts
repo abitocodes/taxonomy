@@ -4,10 +4,16 @@ import { PostListState } from "@/types/post/PostList";
 
 export const defaultPostListState: PostListState = {
   selectedPost: null,
+
   postList: [],
   postVotes: [],
   postListCache: {},
-  postUpdateRequired: true,
+  postListUpdateRequired: true,
+
+  selectedPostCommentList: [],
+  selectedPostCommentVotes: [],
+  selectedPostCommentListCache: {},
+  selectedPostCommentListUpdateRequired: true,
 };
 
 export const postListState = atom<PostListState>({

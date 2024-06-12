@@ -19,12 +19,11 @@ type CommentItemProps = {
   onVoteComment: (event: React.MouseEvent<Element, MouseEvent>, comment: Comment, sessionAndPublicUser: GlobalAuthStateType | null) => void;
   isLoading: boolean;
   userId?: string;
-  isAlreadyVoted?: number;
-  isSessionUserCreator?: boolean;
-  globalAuthState: GlobalAuthStateType;
+  isAlreadyVoted?: boolean;
+  isUserCreator?: boolean;
 };
 
-const CommentItem: FC<CommentItemProps> = ({ comment, onDeleteComment, onVoteComment, isLoading, isAlreadyVoted, isSessionUserCreator }) => {
+const CommentItem: FC<CommentItemProps> = ({ comment, onDeleteComment, onVoteComment, isLoading, isAlreadyVoted, isUserCreator }) => {
   const _globalAuthState = useRecoilValue(globalAuthState);
 
   return (
@@ -46,7 +45,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDeleteComment, onVoteCom
         </div>
         <span className="text-sm">{comment.text}</span>
         <div className="flex items-center cursor-pointer font-semibold text-muted-foreground space-x-4">
-          {comment.voteStatus !== 1 ? (
+          {isAlreadyVoted !== true ? (
             <IoIosHeartEmpty className="h-4 w-4" onClick={(event) => onVoteComment(event, comment, _globalAuthState)} />
           ) : (
             <IoMdHeart className="h-4 w-4" onClick={(event) => onVoteComment(event, comment, _globalAuthState)} />
@@ -54,7 +53,7 @@ const CommentItem: FC<CommentItemProps> = ({ comment, onDeleteComment, onVoteCom
           <span className="font-cpmo text-xs text-primary">
             {comment.voteStatus || 0}
           </span>
-          {isSessionUserCreator && (
+          {isUserCreator && (
             <span className="text-xs hover:text-blue-500 font-cpmo uppercase" onClick={() => onDeleteComment(comment)}>
               Delete
             </span>

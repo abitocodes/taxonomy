@@ -10,17 +10,14 @@ import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 import { useRecoilValue } from "recoil";
 
 export const useCommentList = (postId: string) => {
+  const { globalSessionData } = useRecoilValue(globalAuthState);
 
   const [_commentListState, _setCommentListState] = useRecoilState(commentListState);
   const [commentListLoading, setCommentListLoading] = useState(false);
   const [error, setError] = useState("");
 
-
   const [isLoading, setIsLoading] = useState(false);
   const [_postListState, setPostListState] = useRecoilState(postListState);
-
-  const { globalSessionData, globalAuthLoadingState, globalAuthErrorMsg } = useRecoilValue(globalAuthState);
-
 
   const onVoteComment = async (
     event: React.MouseEvent<SVGElement, MouseEvent>,
@@ -43,6 +40,7 @@ export const useCommentList = (postId: string) => {
       }
     } catch (error) {
       console.error("onVotePost error", error);
+      setError("onVotePost error");
     }
   };
 
@@ -72,14 +70,12 @@ export const useCommentList = (postId: string) => {
       }));
     } catch (error) {
       console.error("onDeleteComment error", error.message);
+      setError("onDeleteComment error");
     }
     setIsLoading(false);
   }, [postId, setPostListState]);
 
   return {
-    globalSessionData,
-    globalAuthLoadingState,
-    globalAuthErrorMsg,
     commentListState: _commentListState,
     setCommentListState: _setCommentListState,
     commentListLoading,
@@ -89,7 +85,6 @@ export const useCommentList = (postId: string) => {
     error,
   };
 };
-
 
 const updateCommentVotes = (
   comment: Comment,
