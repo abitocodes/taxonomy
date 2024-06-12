@@ -8,14 +8,14 @@ import MenuWrapper from "./ProfileMenu/MenuWrapper";
 import { User } from "@supabase/supabase-js";
 import { Directory } from "@/components/reddit/Navbar/Directory";
 import { useRecoilState } from "recoil";
-import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
 interface RightContentProps {
   user: User | null;
 }
 
 export const RightContent: FC<RightContentProps> = ({ user }) => {
-  const [authLoadingState, setAuthLoadingState] = useRecoilState(sessionAndPublicUserState)
+  const [globalAuthLoadingState, setAuthLoadingState] = useRecoilState(globalAuthState)
   
   return (
     <>

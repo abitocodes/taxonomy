@@ -6,29 +6,18 @@ import { authModalState } from "@/atoms/auth/authModalAtom";
 import { useDirectory } from "@/hooks/useDirectory";
 import { supabase } from '@/utils/supabase/client'; // supabase 클라이언트 경로에 맞게 조정해주세요.
 import { Session } from '@supabase/supabase-js';
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
+import { useRecoilValue } from "recoil";
 
 const useCreatePost = () => {
-  const { session, authLoadingState, authErrorMsg } = useAuthState();
+  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
   const setAuthModalState = useSetRecoilState(authModalState);
   const { toggleMenuOpen } = useDirectory();
   const router = useRouter();
   const url = usePathname();
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.error('Failed to fetch session:', error);
-      } else {
-        setSession(data.session);
-      }
-    };
-
-    fetchSession();
-  }, []);
-
   const onClick = () => {
-    if (!sessionUser?.id) {
+    if (!globalSessionData?.user?.id) {
       setAuthModalState((prev) => ({
         ...prev,
         emailInputModalOpen: true,

@@ -9,10 +9,11 @@ import { getMySnippets } from "@/helpers/supabase";
 import { Channel, ChannelSnippet } from "@/types/channelsState";
 import { prisma } from "@/prisma/client";
 import { Session } from '@supabase/supabase-js';
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
+import { useRecoilValue } from "recoil";
 
-// const useChannelData = (ssrChannelData?: boolean) => {
 const useChannelData = () => {
-  const { session, authLoadingState, authErrorMsg } = useAuthState();
+  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
   const pathname = usePathname();
   const [channelStateValue, setChannelStateValue] = useRecoilState(channelState);
   const setAuthModalState = useSetRecoilState(authModalState);
@@ -36,15 +37,15 @@ const useChannelData = () => {
   }, [pathname]);
 
   useEffect(() => {
-    if (!sessionUser || !!channelStateValue.mySnippets.length) return;
+    if (!globalSessionData?.user || !!channelStateValue.mySnippets.length) return;
     getSnippets();
-  }, [sessionUser]);
+  }, [globalSessionData?.user]);
 
   const getSnippets = async () => {
     setLoading(true);
     try {
-      if (!sessionUser?.id) throw new Error("User ID is undefined");
-      const snippets = await getMySnippets(sessionUser.id);
+      if (!globalSessionData?.user?.id) throw new Error("User ID is undefined");
+      const snippets = await getMySnippets(globalSessionData.user.id);
       setChannelStateValue((prev) => ({
         ...prev,
         mySnippets: snippets as ChannelSnippet[],
@@ -76,7 +77,7 @@ const useChannelData = () => {
   };
 
   const onJoinLeaveChannel = (channel: Channel, isJoined?: boolean) => {
-    if (!sessionUser) {
+    if (!globalSessionData?.user) {
       setAuthModalState((prev) => ({
         ...prev,
         emailInputModalOpen: true,
@@ -97,7 +98,7 @@ const useChannelData = () => {
       // Insert new channel snippet for the user
       const newSnippet = await prisma.channelSnippet.create({
         data: {
-          userId: sessionUser?.id,  // 'uid'를 'id'로 변경
+          userId: globalSessionData?.user?.id,  // 'uid'를 'id'로 변경
           channelId: channel.id,
         }
       });
@@ -130,7 +131,7 @@ const useChannelData = () => {
     try {  
       await prisma.$transaction(async (prisma) => {
         await prisma.channelSnippet.deleteMany({
-          where: { channelId: channelId, userId: sessionUser?.id },
+          where: { channelId: channelId, userId: globalSessionData?.user?.id },
         });
   
         await prisma.channel.update({

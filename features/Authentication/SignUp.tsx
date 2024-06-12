@@ -18,7 +18,7 @@ const SignUp: FC<SignUpProps> = ({ toggleView }) => {
     confirmPassword: "",
   });
   const [formError, setFormError] = useState("");
-  const { createUserWithEmailAndPassword, userCred, loading, error: authErrorMsg } = useCreateUserWithEmailAndPassword(session);
+  const { createUserWithEmailAndPassword, userCred, loading, error: globalAuthErrorMsg } = useCreateUserWithEmailAndPassword(session);
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -54,7 +54,7 @@ const SignUp: FC<SignUpProps> = ({ toggleView }) => {
       <InputItem name="password" placeholder="password" type="password" mb={2} onChange={onChange} />
       <InputItem name="confirmPassword" placeholder="confirm password" type="password" onChange={onChange} />
       <p className="text-center mt-2 text-sm text-red-500">
-      {formError || SUPABASE_ERRORS[authErrorMsg as keyof typeof SUPABASE_ERRORS]}
+      {formError || SUPABASE_ERRORS[globalAuthErrorMsg as keyof typeof SUPABASE_ERRORS]}
       </p>
       <button className="w-full h-9 mb-2 mt-2 bg-blue-500 hover:bg-blue-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" disabled={loading}>
         Sign Up

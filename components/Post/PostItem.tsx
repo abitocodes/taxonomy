@@ -17,19 +17,20 @@ import {
 import { Button } from '../ui/button';
 import { ChatBubbleIcon } from '@radix-ui/react-icons';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { SessionAndPublicUserStateType } from '@/types/atoms/SessionAndPublicUserStateType';
-import { sessionAndPublicUserState } from '@/atoms/sessionAndUserAtom';
+import { GlobalAuthStateType } from '@/types/atoms/GlobalAuthStateType';
+import { Session } from '@supabase/supabase-js';
 
 interface PostItemProps {
   post: PostWith;
   postIdx?: number;
-  onVotePost: (event: React.MouseEvent<Element, MouseEvent>, post: Post, sessionAndPublicUser: SessionAndPublicUserStateType | null) => void;
+  onVotePost: (event: React.MouseEvent<Element, MouseEvent>, post: Post, globalSessionData: Session | null) => void;
   onSelectPost?: (value: Post, postIdx: number) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   router?: AppRouterInstance;
   isAlreadyVoted?: number;
   isSessionUserCreator?: boolean;
-  sessionAndPublicUserState?: boolean;
+  isUserCreator?: boolean;
+  globalSessionData: Session | null;
   homePage?: boolean;
   cursorPointer?: boolean; // 추가된 prop
 }
@@ -41,6 +42,7 @@ export function PostItem({
   onSelectPost,
   onDeletePost,
   router,
+  globalSessionData,
   isAlreadyVoted,
   homePage,
   cursorPointer = true, // 기본값은 true로 설정
@@ -48,7 +50,6 @@ export function PostItem({
 }: PostItemProps) {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const _sessionAndPublicUserState = useRecoilValue(sessionAndPublicUserState);
 
   const handleDelete = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -119,14 +120,14 @@ export function PostItem({
             <Button 
               variant="ghost"
               size="icon"
-              onClick={(event) => onVotePost(event, post, _sessionAndPublicUserState)}>
+              onClick={(event) => onVotePost(event, post, globalSessionData)}>
             <IoIosHeartEmpty className="h-4 w-4 "/>
             </Button>
           ) : (
             <Button 
               variant="ghost"
               size="icon"
-              onClick={(event) => onVotePost(event, post, _sessionAndPublicUserState)}>
+              onClick={(event) => onVotePost(event, post, globalSessionData)}>
             <IoMdHeart className="h-4 w-4"/>
           </Button>
           )}

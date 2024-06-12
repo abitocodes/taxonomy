@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+
 import { Label } from "@/components/ui/label"
 import {
   Tabs,
@@ -17,7 +18,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import { PostWith } from "@/types/post/PostList"
 
 import { GameIconChat_bubble } from "@/components/ReactGameIcons"
 import { GameIconAndroid_mask } from "@/components/ReactGameIcons"
@@ -29,7 +29,7 @@ import { GameIconTelepathy } from "@/components/ReactGameIcons"
 import { UserPostsBoard } from "./UserPostsBoard"
 import { PublicUser } from "@prisma/client"
 
-export function UserProfileTab(user: PublicUser) {
+export function UserProfileTab({ user }: { user: PublicUser }) {
   return (
     <Tabs defaultValue="posts" className="w-full">
         {/* <div className="flex items-center justify-center font-scor p-6">

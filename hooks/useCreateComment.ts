@@ -5,17 +5,17 @@ import { useAuthState } from '@/hooks/useAuthState';
 import { Session } from '@supabase/supabase-js';
 import { postListState } from '@/atoms/postListAtom';
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
 const useCreateComment = () => {
-  const sessionAndPublicUser = useRecoilValue(sessionAndPublicUserState);
+  const sessionAndPublicUser = useRecoilValue(globalAuthState);
   const setCommentList = useSetRecoilState(commentListState);
   const setPostList = useSetRecoilState(postListState);
 
   const [createCommentLoading, setCreateCommentLoading] = useState(false);
 
   const onCreateComment = useCallback(async (postId, creatorId, commentText: string) => {
-    if (!sessionAndPublicUser.currentSessionData) return;
+    if (!sessionAndPublicUser.globalSessionData) return;
 
     setCreateCommentLoading(true);
     const queryParams = new URLSearchParams({
@@ -46,7 +46,7 @@ const useCreateComment = () => {
       console.error("createComment error", error.message);
     }
     setCreateCommentLoading(false);
-  }, [sessionAndPublicUser.currentSessionData]);
+  }, [sessionAndPublicUser.globalSessionData]);
 
   return { onCreateComment, createCommentLoading };
 };

@@ -14,6 +14,7 @@ import { supabase } from "@/utils/supabase/client";
 import { Channel } from "@/types/channelsState";
 import { Session } from '@supabase/supabase-js';
 import { Button } from "@/components/ui/button";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
 type AboutProps = {
   channelData: Channel;
@@ -23,7 +24,7 @@ type AboutProps = {
 };
 
 const About: FC<AboutProps> = ({ channelData, pt, onCreatePage, loading }) => {
-  const { session, authLoadingState, authErrorMsg } = useAuthState();
+  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
   const searchParam = useSearchParams()
   const selectFileRef = useRef<HTMLInputElement>(null);
   const setChannelStateValue = useSetRecoilState(channelState);
@@ -109,7 +110,7 @@ const About: FC<AboutProps> = ({ channelData, pt, onCreatePage, loading }) => {
           </div>
         ) : (
           <>
-            {sessionUser?.id === channelData?.creatorId && (
+            {globalSessionData?.user?.id === channelData?.creatorId && (
               <div className="bg-gray-100 w-full p-2 rounded border border-gray-300 cursor-pointer">
                 <p className="text-xs font-bold text-blue-500">
                   Add description
@@ -139,7 +140,7 @@ const About: FC<AboutProps> = ({ channelData, pt, onCreatePage, loading }) => {
                   </Button>
                 </Link>
               )}
-              {sessionUser?.id === channelData?.creatorId && (
+              {globalSessionData?.user?.id === channelData?.creatorId && (
                 <>
                   <hr />
                   <div className="text-sm space-y-1">

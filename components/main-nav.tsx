@@ -18,7 +18,9 @@ import { FC, useState } from "react";
 import { useAuthState } from "@/hooks/useAuthState"
 import { Directory } from "@/components/reddit/Navbar/Directory";
 import { RightContent } from "@/components/reddit/Navbar/RightContent";
-
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
+import { useRecoilValue } from "recoil";
 
 interface MainNavProps {
   items?: MainNavItem[]
@@ -26,8 +28,7 @@ interface MainNavProps {
 }
 
 export function MainNav({ items, children }: MainNavProps) {
-  const { session, authLoadingState, authErrorMsg } = useAuthState();
-
+  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
   const segment = useSelectedLayoutSegment();
   const [showMobileMenu, setShowMobileMenu] = React.useState<boolean>(false);
   const { onSelectMenuItem } = useDirectory();
@@ -78,7 +79,7 @@ export function MainNav({ items, children }: MainNavProps) {
       </div>
       <div className="flex items-center">
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-          {!isHidden && <RightContent user={session?.user!} />}
+          {globalAuthLoadingState ? <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/> : (!isHidden && <RightContent user={globalSessionData?.user!} />)}
         </div>
       </div>
     </div>

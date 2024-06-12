@@ -17,9 +17,11 @@ import Posts from "@/features/Post/Posts";
 import { Channel } from "@/types/channelsState";
 
 import { Session } from '@supabase/supabase-js';
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
+import { useRecoilValue } from "recoil";
 
 export default function ChannelPage ({ params }: { params: { channel: string } }) {
-  const { user, loading: loadingUser, error: authErrorMsg } = useAuthState();
+  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
   const [channelStateValue, setChannelStateValue] = useRecoilState(channelState);
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export default function ChannelPage ({ params }: { params: { channel: string } }
         {/* Left Content */}
         <>
           <CreatePostLink />
-          <Posts channelData={channelStateValue.currentChannel} userId={user?.id} loadingUser={loadingUser} />
+          <Posts channelData={channelStateValue.currentChannel} userId={globalSessionData?.user?.id} loadingUser={globalAuthLoadingState} />
         </>
         {/* Right Content */}
         <>

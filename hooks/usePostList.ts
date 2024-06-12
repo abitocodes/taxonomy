@@ -14,8 +14,7 @@ import { Post, PostVote } from "@prisma/client";
 import { PostWith } from "@/types/post";
 import { Channel } from "@/types/channelsState";
 
-export default function usePostList (channelData?: Channel) {
-  const { session, authLoadingState, authErrorMsg } = useAuthState();
+export default function usePostList (globalSession, globalAuthLoadingState) {
 
   const [_postListState, _setPostListState] = useRecoilState(postListState);
   const [postListLoading, setPostListLoading] = useState(false);
@@ -40,7 +39,7 @@ export default function usePostList (channelData?: Channel) {
   ) => {
     event.stopPropagation();
 
-    if (!session?.user) {
+    if (!globalSession?.user) {
       setAuthModalState((prev) => ({ ...prev, emailInputModalOpen: true }));
       return;
     }
@@ -48,7 +47,7 @@ export default function usePostList (channelData?: Channel) {
     const isAlreadyVoted = _postListState.postVotes.find((v) => v.postId === post.id);
 
     try {
-      const response = await fetch(`/api/votePost?postId=${post.id}&userId=${session?.user.id}`);
+      const response = await fetch(`/api/votePost?postId=${post.id}&userId=${globalSession?.user.id}`);
       const { voteResult } = await response.json();
 
       if (!response.ok) throw new Error('votePost Failed.');
@@ -97,7 +96,7 @@ export default function usePostList (channelData?: Channel) {
 };
 
 const getChannelPostVotes = async (channelId: string) => {
-  const user = session?.user
+  const user = globalSession?.user
   if (!user) return;
 
   const response = await fetch(`/api/getChannelPostVotes?channelId=${channelId}&userId=${user.id}`);
@@ -113,23 +112,20 @@ const getChannelPostVotes = async (channelId: string) => {
 };
 
 useEffect(() => {
-  if (!session?.user?.id || !channelStateValue.currentChannel) return;
+  if (!globalSession?.user?.id || !channelStateValue.currentChannel) return;
   getChannelPostVotes(channelStateValue.currentChannel.id);
-}, [session?.user?.id, channelStateValue.currentChannel]);
+}, [globalSession?.user?.id, channelStateValue.currentChannel]);
 
 useEffect(() => {
-  if (!session?.user?.id) {
+  if (!globalSession?.user?.id) {
     _setPostListState((prev) => ({
       ...prev,
       postVotes: [],
     }));
   }
-}, [session?.user?.id]);
+}, [globalSession?.user?.id]);
 
 return {
-  session,
-  authLoadingState,
-  authErrorMsg,
   postListState: _postListState,
   setPostListState: _setPostListState,
   postListLoading,

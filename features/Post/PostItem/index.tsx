@@ -14,14 +14,14 @@ import { Post, Label, PublicUser } from "@prisma/client";
 import { PostWith } from "@/types/post";
 import { Container } from "@radix-ui/themes";
 import { CardContent } from "@/components/ui/card";
-import { SessionAndPublicUserStateType } from "@/types/atoms/SessionAndPublicUserStateType";
+import { GlobalAuthStateType } from "@/types/atoms/GlobalAuthStateType";
 import { useRecoilState } from "recoil";
-import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
 type PostItemContentProps = {
   post: PostWith;
   postIdx?: number;
-  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, sessionAndPublicUser: SessionAndPublicUserStateType | null) => void;
+  onVote: (event: React.MouseEvent<Element, MouseEvent>, post: Post, sessionAndPublicUser: GlobalAuthStateType | null) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   userIsCreator: boolean;
   onSelectPost?: (value: Post, postIdx: number) => void;
@@ -34,7 +34,7 @@ const PostItem: FC<PostItemContentProps> = ({ post, postIdx, onVote, onSelectPos
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const singlePostView = !onSelectPost;
-  const [_sessionAndPublicUser, setSessionAndPublicUser] = useRecoilState(sessionAndPublicUserState);
+  const [_sessionAndPublicUser, setSessionAndPublicUser] = useRecoilState(globalAuthState);
 
   const handleDelete = async (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();

@@ -10,7 +10,7 @@ import PostItem from "./PostItem";
 import { RecoilRoot } from "recoil";
 import { PostWith } from "@/types/post";
 import { useRecoilState } from "recoil";
-import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
 type PostsProps = {
   channelData?: Channel;
@@ -19,7 +19,7 @@ type PostsProps = {
 };
 
 const Posts: FC<PostsProps> = ({ channelData, userId, loadingUser }) => {
-  const _sessionAndPublicUserState = useRecoilState(sessionAndPublicUserState);
+  const _globalAuthState = useRecoilState(globalAuthState);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { postListState, setPostListState, onVote, onDeletePost } = usePosts(channelData!);

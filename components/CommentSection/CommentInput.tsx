@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import useCreateComment from "@/hooks/useCreateComment";
 
 import { useRecoilValue } from "recoil";
-import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
 interface CommentInputProps {
   comment: string;
@@ -13,23 +13,23 @@ interface CommentInputProps {
 }
 
 const CommentInput: FC<CommentInputProps> = ({ comment, setComment }) => {
-  const sessionAndPublicUser = useRecoilValue(sessionAndPublicUserState);
+  const sessionAndPublicUser = useRecoilValue(globalAuthState);
 
   const { onCreateComment, createCommentLoading } = useCreateComment();
   
   const handleCreateComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!sessionAndPublicUser.currentSessionData) {
+    if (!sessionAndPublicUser.globalSessionData) {
       return;
     }
-    await onCreateComment(postId, sessionAndPublicUser.currentPublicUserData.id, comment);
+    await onCreateComment(postId, sessionAndPublicUser.globalPublicUserData.id, comment);
     setComment('');
   };
   return (
     <div className="flex flex-col relative rounded-xl">
-      {sessionAndPublicUser.currentPublicUserData ? (
+      {sessionAndPublicUser.globalPublicUserData ? (
         <>
           <p className="mb-2 font-cpmo uppercase text-muted-foreground">
-            Comment as <span className="text-blue-500">{sessionAndPublicUser.currentPublicUserData?.nickName}</span>
+            Comment as <span className="text-blue-500">{sessionAndPublicUser.globalPublicUserData?.nickName}</span>
           </p>
           <textarea
             className="w-full p-2.5 text-sm border rounded-md min-h-[160px] pb-10 placeholder-gray-500 focus:outline-none focus:focus:border-black"
@@ -59,11 +59,11 @@ const CommentInput: FC<CommentInputProps> = ({ comment, setComment }) => {
 
 export default CommentInput;
 
-// const onCreateComment = async (commentText: string, sessionAndPublicUser.currentPublicUserDataId: string, channelId: string) => {
+// const onCreateComment = async (commentText: string, sessionAndPublicUser.globalPublicUserDataId: string, channelId: string) => {
 //   setIsLoading(true);
 //   const queryParams = new URLSearchParams({
 //     postId,
-//     creatorId: sessionAndPublicUser.currentPublicUserDataId,
+//     creatorId: sessionAndPublicUser.globalPublicUserDataId,
 //     text: commentText,
 //     channelId,
 //   });

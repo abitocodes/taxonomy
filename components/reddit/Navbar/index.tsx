@@ -9,9 +9,11 @@ import { RightContent } from "@/components/reddit/Navbar/RightContent";
 
 import { Session } from '@supabase/supabase-js';
 import { CommandMenu } from "@/components/command-menu";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
+import { useRecoilValue } from "recoil";
 
 const Navbar: FC = () => {
-  const { session, authLoadingState, authErrorMsg } = useAuthState();
+  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
   const { onSelectMenuItem } = useDirectory();
   
   return (
@@ -20,7 +22,7 @@ const Navbar: FC = () => {
       </div>
       <Directory />
       <CommandMenu/>
-      <RightContent user={sessionUser} />
+      <RightContent user={globalSessionData?.user ?? null} />
     </div>
   );
 };

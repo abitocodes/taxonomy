@@ -4,7 +4,7 @@ import { User, Session } from '@supabase/supabase-js';
 
 export const useSignInWithGoogle = (initialSession: Session | null) => {
     const [loading, setLoading] = useState(false);
-    const [authErrorMsg, setAuthErrorMsg] = useState<string | null>(null);
+    const [globalAuthErrorMsg, setAuthErrorMsg] = useState<string | null>(null);
     const [userCred, setUserCred] = useState<User | null>(null);
     const [session, setSession] = useState<Session | null>(initialSession);
 
@@ -28,7 +28,7 @@ export const useSignInWithGoogle = (initialSession: Session | null) => {
         userCred,
         session,
         loading,
-        authErrorMsg,
+        globalAuthErrorMsg,
         signInWithGoogle
     };
 };

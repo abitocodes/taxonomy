@@ -6,6 +6,8 @@ import { useAuthState } from '@/hooks/useAuthState';
 import { Session } from '@supabase/supabase-js';
 import { useRecoilState } from 'recoil';
 import { commentListState } from '@/atoms/commentListAtom';
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
+import { useRecoilValue } from "recoil";
 
 export const useCommentList = (postId: string) => {
 
@@ -17,7 +19,7 @@ export const useCommentList = (postId: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [_postListState, setPostListState] = useRecoilState(postListState);
 
-  const { session, authLoadingState, authErrorMsg } = useAuthState();
+  const { globalSessionData, globalAuthLoadingState, globalAuthErrorMsg } = useRecoilValue(globalAuthState);
 
 
   const onVoteComment = async (
@@ -30,7 +32,7 @@ export const useCommentList = (postId: string) => {
 
 
     try {
-      const response = await fetch(`/api/voteComment?commentId=${comment.id}&userId=${sessionUser?.id}`);
+      const response = await fetch(`/api/voteComment?commentId=${comment.id}&userId=${globalSessionData?.user?.id}`);
       const { voteResult } = await response.json();
       if (!response.ok) throw new Error('voteComment Failed.');
 
@@ -75,9 +77,9 @@ export const useCommentList = (postId: string) => {
   }, [postId, setPostListState]);
 
   return {
-    sessionUser,
-    authLoadingState,
-    authErrorMsg,
+    globalSessionData,
+    globalAuthLoadingState,
+    globalAuthErrorMsg,
     commentListState: _commentListState,
     setCommentListState: _setCommentListState,
     commentListLoading,

@@ -9,6 +9,7 @@ import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
 import RecoilRootWrapper from "@/components/RecoilWrapper";
 import BgRisingStars from "@/components/BgRisingStars"
+import SupabaseAuth from "@/components/auth/SupabaseAuth"
 
 interface RootLayoutProps {
   children: React.ReactNode
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <RecoilRootWrapper>
           <BgRisingStars/> 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <SupabaseAuth />
               {children}
               <Analytics />
               <Toaster />

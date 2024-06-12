@@ -5,7 +5,7 @@ import { useAuthState } from "@/hooks/useAuthState";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { authModalState } from "@/atoms/auth/authModalAtom";
 
-import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { supabase } from "@/utils/supabase/client";
 import AuthInputs from "./Inputs";
@@ -22,19 +22,19 @@ type AuthModalProps = {};
 
 const AuthModal: FC<AuthModalProps> = () => {
   const [_authModalState, _setAuthModalState] = useRecoilState(authModalState);
-  const { session } = useAuthState();
+  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
 
   const handleClose = () => {
     _setAuthModalState(prev => ({ ...prev, emailInputModalOpen: false }));
   };
 
   useEffect(() => {
-    if (session?.user) handleClose();
-  }, [session?.user]);
+    if (globalSessionData?.user) handleClose();
+  }, [globalSessionData?.user]);
 
   useEffect(() => {
-    if (session?.user) handleClose();
-  }, [session?.user]);
+    if (globalSessionData?.user) handleClose();
+  }, [globalSessionData?.user]);
 
   // useEffect(() => {
   //   console.log("AuthModal useEffect 실행")
@@ -86,7 +86,7 @@ const AuthModal: FC<AuthModalProps> = () => {
               {/* <ResetPassword/> */}
               </>
             )}
-            {session?.user && (
+            {globalSessionData?.user && (
               <>
                 <div className="spinner-border animate-spin mt-2 mb-2 h-8 w-8 border-4"></div>
                 <p className="text-xs text-center text-blue-500">

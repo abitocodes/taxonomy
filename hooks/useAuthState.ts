@@ -1,58 +1,71 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
-import { SessionAndPublicUserStateType } from "@/types/atoms/SessionAndPublicUserStateType";
+import { PublicUser } from '@prisma/client';
 import { useRecoilState } from "recoil";
-import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
+import { GlobalAuthStateType } from "@/types/atoms/GlobalAuthStateType";
 
 type AuthStateHook = {
-  session: Session | null;
-  setSession: (session: Session | null) => void;
-  authLoadingState: boolean;
-  authErrorMsg: Error | null;
+  globalSession: Session | null;
+  globalPublicUser: PublicUser | null;
+  globalAuthLoadingState: boolean;
+  globalAuthErrorMsg: Error | null;
 };
 
 type AuthStateOptions = {
-  onUserChanged?: (user: User | null) => Promise<void>;
+  onSessionChanged?: (session: Session | null) => Promise<void>;
 };
 
-export function useAuthState(options?: AuthStateOptions): AuthStateHook {
-  const [sessionUser, setSessionUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [authLoadingState, setAuthLoadingState] = useState<boolean>(!session);
-  const [authErrorMsg, setAuthErrorMsg] = useState<Error | null>(null);
+export function useAuthState(where: string, options?: AuthStateOptions): AuthStateHook {
+  const [_globalAuthState, _setGlobalAuthState] = useRecoilState(globalAuthState);
 
-  const [_sessionAndPublicUser, _setSessionAndPublicUser] = useRecoilState(sessionAndPublicUserState);
+  const handleAuthChange = async () => {
+    
+    console.log(`handleAuthChange Called(1/2) @${where}, globalAuthLoadingState: `, _globalAuthState.globalAuthLoadingState);
+    console.log(`handleAuthChange Called(2/2) @${where}, _sessionAndPublicUser: `, _globalAuthState.globalPublicUserData);
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, updatedSession) => {
+      const currentSession = updatedSession ?? null;
+
+      _setGlobalAuthState((prev) => ({
+        ...prev,
+        globalAuthLoadingState: false
+      }));
+
+      if (currentSession) {
+        const response = await fetch(`/api/getPublicUser?userId=${currentSession.user.id}`);
+        const { publicUserData } = await response.json();
+        _setGlobalAuthState((prev) => ({
+          ...prev,
+          globalSessionData: currentSession,
+          globalPublicUserData: publicUserData
+        }));
+      } else {
+        _setGlobalAuthState((prev) => ({
+          ...prev,
+          globalSessionData: null,
+          globalPublicUserData: null
+        }));
+      }
+
+      if (options?.onSessionChanged) {
+        await options.onSessionChanged(currentSession);
+      }
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  };
 
   useEffect(() => {
-    let authListener: { subscription: { unsubscribe: () => void } } | null = null;
-  
-    const handleAuthChange = async () => {
-      try {
-        const { data } = supabase.auth.onAuthStateChange(async (event, updatedSession) => {
-          const currentSession = updatedSession ?? null;
-          const currentUser = currentSession?.user ?? null;
-          
-          setSessionUser(currentUser);
-          setAuthLoadingState(false);
-  
-          if (options?.onUserChanged) {
-            await options.onUserChanged(currentUser);
-          }
-        });
-  
-        authListener = data;
-      } catch (error) {
-        setAuthErrorMsg(error as Error);
-      }
-    };
-  
     handleAuthChange();
-  
-    return () => {
-      authListener?.subscription.unsubscribe();
-    };
-  }, [sessionUser, options]);
+  }, [_globalAuthState.globalAuthLoadingState]);
 
-  return { session, setSession, authLoadingState, authErrorMsg };
+  return { 
+    globalSession: _globalAuthState.globalSessionData,
+    globalPublicUser: _globalAuthState.globalPublicUserData,
+    globalAuthLoadingState: _globalAuthState.globalAuthLoadingState, 
+    globalAuthErrorMsg: _globalAuthState.globalAuthErrorMsg };
 }
+

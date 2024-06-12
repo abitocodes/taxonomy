@@ -7,7 +7,7 @@ import CommentInput from "@/components/CommentSection/CommentInput";
 import { useCommentList } from "@/hooks/useCommentList";
 import { CommentWith } from "@/components/CommentSection/CommentItem";
 import { PostWith } from "@/types/post";
-import { sessionAndPublicUserState } from "@/atoms/sessionAndUserAtom";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 import { useRecoilValue } from "recoil";
 import { CommentVote } from "@prisma/client";
 
@@ -20,8 +20,8 @@ interface CommentsProps {
 const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
   const { 
     sessionUser,
-    authLoadingState,
-    authErrorMsg,
+    globalAuthLoadingState,
+    globalAuthErrorMsg,
     commentListState,
     setCommentListState, 
     commentListLoading, 
@@ -31,7 +31,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
     error } = useCommentList(post.id);
 
   const [ commentInput, setCommentInput] = useState("");
-  const _sessionAndPublicUserState = useRecoilValue(sessionAndPublicUserState);
+  const _globalAuthState = useRecoilValue(globalAuthState);
 
   const getCommentList = async () => {
     setCommentListLoading(true);
@@ -72,7 +72,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
 
   useEffect(() => {
     getCommentList()
-  }, [sessionUser, authLoadingState]);
+  }, [sessionUser, globalAuthLoadingState]);
 
   useEffect(() => {
     if (!sessionUser?.id || !commentListState.commentList ) return;
@@ -117,7 +117,7 @@ const Comments: FC<CommentsProps> = ({ user, selectedPost: post, channel }) => {
                     onDeleteComment={() => onDeleteComment(item.id)} 
                     isLoading={commentListLoading} userId={user?.id} 
                     onVoteComment={onVoteComment}
-                    sessionAndPublicUserState={_sessionAndPublicUserState}
+                    globalAuthState={_globalAuthState}
                     />
                 ))}
               </>

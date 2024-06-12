@@ -8,24 +8,27 @@ import { ReactElement } from "react";
 import { PostWith } from "@/types/post";
 import { PostItem } from "@/components/Post/PostItem";
 import { BulletinBoard } from "@/components/BulletinBoard";
+import { useAuthState } from "@/hooks/useAuthState";
+import { useRecoilValue } from "recoil";
+import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
 export default function Home(): ReactElement {
-  console.log("Home 실행")
-  const { session,
-          authLoadingState,
+  const { globalSessionData, globalAuthLoadingState } = useRecoilValue(globalAuthState);
+
+  const { 
           postListState,
           setPostListState,
           postListLoading,
           setPostListLoading,
           onSelectPost,
           onDeletePost,
-          onVotePost } = usePostList();
+          onVotePost } = usePostList(globalSessionData, globalAuthLoadingState);
           
   const getHomePostListWithSession = async () => {
     console.log("getHomePostListWithSession Called.")
     setPostListLoading(true);
     try {
-      const response = await fetch(`/api/getHomePostListWithSession?userId=${session?.user.id}`);
+      const response = await fetch(`/api/getHomePostListWithSession?userId=${globalSessionData?.user.id}`);
       const { postList } = await response.json();
 
       setPostListState((prev) => ({
@@ -76,26 +79,26 @@ export default function Home(): ReactElement {
   };
 
   useEffect(() => {
-    if (!authLoadingState) {
-      if (session?.user) {
+    if (!globalAuthLoadingState) {
+      if (globalSessionData?.user) {
         getHomePostListWithSession();
-      } else if (session?.user === null) {
+      } else if (globalSessionData?.user === null) {
         getHomePostListWithoutSession();
       }
     }
-  }, [session?.user, authLoadingState]);
+  }, [globalAuthState]);
 
   useEffect(() => {
-    if (!session?.user?.id || !postListState.postList ) return;
+    if (!globalSessionData?.user?.id || !postListState.postList ) return;
     getUserPostVotes();
   
     return () => {
       setPostListState((prev) => ({
         ...prev,
-        postVotes: [], // 배열로 초기화
+        postVotes: [],
       }));
     };
-  }, [postListState?.postList, session?.user?.id]);
+  }, [postListState?.postList, globalSessionData?.user?.id]);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -105,7 +108,7 @@ export default function Home(): ReactElement {
         <div className="mx-auto w-full min-w-0">
           <div className="container mx-auto">
             {/* <CreatePostLink /> */}
-            {postListLoading || authLoadingState ? (
+            {postListLoading || globalAuthLoadingState ? (
               <div>
                 <PostLoader />
               </div>
@@ -120,7 +123,8 @@ export default function Home(): ReactElement {
                       onVotePost={onVotePost}
                       onDeletePost={onDeletePost}
                       isAlreadyVoted={postListState?.postVotes.find((item) => item.postId === post.id)?.voteValue}
-                      sessionAndPublicUserState={session?.user?.id === post.creatorId}
+                      isUserCreator={globalSessionData?.user?.id === post.creatorId}
+                      globalSessionData={globalSessionData}
                       onSelectPost={onSelectPost}
                       homePage
                     />
