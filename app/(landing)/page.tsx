@@ -8,7 +8,6 @@ import { ReactElement } from "react";
 import { PostWith } from "@/types/post";
 import { PostItem } from "@/components/Post/PostItem";
 import { BulletinBoard } from "@/components/BulletinBoard";
-import { useAuthState } from "@/hooks/useAuthState";
 import { useRecoilValue } from "recoil";
 import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 
@@ -24,38 +23,30 @@ export default function Home(): ReactElement {
           onDeletePost,
           onVotePost } = usePostList(globalSessionData, globalAuthLoadingState);
           
-  const getHomePostListWithSession = async () => {
-    console.log("getHomePostListWithSession Called.")
+  const getHomePostList = async () => {
+    console.log("getHomePostList Called.")
     setPostListLoading(true);
     try {
-      const response = await fetch(`/api/getHomePostListWithSession?userId=${globalSessionData?.user.id}`);
-      const { postList, postVotes } = await response.json();
-  
-      setPostListState((prev) => ({
-        ...prev,
-        postList: postList as PostWith[],
-        postVotes: postVotes as PostVote[],
-      }));
+      const response = await fetch(`/api/getHomePostList?userId=${globalSessionData?.user?.id || ''}`);
+      const data = await response.json();
+      console.log("data", data)
+      if (data.postList) {
+        setPostListState((prev) => ({
+          ...prev,
+          postList: data.postList as PostWith[],
+          postVotes: data.postVotes as PostVote[],
+          isAlreadyVotedList: data.isAlreadyVotedList as boolean[],
+          isUserCreatorList: data.isUserCreatorList as boolean[],
+        }));
+        console.log("postListState", postListState)
+      } else {
+        setPostListState((prev) => ({
+          ...prev,
+          postList: data.postList as PostWith[],
+        }));
+      }
     } catch (error: any) {
-      console.error("getHomePostListWithSession error", error.message);
-    } finally {
-      setPostListLoading(false);
-    }
-  };
-
-  const getHomePostListWithoutSession = async () => {
-    console.log("getHomePostListWithoutSession Called.")
-    setPostListLoading(true);
-    try {
-      const response = await fetch('/api/getHomePostListWithoutSession');
-      const { postList } = await response.json();
-      
-      setPostListState((prev) => ({
-        ...prev,
-        postList: postList as PostWith[],
-      }));
-    } catch (error: any) {
-      console.error("getHomePostListWithoutSession error", error.message);
+      console.error("getHomePostList error", error.message);
     } finally {
       setPostListLoading(false);
     }
@@ -63,22 +54,10 @@ export default function Home(): ReactElement {
 
   useEffect(() => {
     if (!globalAuthLoadingState) {
-      if (globalSessionData?.user) {
-        getHomePostListWithSession();
-      } else if (globalSessionData?.user === null) {
-        getHomePostListWithoutSession();
-      }
+      getHomePostList();
     }
-  }, [globalAuthState, globalAuthLoadingState, globalSessionData?.user]);
+  }, [globalAuthLoadingState]);
   
-  useEffect(() => {
-    return () => {
-      setPostListState((prev) => ({
-        ...prev,
-        postVotes: [],
-      }));
-    };
-  }, []);
 
   return (
     <div className="flex-1 md:grid md:grid-cols-[220px_1fr] md:gap-6 lg:grid-cols-[240px_1fr] lg:gap-10">
@@ -87,11 +66,8 @@ export default function Home(): ReactElement {
       <main className="relative py-6 lg:gap-10 lg:py-10 xl:grid xl:grid-cols-[1fr_300px]">
         <div className="mx-auto w-full min-w-0">
           <div className="container mx-auto">
-            {/* <CreatePostLink /> */}
             {postListLoading || globalAuthLoadingState ? (
-              <div>
-                <PostLoader />
-              </div>
+              <PostLoader />
             ) : (
               <div className="space-y-6">
                 {(postListState?.postList || []).map((post: PostWith, index: number) => {
@@ -103,6 +79,8 @@ export default function Home(): ReactElement {
                       onVotePost={onVotePost}
                       onDeletePost={onDeletePost}
                       globalSessionData={globalSessionData}
+                      isAlreadyVoted={postListState?.isAlreadyVotedList[index]}
+                      isUserCreator={postListState?.isUserCreatorList[index]}
                       onSelectPost={onSelectPost}
                       homePage
                     />
@@ -112,9 +90,9 @@ export default function Home(): ReactElement {
             )}
           </div>
         </div>
-          <div className="fixed md:sticky top-36 h-[calc(100vh-3.5rem)] z-30">
-              <BulletinBoard/>
-          </div>
+        <div className="fixed md:sticky top-36 h-[calc(100vh-3.5rem)] z-30">
+            <BulletinBoard/>
+        </div>
       </main>
     </div>
   );

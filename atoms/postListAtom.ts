@@ -10,6 +10,9 @@ export const defaultPostListState: PostListState = {
   postListCache: {},
   postListUpdateRequired: true,
 
+  isAlreadyVotedList: [],
+  isUserCreatorList: [],
+
   selectedPostCommentList: [],
   selectedPostCommentVotes: [],
   selectedPostCommentListCache: {},

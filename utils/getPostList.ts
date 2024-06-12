@@ -48,6 +48,9 @@ export async function getPostList(userId?: string) {
         });
 
         let postVotes: PostVote[] = [];
+        let isAlreadyVotedList: boolean[] = [];
+        let isUserCreatorList: boolean[] = [];
+
         if (userId) {
             const postIds = postList.map(post => post.id);
             postVotes = await prisma.postVote.findMany({
@@ -56,9 +59,15 @@ export async function getPostList(userId?: string) {
                     userId: userId
                 }
             });
+
+            // postId와 userId가 일치하는 투표 여부 확인
+            isAlreadyVotedList = postList.map(post => postVotes.some(vote => vote.postId === post.id));
+
+            // 포스트의 creatorId가 userId와 일치하는지 확인
+            isUserCreatorList = postList.map(post => post.creatorId === userId);
         }
 
-        return { postList, postVotes };
+        return { postList, postVotes, isAlreadyVotedList, isUserCreatorList };
     } catch (error) {
         console.error("Error retrieving post list:", error);
         throw error;
