@@ -12,7 +12,8 @@ import { Icon } from "@radix-ui/react-select"
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
     const links = [
       { href: "/terms", label: "TERMS" },
-      { href: "/privacy", label: "PRIVACY" }
+      { href: "/privacy", label: "PRIVACY" },
+      { href: "/contact", label: "CONTACT" }
     ];
 
     const socialLinks = [

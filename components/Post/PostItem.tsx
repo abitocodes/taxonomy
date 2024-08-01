@@ -62,7 +62,7 @@ export function PostItem({
     }
   };
 
-  const containerClasses = `flex w-full flex-col items-center border-b border-dashed bg-background/80 rounded-xl text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8 ${cursorPointer ? 'cursor-pointer' : ''}`;
+  const containerClasses = `flex w-full flex-col items-center border bg-background/80 text-card-foreground shadow-md transition-colors hover:bg-muted/50 p-6 pr-8 ${cursorPointer ? 'cursor-pointer' : ''}`;
 
   return (
     <div className={containerClasses}>

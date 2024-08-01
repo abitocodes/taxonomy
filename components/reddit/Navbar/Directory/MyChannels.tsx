@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { FaReddit } from "react-icons/fa";
 import { GrAdd } from "react-icons/gr";
-import { Icon } from "@radix-ui/react-select";
 import {
   DropdownMenu,
   DropdownMenuContent,

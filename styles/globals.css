@@ -33,8 +33,8 @@
     --card-foreground: 60 9.1% 97.8%;
     --popover: 20 14.3% 4.1%;
     --popover-foreground: 60 9.1% 97.8%;
-    --primary: 47.9 95.8% 53.1%;
-    --primary-foreground: 26 83.3% 14.1%;
+    --primary: 60 100% 50.4%;
+    --primary-foreground: 0 0% 0%;
     --secondary: 12 6.5% 15.1%;
     --secondary-foreground: 60 9.1% 97.8%;
     --muted: 12 6.5% 15.1%;
@@ -383,3 +383,31 @@ input::-webkit-inner-spin-button,input::-webkit-outer-spin-button {
 .no-padding {
   padding: 0 !important;
 } */
+
+.firstPattern {
+  height: 10px; /* 패턴의 높이 설정 */
+  width: 100%; /* 패턴의 너비 설정 */
+  background: repeating-linear-gradient(
+    45deg, /* 그라디언트 각도 설정 */
+    yellow, /* 첫 번째 색상 (노란색) */
+    yellow 10px, /* 노란색 지점 */
+    black 10px, /* 두 번째 색상 (검은색) 시작 지점 */
+    black 20px /* 검은색 지점 */
+  );
+}
+
+.corner-border {
+  --b: 1.2px;   /* thickness of the border */
+  --c: yellow;   /* color of the border */
+  --w: 15px;  /* width of border */
+
+  border: var(--b) solid transparent; /* space for the border */
+  --_g: transparent 90deg, var(--c) 0;
+  --_p: var(--w) var(--w) border-box no-repeat;
+  background:
+    conic-gradient(from 90deg at top var(--b) left var(--b), var(--_g)) 0 0 / var(--_p),
+    conic-gradient(from 180deg at top var(--b) right var(--b), var(--_g)) 100% 0 / var(--_p),
+    conic-gradient(from 0deg at bottom var(--b) left var(--b), var(--_g)) 0 100% / var(--_p),
+    conic-gradient(from -90deg at bottom var(--b) right var(--b), var(--_g)) 100% 100% / var(--_p);
+  box-sizing: border-box;
+}

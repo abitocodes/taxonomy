@@ -75,6 +75,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <BgRisingStars/> 
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <SupabaseAuth />
+              <div className="firstPattern"></div>
               {children}
               <Analytics />
               <Toaster />

@@ -11,6 +11,7 @@ export default function LandingLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="flex min-h-screen flex-col">
+      {/* <div className="firstPattern"></div> */}
       <header className="sticky top-0 left-0 z-50 h-24 w-full bg-dither">
         <div className="container flex h-full max-w-screen-2xl items-center">
           <MainNav />

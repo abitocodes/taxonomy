@@ -47,33 +47,33 @@ export function MainNav({ items, children }: MainNavProps) {
           <Icons.logo className="h-6 w-6" />
           <Icons.logoText className="h-6 w-24" />
         </Link>
-        <div className="border-t laptop:flex-1 font-cpmo">
+        <div className="border-t laptop:flex-1 font-bank">
           <ul className="flex overflow-hidden">
-            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+            <li className="tick group relative flex h-nav text-lg uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/">
                 <span>FEED</span>
               </Link>
             </li>
-            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+            {/* <li className="tick group relative flex h-nav text-lg uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/ch">
                 <span>CHANNELS</span>
               </Link>
-            </li>
-            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+            </li> */}
+            <li className="tick group relative flex h-nav text-lg uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/docs">
                 <span>DOCS</span>
               </Link>
             </li>
-            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+            <li className="tick group relative flex h-nav text-lg uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/gallery">
                 <span>GALLERY</span>
               </Link>
             </li>
-            <li className="tick group relative flex h-nav text-xs uppercase hover:before:h-[12px]">
+            {/* <li className="tick group relative flex h-nav text-lg uppercase hover:before:h-[12px]">
               <Link className="-ml-px flex items-center pr-lg" href="/contact">
                 <span>Contact</span>
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

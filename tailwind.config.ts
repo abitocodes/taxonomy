@@ -26,6 +26,7 @@ const config = {
         scor: ['"SCDream"', ...fontFamily.mono],
         scol: ['"SCDreamLight"', ...fontFamily.mono],
         gifo: ['"GFODream"', ...fontFamily.mono],
+        bank: ['"BankGothic"', ...fontFamily.mono],
         
       },
       backgroundImage: {
