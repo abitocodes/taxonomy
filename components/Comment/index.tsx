@@ -66,7 +66,7 @@ const Comment: FC<CommentProps> = ({ user, selectedPost: post }) => {
           onVoteComment={onVoteComment}
         />
       </div>
-      <div className="flex flex-col pl-10 pr-4 mb-6 text-sm w-full">
+      <div className="flex flex-col p-2 mb-6 text-sm w-full">
         <CommentInput 
           comment={commentInput} 
           setComment={setCommentInput} 

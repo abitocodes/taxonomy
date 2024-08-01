@@ -57,7 +57,6 @@ export async function getPostList(userId?: string) {
                     userId: userId
                 }
             });
-
         }
 
         return { postList, postVotes };

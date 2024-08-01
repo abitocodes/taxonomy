@@ -22,6 +22,7 @@ const CommentList: React.FC<CommentListProps> = ({
 }) => {
   return (
     <>
+    <div className="flex flex-col space-y-4">
       {commentList.map((comment, index) => (
         <CommentItem
             key={comment.id}
@@ -30,8 +31,11 @@ const CommentList: React.FC<CommentListProps> = ({
             globalSessionData={globalSessionData}
             onVoteComment={onVoteComment}
             onDeleteComment={() => onDeleteComment(comment.id)}
+            isAlreadyVoted={commentVotes.some(vote => vote.commentId === comment.id)}
+            isUserCreator={comment.creatorId === globalSessionData?.user?.id}
         />
       ))}
+    </div>
     </>
   );
 };

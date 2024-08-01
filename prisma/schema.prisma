@@ -23,21 +23,20 @@ model Comment {
 }
 
 model CommentVote {
-  id        String   @id
-  commentId String
-  userId    String
-  voteValue Int      // 투표 값 (예: 1 또는 -1)
-  createdAt DateTime @default(now())
-
-  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  user      PublicUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String     @id @db.VarChar
+  commentId String     @db.VarChar
+  userId    String     @db.VarChar
+  voteValue Int
+  createdAt DateTime   @default(now()) @db.Timestamptz(6)
+  comment   Comment    @relation(fields: [commentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_comment")
+  user      PublicUser @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user")
 
   @@map(name: "comment_votes")
 }
 
 model Channel {
-  id                String            @id
-  name              String            @unique
+  id                String            @id(map: "genres_pkey")
+  name              String            @unique(map: "genres_name_key")
   description       String?
   creatorId         String
   numberOfMembers   Int
@@ -51,12 +50,12 @@ model Channel {
 }
 
 model ChannelSnippet {
-  id           Int                  @id @default(autoincrement())
+  id           Int                  @id(map: "genres_snippets_pkey") @default(autoincrement())
   channelId    String 
   userId       String?
   isModerator  Boolean?             @default(false)
   channels     Channel              @relation(fields: [channelId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  publicUsers  PublicUser?          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  publicUsers  PublicUser?          @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "genres_snippets_userId_fkey")
 
   @@map(name: "channels_snippets")
 }
@@ -79,7 +78,7 @@ model PostVote {
   postId       String
   voteValue    Int
   userId       String
-  createdAt    DateTime     @default(now())
+  createdAt    DateTime?    @default(now()) @db.Timestamptz(6)
   posts        Post         @relation(fields: [postId], references: [id])
   publicUsers  PublicUser   @relation(fields: [userId], references: [id])
 
@@ -101,11 +100,11 @@ model Post {
   voteStatus          Int?
   coverImageUrl       String?
   description         String
-  channel             Channel      @relation(fields: [channelId], references: [id])
   comments            Comment[]
-  postVotes           PostVote[]
-  publicUsers         PublicUser   @relation(fields: [creatorId], references: [id])
   labels              Label[]
+  postVotes           PostVote[]
+  channel             Channel      @relation(fields: [channelId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "posts_channelid_fkey")
+  publicUsers         PublicUser   @relation(fields: [creatorId], references: [id])
 
   @@map(name: "posts")
 }

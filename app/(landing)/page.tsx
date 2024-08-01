@@ -22,7 +22,8 @@ export default function Home(): ReactElement {
           setPostListLoading,
           onSelectPost,
           onDeletePost,
-          onVotePost } = usePostList(globalSessionData, globalAuthLoadingState);
+          onVotePost 
+        } = usePostList(globalSessionData, globalAuthLoadingState);
           
   const getHomePostList = async () => {
     console.log("getHomePostList Called.")

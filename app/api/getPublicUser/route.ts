@@ -23,9 +23,7 @@ export async function GET(request: Request) {
             message: '200 OK',
             publicUserData: publicUserData
         });
-
     } catch (error) {
-        console.log("getPublicUser!!!, error: ", error)
         return Response.json({
             statusCode: 500,
             message: 'An error occurred while retrieving public user data'

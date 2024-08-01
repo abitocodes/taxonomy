@@ -1,20 +1,20 @@
 import { useState, useCallback } from 'react';
-import { useSetRecoilState } from 'recoil';
 import { postListState } from '@/atoms/postListAtom';
-import { useAuthState } from '@/hooks/useAuthState';
-import { Session } from '@supabase/supabase-js';
 import { useRecoilState } from 'recoil';
-import { commentListState } from '@/atoms/commentListAtom';
 import { globalAuthState } from "@/atoms/globalAuthStateAtom";
 import { useRecoilValue } from "recoil";
-
 import { Comment, CommentVote } from '@prisma/client';
 import { CommentWith } from '@/types/comment/CommentList';
 
 export const useCommentList = (postId: string) => {
   const { globalSessionData } = useRecoilValue(globalAuthState);
-
-  const [_commentListState, _setCommentListState] = useRecoilState(commentListState);
+  const [commentListState, setCommentListState] = useState({
+    commentList: [],
+    commentVotes: [],
+    commentListCache: {},
+    commentUpdateRequired: true,
+  });
+  
   const [commentListLoading, setCommentListLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -27,7 +27,7 @@ export const useCommentList = (postId: string) => {
   ) => {
     console.log("onVoteComment Called.");
     setIsLoading(true);
-    const isAlreadyVoted = _commentListState.commentVotes.find((v) => v.commentId === comment.id);
+    const isAlreadyVoted = commentListState.commentVotes.find((v) => v.commentId === comment.id);
 
     try {
       const response = await fetch(`/api/voteComment?commentId=${comment.id}&userId=${globalSessionData?.user?.id}`);
@@ -35,9 +35,9 @@ export const useCommentList = (postId: string) => {
       if (!response.ok) throw new Error('voteComment Failed.');
 
       if (voteResult) {
-        updateCommentVotes(comment, voteResult, isAlreadyVoted, _commentListState, _setCommentListState);
+        updateCommentVotes(comment, voteResult, isAlreadyVoted, commentListState, setCommentListState);
       } else {
-        removeCommentVote(comment, isAlreadyVoted, _commentListState, _setCommentListState);
+        removeCommentVote(comment, isAlreadyVoted, commentListState, setCommentListState);
       }
     } catch (error) {
       console.error("onVotePost error", error);
@@ -57,7 +57,7 @@ export const useCommentList = (postId: string) => {
       const data = await response.json();
       const updatedNumberOfCommentList = data.numberOfComments;
 
-      _setCommentListState(prev => ({
+      setCommentListState(prev => ({
         ...prev,
         commentList: prev.commentList.filter(comment => comment.id !== commentId),
         commentVotes: prev.commentVotes.filter(vote => vote.commentId !== commentId),
@@ -77,8 +77,8 @@ export const useCommentList = (postId: string) => {
   }, [postId, setPostListState]);
 
   return {
-    commentListState: _commentListState,
-    setCommentListState: _setCommentListState,
+    commentListState,
+    setCommentListState,
     commentListLoading,
     setCommentListLoading,
     onDeleteComment,
@@ -91,18 +91,18 @@ const updateCommentVotes = (
   comment: Comment,
   voteResult: CommentVote,
   isAlreadyVoted: CommentVote | undefined,
-  _commentListState: any,
-  _setCommentListState: any
+  commentListState: any,
+  setCommentListState: any
 ) => {
   const voteChange = voteResult.voteValue - (isAlreadyVoted ? isAlreadyVoted.voteValue : 0);
   const updatedComment = { ...comment, voteStatus: (comment.voteStatus || 0) + voteChange };
-  const updatedCommentList = _commentListState.commentList.map((p) => (p.id === comment.id ? updatedComment : p));
+  const updatedCommentList = commentListState.commentList.map((p) => (p.id === comment.id ? updatedComment : p));
 
   const updatedCommentVotes = isAlreadyVoted
-    ? _commentListState.postVotes.map((v) => (v.id === isAlreadyVoted.id ? voteResult : v))
-    : [..._commentListState.postVotes, voteResult];
+    ? commentListState.commentVotes.map((v) => (v.id === isAlreadyVoted.id ? voteResult : v))
+    : [...commentListState.commentVotes, voteResult];
 
-  _setCommentListState((prev) => ({
+  setCommentListState((prev) => ({
     ...prev,
     commentList: updatedCommentList,
     commentVotes: updatedCommentVotes,
@@ -112,16 +112,16 @@ const updateCommentVotes = (
 const removeCommentVote = (
   comment: Comment,
   isAlreadyVoted: CommentVote | undefined,
-  _commentListState: any,
-  _setCommentListState: any
+  commentListState: any,
+  setCommentListState: any
 ) => {
-  const updatedCommentList = _commentListState.commentList.map((p) =>
+  const updatedCommentList = commentListState.commentList.map((p) =>
     p.id === comment.id ? { ...p, voteStatus: (p.voteStatus || 0) - (isAlreadyVoted ? isAlreadyVoted.voteValue : 0) } : p
   );
 
-  const updatedCommentVotes = _commentListState.commentVotes.filter((v) => v.commentId !== comment.id);
+  const updatedCommentVotes = commentListState.commentVotes.filter((v) => v.commentId !== comment.id);
 
-  _setCommentListState((prev) => ({
+  setCommentListState((prev) => ({
     ...prev,
     commentList: updatedCommentList,
     commentVotes: updatedCommentVotes,

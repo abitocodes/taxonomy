@@ -3,10 +3,9 @@ import { FaReddit } from "react-icons/fa";
 import { IoMdHeart, IoIosHeartEmpty } from "react-icons/io";
 
 import moment from "moment";
-import { Comment, PublicUser } from "@prisma/client";
+import { Comment } from "@prisma/client";
 import { useRecoilValue } from "recoil";
 import { globalAuthState } from "@/atoms/globalAuthStateAtom";
-import { GlobalAuthStateType } from "@/types/atoms/GlobalAuthStateType";
 import { Session } from "@supabase/supabase-js";
 import { CommentWith } from "@/types/comment/CommentList";
 
@@ -30,7 +29,6 @@ const CommentItem: FC<CommentItemProps> = ({
   isUserCreator,
 }) => {
   console.log("comment", comment);
-  const _globalAuthState = useRecoilValue(globalAuthState);
 
   return (
     <div className="flex">

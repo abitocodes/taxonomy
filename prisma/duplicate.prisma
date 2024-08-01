@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model channels {
+  id                String              @id(map: "genres_pkey")
+  name              String              @unique(map: "genres_name_key")
+  description       String?
+  creatorId         String
+  numberOfMembers   Int
+  privacyType       String              @default("public")
+  createdAt         DateTime            @default(now())
+  imageURL          String?
+  channels_snippets channels_snippets[]
+  posts             posts[]
+}
+
+model channels_snippets {
+  id           Int           @id(map: "genres_snippets_pkey") @default(autoincrement())
+  channelId    String
+  userId       String?
+  isModerator  Boolean?      @default(false)
+  channels     channels      @relation(fields: [channelId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  public_users public_users? @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "genres_snippets_userId_fkey")
+}
+
+model comment_votes {
+  id           String       @id @db.VarChar
+  commentId    String       @db.VarChar
+  userId       String       @db.VarChar
+  voteValue    Int
+  createdAt    DateTime?    @default(now()) @db.Timestamptz(6)
+  comments     comments     @relation(fields: [commentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_comment")
+  public_users public_users @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user")
+}
+
+model comments {
+  id            String          @id
+  creatorId     String
+  postId        String
+  text          String
+  createdAt     DateTime        @default(now())
+  voteStatus    Int?            @default(0)
+  comment_votes comment_votes[]
+  public_users  public_users    @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  posts         posts           @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model labels {
+  id        String   @id
+  name      String   @unique
+  color     String
+  createdAt DateTime @default(now())
+  creatorId String
+  postId    String
+  posts     posts    @relation(fields: [postId], references: [id])
+}
+
+model post_votes {
+  id           String       @id
+  postId       String
+  voteValue    Int
+  userId       String
+  createdAt    DateTime?    @default(now()) @db.Timestamptz(6)
+  posts        posts        @relation(fields: [postId], references: [id])
+  public_users public_users @relation(fields: [userId], references: [id])
+}
+
+model posts {
+  id               String       @id
+  title            String
+  channelId        String
+  createdAt        DateTime     @default(now())
+  creatorId        String
+  editedAt         DateTime     @default(now())
+  link             String?
+  mediaType        String?
+  mediaURL         String?
+  numberOfComments Int          @default(0)
+  postIdx          Int?
+  voteStatus       Int?
+  coverImageUrl    String?
+  description      String
+  comments         comments[]
+  labels           labels[]
+  post_votes       post_votes[]
+  channels         channels     @relation(fields: [channelId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "posts_channelid_fkey")
+  public_users     public_users @relation(fields: [creatorId], references: [id])
+}
+
+model public_users {
+  id                     String              @id
+  nickName               String
+  handler                String              @unique
+  email                  String?             @unique
+  emailVerified          DateTime?
+  profileImageUrl        String?
+  createdAt              DateTime            @default(now())
+  editedAt               DateTime            @default(now())
+  stripeCurrentPeriodEnd DateTime?
+  stripeCustomerId       String?             @unique
+  stripePriceId          String?
+  stripeSubscriptionId   String?             @unique
+  channels_snippets      channels_snippets[]
+  comment_votes          comment_votes[]
+  comments               comments[]
+  post_votes             post_votes[]
+  posts                  posts[]
+}

@@ -1,13 +1,22 @@
-import '@/styles/risingStars.css';
-import exp from 'constants';
+"use client"
+
+import React, { useEffect } from 'react';
+import { generateStarStyles } from '@/utils/starStyles';
 
 const BgRisingStars = () => {
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = generateStarStyles();
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
-    <div className="bg-animation z-[-1]">
-        {/* <div id="stars"></div> */}
-        <div id="stars2"></div>
-        <div id="stars3"></div>
-        <div id="stars4"></div>
+    <div className="z-[-1]">
+      <div id="stars2"></div>
     </div>
   );
 }
