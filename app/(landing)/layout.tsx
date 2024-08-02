@@ -2,6 +2,7 @@
 
 import { MainNav } from "@/components/main-nav"
 import { SiteFooter } from "@/components/site-footer"
+import RouteGuard from "@/components/RouteGuard"
 
 interface AppLayoutProps {
   children: React.ReactNode
@@ -10,8 +11,8 @@ interface AppLayoutProps {
 export default function LandingLayout({ children }: AppLayoutProps) {
 
   return (
+    <RouteGuard>
     <div className="flex min-h-screen flex-col">
-      {/* <div className="firstPattern"></div> */}
       <header className="sticky top-0 left-0 z-50 h-24 w-full bg-dither">
         <div className="container flex h-full max-w-screen-2xl items-center">
           <MainNav />
@@ -20,5 +21,6 @@ export default function LandingLayout({ children }: AppLayoutProps) {
       <div className="container flex-1">{children}</div>
         <SiteFooter/>
     </div>
+    </RouteGuard>
   )
 }

@@ -23,7 +23,7 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
     return (
       <footer className="wrapper mt-md flex flex-wrap items-center opacity-60 laptop:mt-xxl">
         <div className="container flex h-full items-center justify-between">
-          <div className="flex w-full items-center gap-x-gutter font-cpmo">
+          <div className="flex w-full items-center gap-x-gutter font-bank">
             <div className="flex max-md:hidden flex-1 border-t laptop:block">
               <ul className="flex overflow-hidden">
                 {links.map((link) => (
@@ -38,7 +38,7 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
           <div className="tick relative z-50 flex h-nav flex-1 items-center border-t text-xs uppercase laptop:flex-[0_0_25%]">
             {socialLinks.map((link) => (
               <div key={link.label} className="relative">
-                <Link className="tick flex h-nav w-lg items-center pr-sm" href={link.href} target="_blank" rel="noreferrer noopener">
+                <Link className="tick flex h-nav w-lg items-center pr-sm text-xs" href={link.href} target="_blank" rel="noreferrer noopener">
                   <span className="sr-only">{link.label}</span>
                   {link.icon}
                 </Link>

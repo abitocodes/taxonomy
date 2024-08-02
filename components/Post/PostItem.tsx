@@ -94,7 +94,7 @@ export function PostItem({
           </div>
           </div>
           {post.labels.length ? (
-          <div className="flex items-center gap-2 text-xs font-scor uppercase">
+          <div className="flex items-center gap-2 text-xs font-dots uppercase">
             <div>
             <Badge>
             {post.channel.name}
