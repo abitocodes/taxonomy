@@ -10,7 +10,6 @@ export default function AuthLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="flex flex-col">
-      <>HERO</>
       <div className="container flex-1">{children}</div>
         <SiteFooter/>
     </div>

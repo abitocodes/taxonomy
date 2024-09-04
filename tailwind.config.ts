@@ -27,6 +27,7 @@ const config = {
         scol: ['"SCDreamLight"', ...fontFamily.mono],
         gifo: ['"GFODream"', ...fontFamily.mono],
         bank: ['"BankGothic"', ...fontFamily.mono],
+        game: ['"Press Start 2P"', ...fontFamily.mono],
         
       },
       backgroundImage: {

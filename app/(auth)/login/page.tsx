@@ -1,6 +1,7 @@
 "use client"
 // import { ReactElement } from "react";
 import Image from 'next/image';
+import LandingHero from '@/components/LandingHero';
 
 export default function Login() {
   return (
@@ -9,19 +10,10 @@ export default function Login() {
       </aside>
       <main className="relative py-6 lg:gap-10 lg:py-10 xl:grid xl:grid-cols-[1fr_300px]">
         <div className="mx-auto w-full min-w-0">
+          <LandingHero />
+          dd
         </div>
         <div className="fixed md:sticky top-36 h-[calc(100vh-3.5rem)] z-30">
-          <Image
-              src="/turnOnTheMusic.gif"
-              alt="로그인 해주세요"
-              width={125}
-              height={75}
-              style={{
-                width: '100%',
-                height: 'auto',
-                border: '1px solid #FFD700',
-              }}
-            />
         </div>
       </main>
     </div>
