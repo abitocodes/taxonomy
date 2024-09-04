@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Astraea</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.10.2/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/lib/alea.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/gh/kchapelier/poisson-disk-sampling@2.2.0/build/poisson-disk-sampling.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/zlibjs@0.3.1/bin/gzip.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/zlibjs@0.3.1/bin/gunzip.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+
+<body>
+  <section class="hero is-dark is-bold">
+    <div class="hero-body">
+      <div class="container has-text-centered">
+        <h1 class="title">Astraea</h1>
+        <h2 class="subtitle">
+          The planet generator inspired by
+          <a href="https://managore.itch.io/planetarium">Planetarium</a>.
+        </h2>
+        <a href="https://github.com/yurkth/astraea" target="_blank"
+          class="button is-white is-outlined  is-rounded">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container has-text-centered is-size-5">
+      <p>
+        Enter the name of the planet and visit it!
+      </p>
+      <p>
+        If not, you will reach an unknown planet.
+      </p>
+      <form class="field has-addons has-addons-centered" onsubmit="explore();return false;">
+        <div class="control">
+          <input class="input is-rounded" type="text" id="seed" placeholder="unknown planet" maxlength="16"
+            pattern="^[\w ]+$">
+        </div>
+        <div class="control">
+          <a class="button is-dark is-outlined is-rounded" onclick="explore()">Explore</a>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <div id="canvas"></div>
+
+  <footer class="hero is-dark">
+    <div class="hero-body has-text-centered">
+      <p class="has-text-grey-lighter">Copyright © 2020 torin All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/words.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/planet.js"></script>
+  <script src="assets/js/sketch.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.container>.field {
+  margin-top: 24px;
+}
+
+input {
+  text-transform: uppercase;
+}
+
+canvas {
+  margin: auto;
+  display: block;
+  image-rendering: pixelated;
+}
+
+footer {
+  margin-top: 48px;
+  padding-bottom: 0px;
+}

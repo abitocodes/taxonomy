@@ -146,6 +146,9 @@ dependencies:
   '@radix-ui/themes':
     specifier: ^3.0.5
     version: 3.0.5(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
+  '@spissvinkel/simplex-noise':
+    specifier: ^1.0.1
+    version: 1.0.1
   '@supabase/auth-helpers-nextjs':
     specifier: ^0.10.0
     version: 0.10.0(@supabase/supabase-js@2.43.4)
@@ -182,6 +185,9 @@ dependencies:
   '@web3modal/wagmi':
     specifier: 3.5.2
     version: 3.5.2(@types/react@18.3.3)(@wagmi/core@2.10.5)(typescript@5.4.5)(viem@1.0.0)
+  alea:
+    specifier: ^1.0.1
+    version: 1.0.1
   child_process:
     specifier: ^1.0.2
     version: 1.0.2
@@ -251,9 +257,12 @@ dependencies:
   nodemailer:
     specifier: ^6.9.1
     version: 6.9.13
-  outline:
-    specifier: link:@heroicons/react/24/outline
-    version: link:@heroicons/react/24/outline
+  p5:
+    specifier: ^1.10.0
+    version: 1.10.0
+  poisson-disk-sampling:
+    specifier: ^2.3.1
+    version: 2.3.1
   postmark:
     specifier: ^3.0.15
     version: 3.11.0
@@ -317,6 +326,9 @@ dependencies:
   shiki:
     specifier: ^0.11.1
     version: 0.11.1
+  simplex-noise:
+    specifier: ^4.0.3
+    version: 4.0.3
   sonner:
     specifier: 1.2.3
     version: 1.2.3(react-dom@18.3.1)(react@18.3.1)
@@ -376,6 +388,9 @@ devDependencies:
   '@types/node':
     specifier: 18.14.2
     version: 18.14.2
+  '@types/p5':
+    specifier: ^1.7.6
+    version: 1.7.6
   '@types/react':
     specifier: ^18.2.8
     version: 18.3.3
@@ -4561,6 +4576,10 @@ packages:
     engines: {node: '>=18'}
     dev: false
 
+  /@spissvinkel/simplex-noise@1.0.1:
+    resolution: {integrity: sha512-Ni1aqFlajxWFxkp2WuCspat6wmrsRZmDv1hgt90hm8J0XkRByd1bzlJFIKw9kC0q5MlOH5GyVrHVR/ZVvhOzqg==}
+    dev: false
+
   /@stablelib/aead@1.0.1:
     resolution: {integrity: sha512-q39ik6sxGHewqtO0nP4BuSe3db5G1fEJE8ukvngS2gLkBXyy6E7pLubhbYgnkDFv6V8cWaxcE4Xn0t6LWcJkyg==}
     requiresBuild: true
@@ -5077,6 +5096,10 @@ packages:
 
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
+    dev: true
+
+  /@types/p5@1.7.6:
+    resolution: {integrity: sha512-6pLTOo0V3N5jZb5nTwjiv3lPHLK3Z/TjbhQUj8CTWXocUk1Z/f6OHTp3Pcwi1BhWnf5gqKUcyEb1gP0KIJuQgw==}
     dev: true
 
   /@types/parse5@6.0.3:
@@ -6334,6 +6357,10 @@ packages:
       require-from-string: 2.0.2
       uri-js: 4.4.1
     dev: true
+
+  /alea@1.0.1:
+    resolution: {integrity: sha512-QU+wv+ziDXaMxRdsQg/aH7sVfWdhKps5YP97IIwFkHCsbDZA3k87JXoZ5/iuemf4ntytzIWeScrRpae8+lDrXA==}
+    dev: false
 
   /ansi-regex@2.1.1:
     resolution: {integrity: sha512-TIGnTpdo+E3+pCyAluZvtED5p5wCqLdezCyhPZzKPcxvFplEt4i+W7OONCKgeZFT3+y5NZZfOOS/Bdcanm1MYA==}
@@ -11406,6 +11433,10 @@ packages:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
     dev: false
 
+  /moore@1.0.0:
+    resolution: {integrity: sha512-xcsFo/jgtMuVaGePHod5TdSzxnRAQQ4wFpDmFuu34lHvx5sNMsioA84NW7iBWYZ10jHR/nyGaDkhunMJxqAzkw==}
+    dev: false
+
   /motion@10.16.2:
     resolution: {integrity: sha512-p+PurYqfUdcJZvtnmAqu5fJgV2kR0uLFQuBKtLeFVTrYEVllI99tiOTSefVNYuip9ELTEkepIIDftNdze76NAQ==}
     dependencies:
@@ -11982,6 +12013,10 @@ packages:
     resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
     engines: {node: '>=6'}
 
+  /p5@1.10.0:
+    resolution: {integrity: sha512-6cWYBFhnZz7jNC6p1VWvlt3QReMqrRSmO90bgECQIKB9oko2w/sKrOAVMyei5tjIzSYcSY0JHy+BRtSAWq24jQ==}
+    dev: false
+
   /parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
     engines: {node: '>=6'}
@@ -12206,6 +12241,12 @@ packages:
   /pngjs@5.0.0:
     resolution: {integrity: sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==}
     engines: {node: '>=10.13.0'}
+    dev: false
+
+  /poisson-disk-sampling@2.3.1:
+    resolution: {integrity: sha512-O3TzHR8IA+Do5zC7EgPdHLOYOpUJ6DikiTwqRqXdSPUhx1ZqfeH6PqAD86KKi+8Nq8vnL2navErsgURKTe089w==}
+    dependencies:
+      moore: 1.0.0
     dev: false
 
   /pony-cause@2.1.11:
@@ -13565,6 +13606,10 @@ packages:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
     dependencies:
       is-arrayish: 0.3.2
+    dev: false
+
+  /simplex-noise@4.0.3:
+    resolution: {integrity: sha512-qSE2I4AngLQG7BXqoZj51jokT4WUXe8mOBrvfOXpci8+6Yu44+/dD5zqDpOx3Ux792eamTd2lLcI8jqFntk/lg==}
     dev: false
 
   /slash@3.0.0:
